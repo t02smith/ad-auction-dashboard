@@ -1,6 +1,10 @@
 package ad.auction.dashboard.model.files.records;
 
-public record Server(String dateTime, String ID, String exitDate, int pagesViewed, boolean conversion) {
+import java.time.LocalDateTime;
+
+import ad.auction.dashboard.model.Utility;
+
+public record Server(LocalDateTime dateTime, String ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
 
     /**
      * produce a new server
@@ -10,15 +14,12 @@ public record Server(String dateTime, String ID, String exitDate, int pagesViewe
     public static Server producer(String line) {
         String[] parts = line.split(",");
 
-        boolean conversion;
-        if (parts[4].equals("Yes")) {
-            conversion = true;
-        }
-
-        else {
-            conversion = false;
-        }
-
-        return new Server(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]), conversion);
+        return new Server(
+            Utility.parseDate(parts[0]), 
+            parts[1], 
+            Utility.parseDate(parts[2]), 
+            Integer.parseInt(parts[3]), 
+            parts[4].equals("Yes")
+        );
     }
 }

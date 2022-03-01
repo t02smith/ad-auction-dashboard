@@ -93,6 +93,7 @@ public class FileTracker {
         if (!this.isFileTracked(filename)) return null;
 
         TrackedFile file = trackedFiles.get(filename);
+        FileType type = file.getType();
 
         final PipedInputStream pipe = new PipedInputStream();
         file.connect(pipe);
@@ -108,9 +109,7 @@ public class FileTracker {
         int c;
         while ((c = pipe.read()) != 255) {
             if ((char)c == '\n') {
-                //parse line
-                //logger.info(builder.toString());
-                objs.add(builder.toString());
+                objs.add(type.produce(builder.toString()));
                 builder.setLength(0);
             } else builder.append((char)c);
         }

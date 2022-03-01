@@ -2,7 +2,7 @@ package ad.auction.dashboard;
 
 import java.net.URISyntaxException;
 
-public class TestUtility {
+public final class TestUtility {
     
     public static String getResourceFile(String target) {
         try {
@@ -16,4 +16,6 @@ public class TestUtility {
 
         return null;
     }
+
+
 }

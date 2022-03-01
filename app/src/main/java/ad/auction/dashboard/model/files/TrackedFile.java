@@ -25,8 +25,29 @@ public class TrackedFile implements Runnable {
     //Output stream
     private final PipedOutputStream pipe = new PipedOutputStream();
 
+    private final FileType type;
+
     public TrackedFile(String filename) {
         this.filename = filename;
+        this.type = this.determineFileType();
+    }
+
+    private FileType determineFileType() {
+        try {
+            final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
+
+            String[] headers = reader.readLine().split(",");
+            reader.close();
+
+            return FileType.determineType(headers);
+
+            
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
+        return FileType.OTHER;
+        
     }
 
     /**
@@ -39,6 +60,7 @@ public class TrackedFile implements Runnable {
         
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
+            if (this.type != FileType.OTHER) reader.readLine();
 
             byte[] newline = "\n".getBytes();
 
@@ -86,7 +108,10 @@ public class TrackedFile implements Runnable {
         } catch (IOException e) {
             logger.error("Error closing pipe");
         }
-        
+    }
+
+    public FileType getType() {
+        return this.type;
     }
 
 }

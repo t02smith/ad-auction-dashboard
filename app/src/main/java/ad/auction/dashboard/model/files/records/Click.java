@@ -1,6 +1,10 @@
 package ad.auction.dashboard.model.files.records;
 
-public record Click(String dateTime, String ID, float clickCost){
+import java.time.LocalDateTime;
+
+import ad.auction.dashboard.model.Utility;
+
+public record Click(LocalDateTime dateTime, String ID, float clickCost){
 
     /**
      * produce a new Click
@@ -9,7 +13,11 @@ public record Click(String dateTime, String ID, float clickCost){
      */
     public static Click producer(String line) {
         String[] parts = line.split(",");
-        return new Click(parts[0], parts[1], Float.parseFloat(parts[2]));
+        return new Click(
+            Utility.parseDate(parts[0]), 
+            parts[1], 
+            Float.parseFloat(parts[2])
+        );
     }
 
 }

@@ -15,7 +15,7 @@ public class Model {
      * @param target The target file
      * @return The result if any
      */
-    public Optional<Object> queryFileTracker(FileTrackerQuery query, String target) {
-        return this.fileTracker.query(query, target);
+    public Optional<Object> queryFileTracker(FileTrackerQuery query, String filename) {
+        return this.fileTracker.query(query, filename);
     }
 }
