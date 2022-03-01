@@ -61,7 +61,7 @@ public class TrackedFile implements Runnable {
         }
 
         long timeEnd = System.nanoTime();
-        logger.info("Time taken {}ms", (timeEnd-time)/1000000);
+        logger.info("Read '{}' in {}ms", filename, (timeEnd-time)/1000000);
         
     }
 
@@ -75,7 +75,6 @@ public class TrackedFile implements Runnable {
         } catch (IOException e) {
             logger.error("Unable to connect to '{}'s pipe",filename);
         }
-        
     }
 
     /**
