@@ -1,4 +1,4 @@
-package ad.auction.dashboard.records;
+package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
 

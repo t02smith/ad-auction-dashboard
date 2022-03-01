@@ -1,8 +1,12 @@
-package ad.auction.dashboard.records;
+package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
 
 public class Impression extends FileType {
+
+    public static Impression producer(String line) {
+        return null;
+    } 
 
     private boolean isMale; // true if male, false if female
     private String ageGroup;
