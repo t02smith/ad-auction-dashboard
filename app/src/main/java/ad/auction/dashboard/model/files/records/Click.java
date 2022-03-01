@@ -1,22 +1,15 @@
 package ad.auction.dashboard.model.files.records;
 
-import java.time.LocalDateTime;
+public record Click(String dateTime, String ID, float clickCost){
 
-public class Click extends FileType {
-
-    private float cost;
-
-    public Click(LocalDateTime dateTime, String ID, float cost) {
-        setDateTime(dateTime);
-        setID(ID);
-        setCost(cost);
+    /**
+     * produce a new Click
+     * @param line one line in the file
+     * @return constructed Click
+     */
+    public static Click producer(String line) {
+        String[] parts = line.split(",");
+        return new Click(parts[0], parts[1], Float.parseFloat(parts[2]));
     }
 
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
-
-    public float getCost() {
-        return cost;
-    }
 }

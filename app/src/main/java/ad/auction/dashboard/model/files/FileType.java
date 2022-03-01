@@ -2,15 +2,17 @@ package ad.auction.dashboard.model.files;
 
 import java.util.function.Function;
 
+import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
+import ad.auction.dashboard.model.files.records.Server;
 
 /**
  * Lists all possible file types
  */
 public enum FileType {
-    IMPRESSION(line -> Impression.producer(line), "Date", "ID", "..."),
-    CLICK(line -> null),
-    SERVER(line -> null);
+    IMPRESSION(line -> Impression.producer(line), "Date", "ID", "isMale", "AgeGroup", "Income", "Context", "ImpressionCost"),
+    CLICK(line -> Click.producer(line), "Date", "ID", "Cost"),
+    SERVER(line -> Server.producer(line), "Date", "ID", "ExitDate", "PagesViewed", "Conversion");
 
     //Produces a record from a csv line
     private final Function<String, ?> producer;

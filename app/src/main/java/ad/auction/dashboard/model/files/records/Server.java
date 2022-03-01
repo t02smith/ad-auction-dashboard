@@ -1,42 +1,24 @@
 package ad.auction.dashboard.model.files.records;
 
-import java.time.LocalDateTime;
+public record Server(String dateTime, String ID, String exitDate, int pagesViewed, boolean conversion) {
 
-public class Server extends FileType {
+    /**
+     * produce a new server
+     * @param line one line in the file
+     * @return constructed server
+     */
+    public static Server producer(String line) {
+        String[] parts = line.split(",");
 
-    private String exitDate;
-    private int pagesViewed;
-    private boolean conversion;
+        boolean conversion;
+        if (parts[4].equals("Yes")) {
+            conversion = true;
+        }
 
-    public Server(LocalDateTime dateTime, String ID, String exitDate, int pagesViewed, boolean conversion) {
-        setDateTime(dateTime);
-        setID(ID);
-        setConversion(conversion);
-        setPagesViewed(pagesViewed);
-        setExitDate(exitDate);
-    }
+        else {
+            conversion = false;
+        }
 
-    public String getExitDate() {
-        return exitDate;
-    }
-
-    public void setExitDate(String exitDate) {
-        this.exitDate = exitDate;
-    }
-
-    public int getPagesViewed() {
-        return pagesViewed;
-    }
-
-    public void setPagesViewed(int pagesViewed) {
-        this.pagesViewed = pagesViewed;
-    }
-
-    public boolean isConversion() {
-        return conversion;
-    }
-
-    public void setConversion(boolean conversion) {
-        this.conversion = conversion;
+        return new Server(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]), conversion);
     }
 }
