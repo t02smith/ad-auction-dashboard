@@ -17,7 +17,7 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
         return new Server(
             Utility.parseDate(parts[0]),    //Date
             Long.parseLong(parts[1]),       //ID
-            Utility.parseDate(parts[2]),    //Exit date
+            parts[2].equals("n/a") ? LocalDateTime.MAX:Utility.parseDate(parts[2]),    //Exit date
             Integer.parseInt(parts[3]),     //Pages viewed
             parts[4].equals("Yes")          //Conversion
         );

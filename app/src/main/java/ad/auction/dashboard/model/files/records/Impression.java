@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import ad.auction.dashboard.model.Utility;
 
-//TODO replace ageGroup, income, context with enum values
-
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income, Context context,
         float impressionCost) {
 
