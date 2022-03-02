@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Server(LocalDateTime dateTime, String ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
+public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
 
     /**
      * produce a new server
@@ -15,11 +15,11 @@ public record Server(LocalDateTime dateTime, String ID, LocalDateTime exitDate, 
         String[] parts = line.split(",");
 
         return new Server(
-            Utility.parseDate(parts[0]), 
-            parts[1], 
-            Utility.parseDate(parts[2]), 
-            Integer.parseInt(parts[3]), 
-            parts[4].equals("Yes")
+            Utility.parseDate(parts[0]),    //Date
+            Long.parseLong(parts[1]),       //ID
+            Utility.parseDate(parts[2]),    //Exit date
+            Integer.parseInt(parts[3]),     //Pages viewed
+            parts[4].equals("Yes")          //Conversion
         );
     }
 }

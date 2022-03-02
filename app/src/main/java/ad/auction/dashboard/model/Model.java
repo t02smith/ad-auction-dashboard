@@ -5,6 +5,8 @@ import java.util.Optional;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 
+// TODO model querying
+
 public class Model {
     
     private final FileTracker fileTracker = new FileTracker();

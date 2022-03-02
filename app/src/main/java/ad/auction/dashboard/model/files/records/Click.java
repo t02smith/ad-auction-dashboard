@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Click(LocalDateTime dateTime, String ID, float clickCost){
+public record Click(LocalDateTime dateTime, long ID, float clickCost){
 
     /**
      * produce a new Click
@@ -14,9 +14,9 @@ public record Click(LocalDateTime dateTime, String ID, float clickCost){
     public static Click producer(String line) {
         String[] parts = line.split(",");
         return new Click(
-            Utility.parseDate(parts[0]), 
-            parts[1], 
-            Float.parseFloat(parts[2])
+            Utility.parseDate(parts[0]),    //Date
+            Long.parseLong(parts[1]),       //ID
+            Float.parseFloat(parts[2])      //Click costs
         );
     }
 
