@@ -21,7 +21,7 @@ import ad.auction.dashboard.model.files.records.SharedFields;
  */
 public class FileTracker {
 
-
+    
     private static final Logger logger = LogManager.getLogger(FileTracker.class.getSimpleName());
 
     //Files being tracked

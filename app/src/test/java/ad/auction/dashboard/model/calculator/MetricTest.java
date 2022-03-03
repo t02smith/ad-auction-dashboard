@@ -30,7 +30,7 @@ public class MetricTest {
     public void impressionCountTest() {
         var data = getData("/data/2-week/server_log_1.csv");
 
-        long result = (long)Metric.IMPRESSION_COUNT.calculate(data);
+        long result = (long)Metrics.IMPRESSION_COUNT.getMetric().overall().apply(data);
         assertEquals(46, result);
     }
 
@@ -40,7 +40,7 @@ public class MetricTest {
     public void clickCountTest() {
         var data = getData("/data/2-week/click_log.csv");
 
-        long result = (long)Metric.CLICK_COUNT.calculate(data);
+        long result = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(data);
         assertEquals(23923, result);
     }
 
@@ -50,7 +50,7 @@ public class MetricTest {
     public void uniquesCountTest() {
         var data = getData("/data/2-week/server_log_1.csv");
 
-        long result = (long)Metric.UNIQUES_COUNT.calculate(data);
+        long result = (long)Metrics.UNIQUES_COUNT.getMetric().overall().apply(data);
         assertEquals(45, result);
     }
 
@@ -60,7 +60,7 @@ public class MetricTest {
     public void bouncesCountTest() {
         var data = getData("/data/2-week/server_log.csv");
         
-        long result = (long)Metric.BOUNCES_COUNT.calculate(data);
+        long result = (long)Metrics.BOUNCES_COUNT.getMetric().overall().apply(data);
         assertEquals(8665, result);
     }
 
@@ -70,7 +70,7 @@ public class MetricTest {
     public void conversionsCountTest() {
         var data = getData("/data/2-week/server_log.csv");
 
-        long result = (long)Metric.CONVERSIONS_COUNT.calculate(data);
+        long result = (long)Metrics.CONVERSIONS_COUNT.getMetric().overall().apply(data);
         assertEquals(2026, result);
     }
 
@@ -80,7 +80,7 @@ public class MetricTest {
     public void totalCostImpressionTest() {
         var data = getData("/data/2-week/impression_log.csv");
 
-        double result = (double)Metric.TOTAL_COST.calculate(data);
+        double result = (double)Metrics.TOTAL_COST.getMetric().overall().apply(data);
         assertEquals(487.055, result);
     }
 
@@ -90,7 +90,7 @@ public class MetricTest {
     public void totalCostClickTest() {
         var data = getData("/data/2-week/click_log.csv");
 
-        double result = (double)Metric.TOTAL_COST.calculate(data);
+        double result = (double)Metrics.TOTAL_COST.getMetric().overall().apply(data);
         assertEquals(117610.866, result);
 
     }
@@ -101,6 +101,6 @@ public class MetricTest {
     public void totalCostServerTest() {
         var bundle = new Bundle(null, FileType.SERVER);
 
-        assertThrows(IllegalArgumentException.class, () -> Metric.TOTAL_COST.calculate(bundle));
+        assertThrows(IllegalArgumentException.class, () -> Metrics.TOTAL_COST.getMetric().overall().apply(bundle));
     }
 }
