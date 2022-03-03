@@ -8,7 +8,7 @@ import ad.auction.dashboard.model.files.records.Campaign;
 public class ImpressionCount implements Metric {
     
     @Override
-    public Function<Campaign, ?> overall() {
+    public Function<Campaign, Object> overall() {
         return c -> c.impressions().count();
     }
 }

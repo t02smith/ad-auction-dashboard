@@ -19,6 +19,7 @@ import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
 
+@Tag("model/calculator")
 public class MetricTest {
 
     private static final FileTracker ft = new FileTracker();
@@ -40,9 +41,10 @@ public class MetricTest {
         return (List<?>) ft.query(FileTrackerQuery.READ, file).get();
     }
 
+    //OVERALL
+
     @Test
     @DisplayName("Impression count")
-    @Tag("model/calculator")
     public void impressionCountTest() {
         long result = (long) Metrics.IMPRESSION_COUNT.getMetric().overall().apply(c);
         assertEquals(486104, result);
@@ -50,7 +52,6 @@ public class MetricTest {
 
     @Test
     @DisplayName("Click count")
-    @Tag("model/calculator")
     public void clickCountTest() {
         long result = (long) Metrics.CLICK_COUNT.getMetric().overall().apply(c);
         assertEquals(23923, result);
@@ -58,7 +59,6 @@ public class MetricTest {
 
     @Test
     @DisplayName("Unqiues count")
-    @Tag("model/calculator")
     @Deprecated
     public void uniquesCountTest() {
         long result = (long) ((UniquesCount)Metrics.UNIQUES_COUNT.getMetric()).overall(FileType.IMPRESSION).apply(c);
@@ -67,7 +67,6 @@ public class MetricTest {
 
     @Test
     @DisplayName("Bounces count")
-    @Tag("model/calculator")
     public void bouncesCountTest() {
         long result = (long) Metrics.BOUNCES_COUNT.getMetric().overall().apply(c);
         assertEquals(8665, result);
@@ -75,7 +74,6 @@ public class MetricTest {
 
     @Test
     @DisplayName("Conversions count")
-    @Tag("model/calculator")
     public void conversionsCountTest() {
         long result = (long) Metrics.CONVERSIONS_COUNT.getMetric().overall().apply(c);
         assertEquals(2026, result);
@@ -83,7 +81,6 @@ public class MetricTest {
 
     @Test
     @DisplayName("Total cost - Impression")
-    @Tag("model/calculator")
     public void totalCostImpressionTest() {
         double result = (double) Metrics.TOTAL_COST_IMPRESSION.getMetric().overall().apply(c);
         assertEquals(487.055, result);
@@ -91,11 +88,46 @@ public class MetricTest {
 
     @Test
     @DisplayName("Total cost - Click")
-    @Tag("model/calculator")
     public void totalCostClickTest() {
         double result = (double) Metrics.TOTAL_COST_CLICK.getMetric().overall().apply(c);
         assertEquals(117610.866, result);
 
     }
+
+    @Test
+    @DisplayName("CTR")
+    public void ctrTest() {
+        double result = (double)Metrics.CTR.getMetric().overall().apply(c);
+        assertEquals(0.04921, result);
+    }
+
+    @Test
+    @DisplayName("CPA")
+    public void cpaTest() {
+        double result = (double)Metrics.CPA.getMetric().overall().apply(c);
+        assertEquals(58.291, result);
+    }
+
+    @Test
+    @DisplayName("CPC")
+    public void cpcTest() {
+        double result = (double)Metrics.CPC.getMetric().overall().apply(c);
+        assertEquals(4.937, result);
+    }
+
+    @Test
+    @DisplayName("CPM")
+    public void cpmTest() {
+        double result = (double)Metrics.CPM.getMetric().overall().apply(c);
+        assertEquals(242.99984, result);
+    }
+
+    @Test
+    @DisplayName("Bounce Rate")
+    public void bounceRateTest() {
+        double result = (double)Metrics.BOUNCE_RATE.getMetric().overall().apply(c);
+        assertEquals(0.362, result);
+    }
+
 
 }

@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) implements SharedFields {
+public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
 
     /**
      * produce a new server

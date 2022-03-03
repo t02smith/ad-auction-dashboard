@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Manages all the files being tracked by the system
@@ -104,7 +103,7 @@ public class FileTracker {
         t.setName(filename + " Reader");
         t.start();
 
-        final ArrayList<SharedFields> objs = new ArrayList<>();
+        final ArrayList<Object> objs = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
 

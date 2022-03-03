@@ -4,9 +4,6 @@ import java.util.function.Supplier;
 
 import ad.auction.dashboard.model.calculator.calculations.*;
 
-
-//TODO Finish metric functions
-
 /**
  * A reference point for all different metrics
  * 
@@ -29,21 +26,28 @@ public enum Metrics {
     // Number of conversions
     CONVERSIONS_COUNT(() -> new ConversionsCount()),
 
-    // Total cost (impressions)
+    // Total cost (impressions + clicks)
     TOTAL_COST_IMPRESSION(() -> new TotalImpressionsCost()),
-
     TOTAL_COST_CLICK(() -> new TotalClicksCost()),
+    TOTAL_COST(() -> new TotalCost()),
 
-    CTR(() -> null),
-    CPA(() -> null),
-    CPC(() -> null),
-    CPM(() -> null),
-    BOUNCE_RATE(() -> null);
+    // Click-through-rate - avg clicks per impression
+    CTR(() -> new CTR()),
+
+    //Cost-per-acquisition - avg money spent for each conversion
+    CPA(() -> new CPA()),
+
+    //Cost-per-click - avg money spent for each click
+    CPC(() -> new CPC()),
+
+    //Cost-per-1000-impression
+    CPM(() -> new CPM()),
+
+    BOUNCE_RATE(() -> new BounceRate());
 
     //Produces a metric object to perform calculations
     private final Supplier<Metric> metric;
 
-    
     private Metrics(Supplier<Metric> metric) {
         this.metric = metric;
     }

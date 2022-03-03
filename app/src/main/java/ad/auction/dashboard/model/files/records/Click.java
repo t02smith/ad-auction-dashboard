@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Click(LocalDateTime dateTime, long ID, float clickCost) implements SharedFields {
+public record Click(LocalDateTime dateTime, long ID, float clickCost) {
 
     /**
      * produce a new Click

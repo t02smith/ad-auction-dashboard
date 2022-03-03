@@ -17,7 +17,7 @@ public interface Metric {
      * Calculate the overall metric
      * @return function for overall metric
      */
-    public Function<Campaign, ?> overall();
+    public Function<Campaign, Object> overall();
 
     // /**
     //  * Calculate a set of graph points

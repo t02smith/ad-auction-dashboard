@@ -8,11 +8,11 @@ import ad.auction.dashboard.model.files.records.Campaign;
 public class UniquesCount implements Metric {
 
     @Override
-    public Function<Campaign, ?> overall() {
+    public Function<Campaign, Object> overall() {
         throw new IllegalArgumentException("You must provde a filetype");
     }
 
-    public Function<Campaign, ?> overall(FileType type) {
+    public Function<Campaign, Object> overall(FileType type) {
         switch (type) {
             case IMPRESSION:
                 return c -> c.impressions()

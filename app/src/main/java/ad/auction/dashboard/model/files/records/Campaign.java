@@ -8,6 +8,8 @@ import java.util.stream.Stream;
  */
 public class Campaign {
 
+    //Lists of values read from file
+    //From a list we can generate any number of streams
     private List<Impression> impressions;
     private List<Click> clicks;
     private List<Server> server;

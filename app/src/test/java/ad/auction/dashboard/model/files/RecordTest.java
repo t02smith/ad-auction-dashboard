@@ -13,8 +13,6 @@ import ad.auction.dashboard.model.files.records.Server;
 import ad.auction.dashboard.model.files.records.Click;
 
 public class RecordTest {
-    
-    //TODO add unit tests for record producers
 
     @Test
     @DisplayName("Impression producer")

@@ -7,7 +7,7 @@ import ad.auction.dashboard.model.files.records.Campaign;
 public class ConversionsCount implements Metric {
 
     @Override
-    public Function<Campaign, ?> overall() {
+    public Function<Campaign, Object> overall() {
         return c -> c.server()
                 .filter(e -> e.conversion())
                 .count();
