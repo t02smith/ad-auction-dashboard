@@ -4,11 +4,12 @@ import java.util.function.Function;
 
 import ad.auction.dashboard.model.files.records.Campaign;
 
+public class TotalClicksCost implements Metric {
 
-public class ClickCount implements Metric {
-    
     @Override
     public Function<Campaign, ?> overall() {
-        return c -> c.clicks().count();
+        return c -> (double) Math.round(1000 * c.clicks()
+                .parallel()
+                .reduce(0.0, (acc, elem) -> acc + elem.clickCost(), Double::sum)) / 1000;
     }
 }

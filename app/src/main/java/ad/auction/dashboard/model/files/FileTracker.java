@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
-
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.model.files.records.Bundle;
 import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
@@ -91,7 +90,7 @@ public class FileTracker {
      * @return A stream of all the records
      * @throws IOException
      */
-    private Bundle readFile(String filename) throws IOException  {
+    private List<?> readFile(String filename) throws IOException  {
 
         if (!this.isFileTracked(filename)) return null;
 
@@ -118,7 +117,8 @@ public class FileTracker {
         }
         
         pipe.close();
-        return new Bundle(objs.stream(), type);        
+
+        return objs;        
     }
 
     /**

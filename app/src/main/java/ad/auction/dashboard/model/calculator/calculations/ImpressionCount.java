@@ -2,12 +2,13 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.files.records.Bundle;
+import ad.auction.dashboard.model.files.records.Campaign;
+
 
 public class ImpressionCount implements Metric {
     
     @Override
-    public Function<Bundle, ?> overall() {
-        return (bundle) -> bundle.stream().count();
+    public Function<Campaign, ?> overall() {
+        return c -> c.impressions().count();
     }
 }

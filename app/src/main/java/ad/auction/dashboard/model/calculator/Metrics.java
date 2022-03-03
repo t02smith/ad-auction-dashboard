@@ -7,6 +7,11 @@ import ad.auction.dashboard.model.calculator.calculations.*;
 
 //TODO Finish metric functions
 
+/**
+ * A reference point for all different metrics
+ * 
+ * @author tcs1g20
+ */
 public enum Metrics {
 
     // Number of impressions
@@ -24,16 +29,21 @@ public enum Metrics {
     // Number of conversions
     CONVERSIONS_COUNT(() -> new ConversionsCount()),
 
-    // Total cost (clicks or impressions)
-    TOTAL_COST(() -> new TotalCost()),
+    // Total cost (impressions)
+    TOTAL_COST_IMPRESSION(() -> new TotalImpressionsCost()),
+
+    TOTAL_COST_CLICK(() -> new TotalClicksCost()),
+
     CTR(() -> null),
     CPA(() -> null),
     CPC(() -> null),
     CPM(() -> null),
     BOUNCE_RATE(() -> null);
 
+    //Produces a metric object to perform calculations
     private final Supplier<Metric> metric;
 
+    
     private Metrics(Supplier<Metric> metric) {
         this.metric = metric;
     }

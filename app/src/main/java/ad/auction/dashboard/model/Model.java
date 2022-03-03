@@ -5,6 +5,7 @@ import java.util.Optional;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 
+
 // TODO model querying
 
 public class Model {
@@ -20,4 +21,5 @@ public class Model {
     public Optional<?> queryFileTracker(FileTrackerQuery query, String filename) {
         return this.fileTracker.query(query, filename);
     }
+
 }
