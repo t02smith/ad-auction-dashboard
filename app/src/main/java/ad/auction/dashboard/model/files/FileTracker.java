@@ -5,11 +5,13 @@ import java.io.PipedInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ad.auction.dashboard.model.files.records.Bundle;
+import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Manages all the files being tracked by the system
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.Logger;
  * @author tcs1g20
  */
 public class FileTracker {
+
 
     private static final Logger logger = LogManager.getLogger(FileTracker.class.getSimpleName());
 
@@ -49,7 +52,7 @@ public class FileTracker {
      * @param filename The target file
      * @return the output of the query if there is one
      */
-    public Optional<Object> query(FileTrackerQuery query, String filename) {
+    public Optional<?> query(FileTrackerQuery query, String filename) {
         logger.info("Performing {} on '{}'", query, filename);
 
         switch (query) {
@@ -88,7 +91,7 @@ public class FileTracker {
      * @return A stream of all the records
      * @throws IOException
      */
-    private Stream<Object> readFile(String filename) throws IOException  {
+    private Bundle readFile(String filename) throws IOException  {
 
         if (!this.isFileTracked(filename)) return null;
 
@@ -102,7 +105,7 @@ public class FileTracker {
         t.setName(filename + " Reader");
         t.start();
 
-        final ArrayList<Object> objs = new ArrayList<>();
+        final ArrayList<SharedFields> objs = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
 
@@ -115,7 +118,7 @@ public class FileTracker {
         }
         
         pipe.close();
-        return objs.stream();        
+        return new Bundle(objs.stream(), type);        
     }
 
     /**

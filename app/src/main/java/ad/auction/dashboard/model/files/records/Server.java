@@ -1,10 +1,11 @@
 package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
+public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) implements SharedFields {
 
     /**
      * produce a new server
@@ -21,5 +22,9 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
             Integer.parseInt(parts[3]),     //Pages viewed
             parts[4].equals("Yes")          //Conversion
         );
+    }
+
+    public long secondsOnWebsite() {
+        return Math.abs(ChronoUnit.SECONDS.between(dateTime, exitDate));
     }
 }

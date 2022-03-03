@@ -1,20 +1,14 @@
 package ad.auction.dashboard.model.files;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
 import ad.auction.dashboard.TestUtility;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
@@ -82,34 +76,4 @@ public class FileTrackerTest {
         );
     }
 
-    @Test
-    @DisplayName("Successful file read")
-    @Tag("model/files")
-    @Timeout(10)
-    @SuppressWarnings("unchecked")
-    public void fileCorrectRead() {
-
-        List<String> expectedContent = Arrays.asList(new String[] {
-            "this is a test file",
-            "written for the purpose of testing"
-        });
-
-        var filename = TestUtility.getResourceFile("/data/test-1.txt");
-        if (filename == null) fail();
-
-        fileTracker.query(
-            FileTrackerQuery.TRACK, 
-            filename
-        );
-
-        Stream<Object> read = (Stream<Object>)fileTracker.query(
-            FileTrackerQuery.READ, 
-            filename
-        ).get();
-
-        List<String> actual = read.map(line -> (String)line)
-                                  .toList();
-
-        assertEquals(expectedContent, actual);
-    }
 }

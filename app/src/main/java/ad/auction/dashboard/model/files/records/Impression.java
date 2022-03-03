@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import ad.auction.dashboard.model.Utility;
 
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income, Context context,
-        float impressionCost) {
+        float impressionCost) implements SharedFields {
 
     /**
      * produce a new impression
@@ -16,13 +16,15 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
     public static Impression producer(String line) {
         String[] parts = line.split(",");
 
+
+
         return new Impression(
                 Utility.parseDate(parts[0]),                //Date of impression
                 Long.parseLong(parts[1]),                   //ID
                 Gender.valueOf(parts[2].toUpperCase()),     //Gender
                 AgeGroup.getAgeGroup(parts[3]),             //Age Group
                 Income.valueOf(parts[4].toUpperCase()),     //Income
-                Context.valueOf(parts[5].toUpperCase()),    //Context
+                Context.valueOf(parts[5].toUpperCase().replace(" ", "_")),    //Context
                 Float.parseFloat(parts[6]));                //Impression cost
     }
 
@@ -61,8 +63,7 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
     public enum Context {
         NEWS,
         SHOPPING,
-        SOCIAL,
-        MEDIA,
+        SOCIAL_MEDIA,
         BLOG,
         HOBBIES,
         TRAVEL;
