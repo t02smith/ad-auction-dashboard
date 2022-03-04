@@ -32,6 +32,7 @@ public class FileTracker {
         ft.trackFile(file);
 
         ft.readFile(file);
+
     }
 
     /**
@@ -50,7 +51,7 @@ public class FileTracker {
      * @param filename The target file
      * @return the output of the query if there is one
      */
-    public Optional<?> query(FileTrackerQuery query, String filename) {
+    public Optional<Object> query(FileTrackerQuery query, String filename) {
         logger.info("Performing {} on '{}'", query, filename);
 
         switch (query) {

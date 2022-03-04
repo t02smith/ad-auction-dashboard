@@ -37,7 +37,6 @@ public final class Utility {
 
     public static double roundNDp(double number, int n) {
         final double factor = Math.pow(10, n);
-        System.out.println(factor);
         return (double)Math.round(number*factor)/factor;
     }
     

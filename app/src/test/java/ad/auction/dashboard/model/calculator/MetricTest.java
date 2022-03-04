@@ -2,46 +2,43 @@ package ad.auction.dashboard.model.calculator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.TestUtility;
+import ad.auction.dashboard.model.Model;
+import ad.auction.dashboard.model.Campaigns.Campaign;
+import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
-import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.model.files.FileType;
-import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
-import ad.auction.dashboard.model.files.records.Campaign;
-import ad.auction.dashboard.model.files.records.Click;
-import ad.auction.dashboard.model.files.records.Impression;
-import ad.auction.dashboard.model.files.records.Server;
+
 
 @Tag("model/calculator")
 public class MetricTest {
 
-    private static final FileTracker ft = new FileTracker();
+    private static final Model model = new Model();
 
     private static Campaign c;
 
     @BeforeAll
-    @SuppressWarnings("unchecked")
     public static void setup() {
-        c = new Campaign(
-            (List<Impression>)getData("/data/2-week/impression_log.csv"),
-            (List<Click>)getData("/data/2-week/click_log.csv"),
-            (List<Server>)getData("/data/2-week/server_log.csv"));
+
+        model.queryCampaignManager(
+            CMQuery.NEW_CAMPAIGN, 
+            "campaign 1",
+            TestUtility.getResourceFile("/data/2-week/impression_log.csv"),
+            TestUtility.getResourceFile("/data/2-week/click_log.csv"),
+            TestUtility.getResourceFile("/data/2-week/server_log.csv"));
+        
+        model.queryCampaignManager(CMQuery.LOAD_CAMPAIGN, "campaign 1");
+        c = model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
+
     }
 
-    private static List<?> getData(String filename) {
-        String file = TestUtility.getResourceFile(filename);
-        ft.query(FileTrackerQuery.TRACK, file);
-        return (List<?>) ft.query(FileTrackerQuery.READ, file).get();
-    }
 
-    //OVERALL
+    // OVERALL
 
     @Test
     @DisplayName("Impression count")
@@ -61,7 +58,7 @@ public class MetricTest {
     @DisplayName("Unqiues count")
     @Deprecated
     public void uniquesCountTest() {
-        long result = (long) ((UniquesCount)Metrics.UNIQUES_COUNT.getMetric()).overall(FileType.IMPRESSION).apply(c);
+        long result = (long) ((UniquesCount) Metrics.UNIQUES_COUNT.getMetric()).overall(FileType.IMPRESSION).apply(c);
         assertEquals(439832, result);
     }
 
@@ -97,37 +94,36 @@ public class MetricTest {
     @Test
     @DisplayName("CTR")
     public void ctrTest() {
-        double result = (double)Metrics.CTR.getMetric().overall().apply(c);
+        double result = (double) Metrics.CTR.getMetric().overall().apply(c);
         assertEquals(0.04921, result);
     }
 
     @Test
     @DisplayName("CPA")
     public void cpaTest() {
-        double result = (double)Metrics.CPA.getMetric().overall().apply(c);
+        double result = (double) Metrics.CPA.getMetric().overall().apply(c);
         assertEquals(58.291, result);
     }
 
     @Test
     @DisplayName("CPC")
     public void cpcTest() {
-        double result = (double)Metrics.CPC.getMetric().overall().apply(c);
+        double result = (double) Metrics.CPC.getMetric().overall().apply(c);
         assertEquals(4.937, result);
     }
 
     @Test
     @DisplayName("CPM")
     public void cpmTest() {
-        double result = (double)Metrics.CPM.getMetric().overall().apply(c);
+        double result = (double) Metrics.CPM.getMetric().overall().apply(c);
         assertEquals(242.99984, result);
     }
 
     @Test
     @DisplayName("Bounce Rate")
     public void bounceRateTest() {
-        double result = (double)Metrics.BOUNCE_RATE.getMetric().overall().apply(c);
+        double result = (double) Metrics.BOUNCE_RATE.getMetric().overall().apply(c);
         assertEquals(0.362, result);
     }
-
 
 }

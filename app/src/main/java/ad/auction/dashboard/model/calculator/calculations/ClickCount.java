@@ -2,7 +2,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.files.records.Campaign;
+import ad.auction.dashboard.model.Campaigns.Campaign;
 
 
 public class ClickCount implements Metric {

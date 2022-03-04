@@ -2,8 +2,8 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.util.function.Function;
 
+import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.files.FileType;
-import ad.auction.dashboard.model.files.records.Campaign;
 
 public class UniquesCount implements Metric {
 

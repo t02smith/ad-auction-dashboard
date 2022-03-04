@@ -2,7 +2,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.files.records.Campaign;
+import ad.auction.dashboard.model.Campaigns.Campaign;
 
 /**
  * Each metric must provide:
@@ -25,4 +25,9 @@ public interface Metric {
     //  * @return function for graph points
     //  */
     // public Function<Bundle, HashSet<Point2D>> overTime();
+
+    public enum MetricFunction {
+        OVERALL,
+        OVER_TIME;
+    } 
 }
