@@ -14,8 +14,7 @@ import ad.auction.dashboard.model.files.records.Server;
 public enum FileType {
     IMPRESSION(line -> Impression.producer(line), "Date", "ID", "Gender", "Age", "Income", "Context", "Impression Cost"),
     CLICK(line -> Click.producer(line), "Date", "ID", "Click Cost"),
-    SERVER(line -> Server.producer(line), "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion"),
-    OTHER(line -> null);
+    SERVER(line -> Server.producer(line), "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion");
 
     //Produces a record from a csv line
     private final Function<String, ?> producer;

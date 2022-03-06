@@ -2,10 +2,12 @@ package ad.auction.dashboard.model.files;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,21 +21,16 @@ import org.apache.logging.log4j.Logger;
  */
 public class FileTracker {
 
-    
     private static final Logger logger = LogManager.getLogger(FileTracker.class.getSimpleName());
+
+    //Max number of files to be processed at once
+    private static final int FILE_TRACKER_THREAD_COUNT = 10;
 
     //Files being tracked
     private final HashMap<String, TrackedFile> trackedFiles = new HashMap<>();
 
-    public static void main(String[] args) throws Exception {
-        String file = args[0];
+    private final ExecutorService executor = Executors.newFixedThreadPool(FILE_TRACKER_THREAD_COUNT);
 
-        FileTracker ft = new FileTracker();
-        ft.trackFile(file);
-
-        ft.readFile(file);
-
-    }
 
     /**
      * Types of query to the FileTracker
@@ -79,8 +76,10 @@ public class FileTracker {
      * @param filename the location of the file
      */
     private void trackFile(String filename) {
-        logger.info("Tracking file '{}'", filename);
-        this.trackedFiles.put(filename, new TrackedFile(filename));
+        synchronized (this.trackedFiles) {
+            logger.info("Tracking file '{}'", filename);
+            this.trackedFiles.put(filename, new TrackedFile(filename));
+        }
     }
 
     /**
@@ -90,35 +89,24 @@ public class FileTracker {
      * @return A stream of all the records
      * @throws IOException
      */
-    private List<?> readFile(String filename) throws IOException  {
+    private Future<List<Object>> readFile(String filename) throws IOException  {
+        TrackedFile file;
 
-        if (!this.isFileTracked(filename)) return null;
-
-        TrackedFile file = trackedFiles.get(filename);
+        synchronized (this.trackedFiles) {
+            if (!this.isFileTracked(filename)) return null;
+            file = trackedFiles.get(filename);
+        }
+        
         FileType type = file.getType();
 
         final PipedInputStream pipe = new PipedInputStream();
         file.connect(pipe);
 
-        Thread t = new Thread(file);
-        t.setName(filename + " Reader");
-        t.start();
+        //Start reading the file
+        executor.submit(file);
 
-        final ArrayList<Object> objs = new ArrayList<>();
-        StringBuilder builder = new StringBuilder();
-
-
-        int c;
-        while ((c = pipe.read()) != 255) {
-            if ((char)c == '\n') {
-                objs.add(type.produce(builder.toString()));
-                builder.setLength(0);
-            } else builder.append((char)c);
-        }
-        
-        pipe.close();
-
-        return objs;        
+        //Start parsing the file
+        return executor.submit(new FileParser(pipe, type));  
     }
 
     /**
@@ -126,12 +114,14 @@ public class FileTracker {
      * @param filename
      */
     private void untrackFile(String filename) {
-        if (!isFileTracked(filename)) return;
+        synchronized (this.trackedFiles) {
+            if (!isFileTracked(filename)) return;
 
-        this.trackedFiles.get(filename).close();
-        this.trackedFiles.remove(filename);
-
-        logger.info("File '{}' untracked", filename);
+            this.trackedFiles.get(filename).close();
+            this.trackedFiles.remove(filename);
+    
+            logger.info("File '{}' untracked", filename);
+        }
     }
 
     /**
@@ -140,12 +130,13 @@ public class FileTracker {
      * @return
      */
     private boolean isFileTracked(String filename) {
-
-        if (!trackedFiles.containsKey(filename)) {
-            logger.error("File '{}' not being tracked");
-            return false;
-        }
-
-        return true;
+        synchronized(this.trackedFiles) {
+            if (!trackedFiles.containsKey(filename)) {
+                logger.error("File '{}' not being tracked");
+                return false;
+            }
+    
+            return true;
+        }        
     }
 }

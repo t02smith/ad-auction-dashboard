@@ -60,4 +60,12 @@ public class Calculator {
             runCalculation(campaign, metric, MetricFunction.OVER_TIME));
     }
 
+    /**
+     * Stops all currently running calculations
+     */
+    public void close() {
+        logger.info("Shutting down Calculator");
+        this.executor.shutdown();
+    }
+
 }

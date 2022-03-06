@@ -3,6 +3,8 @@ package ad.auction.dashboard.model.Campaigns;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,9 +96,21 @@ public class CampaignManager {
         }
 
         logger.info("Reading data for campaing '{}'", campaign);
-        c.impressions = (List<Impression>)model.queryFileTracker(FileTrackerQuery.READ, c.impressionPath).get();
-        c.clicks = (List<Click>)model.queryFileTracker(FileTrackerQuery.READ, c.clickPath).get();
-        c.server = (List<Server>)model.queryFileTracker(FileTrackerQuery.READ, c.serverPath).get();
+        var impressions = (Future<List<Impression>>)model.queryFileTracker(FileTrackerQuery.READ, c.impressionPath).get();
+        var clicks = (Future<List<Click>>)model.queryFileTracker(FileTrackerQuery.READ, c.clickPath).get();
+        var server = (Future<List<Server>>)model.queryFileTracker(FileTrackerQuery.READ, c.serverPath).get();
+
+        while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {}
+
+        try {
+            c.impressions = impressions.get();
+            c.clicks = clicks.get();
+            c.server = server.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error("Error reading campaign '{}'", c.name());
+        }
+        
+
         c.dataLoaded = true;
 
     }

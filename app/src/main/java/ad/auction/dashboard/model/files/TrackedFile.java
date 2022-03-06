@@ -46,7 +46,7 @@ public class TrackedFile implements Runnable {
             logger.error(e.getMessage());
         }
 
-        return FileType.OTHER;
+        return null;
         
     }
 
@@ -60,7 +60,7 @@ public class TrackedFile implements Runnable {
         
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
-            if (this.type != FileType.OTHER) reader.readLine();
+            if (this.type != null) reader.readLine();
 
             byte[] newline = "\n".getBytes();
 
