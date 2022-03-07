@@ -26,7 +26,7 @@ public class Calculation implements Callable<Object> {
      */
     public Calculation(Function<Campaign, Object> calculation, Campaign c) {
         this.calculation = calculation;
-        this.campaign = c;
+        this.campaign = c;       
     }
 
     @Override

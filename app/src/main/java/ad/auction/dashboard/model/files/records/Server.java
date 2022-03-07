@@ -5,10 +5,12 @@ import java.time.temporal.ChronoUnit;
 
 import ad.auction.dashboard.model.Utility;
 
-public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion) {
+public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, int pagesViewed, boolean conversion)
+        implements SharedFields {
 
     /**
      * produce a new server
+     * 
      * @param line one line in the file
      * @return constructed server
      */
@@ -16,11 +18,11 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
         String[] parts = line.split(",");
 
         return new Server(
-            Utility.parseDate(parts[0]),    //Date
-            Long.parseLong(parts[1]),       //ID
-            parts[2].equals("n/a") ? LocalDateTime.MAX:Utility.parseDate(parts[2]),    //Exit date
-            Integer.parseInt(parts[3]),     //Pages viewed
-            parts[4].equals("Yes")          //Conversion
+                Utility.parseDate(parts[0]), // Date
+                Long.parseLong(parts[1]), // ID
+                parts[2].equals("n/a") ? LocalDateTime.MAX : Utility.parseDate(parts[2]), // Exit date
+                Integer.parseInt(parts[3]), // Pages viewed
+                parts[4].equals("Yes") // Conversion
         );
     }
 

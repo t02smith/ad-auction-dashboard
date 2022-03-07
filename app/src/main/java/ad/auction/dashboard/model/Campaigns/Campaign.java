@@ -1,5 +1,6 @@
 package ad.auction.dashboard.model.Campaigns;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -12,8 +13,8 @@ import ad.auction.dashboard.model.files.records.Server;
  */
 public class Campaign {
 
-    //Lists of values read from file
-    //From a list we can generate any number of streams
+    // Lists of values read from file
+    // From a list we can generate any number of streams
 
     private final String name;
     boolean dataLoaded = false;
@@ -34,19 +35,34 @@ public class Campaign {
         this.serverPath = serverPath;
     }
 
-
     // GETTERS
 
     public Stream<Impression> impressions() {
         return this.impressions.stream();
     }
 
-    public Stream<Click> clicks() {
-        return this.clicks.stream();
+    public Stream<Impression> impressions(LocalDateTime from, LocalDateTime to) {
+        return this.impressions.stream()
+                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
     }
 
     public Stream<Server> server() {
         return this.server.stream();
+    }
+
+    public Stream<Server> server(LocalDateTime from, LocalDateTime to) {
+        return this.server.stream()
+                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
+    }
+
+    public Stream<Click> clicks() {
+        return this.clicks.stream();
+    }
+
+    public Stream<Click> clicks(LocalDateTime from, LocalDateTime to) {
+        return this.clicks.stream()
+                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
+
     }
 
     public String name() {
@@ -57,6 +73,3 @@ public class Campaign {
         return this.dataLoaded;
     }
 }
-
-
-

@@ -1,9 +1,12 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.files.FileType;
+import javafx.geometry.Point2D;
 
 public class UniquesCount implements Metric {
 
@@ -32,5 +35,11 @@ public class UniquesCount implements Metric {
             default:
                 throw new IllegalArgumentException("Unrecognised file type");
         }
+    }
+
+    @Override
+    public Function<Campaign, HashSet<Point2D>> overTime(ChronoUnit timeResolution) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

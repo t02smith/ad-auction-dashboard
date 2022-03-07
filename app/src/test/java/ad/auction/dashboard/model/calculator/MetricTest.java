@@ -2,6 +2,9 @@ package ad.auction.dashboard.model.calculator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -13,6 +16,7 @@ import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
 import ad.auction.dashboard.model.files.FileType;
+import javafx.geometry.Point2D;
 
 
 @Tag("model/calculator")
@@ -28,12 +32,20 @@ public class MetricTest {
         model.queryCampaignManager(
             CMQuery.NEW_CAMPAIGN, 
             "campaign 1",
-            TestUtility.getResourceFile("/data/2-week/impression_log.csv"),
+            TestUtility.getResourceFile("/data/2-week/impress.csv"),
             TestUtility.getResourceFile("/data/2-week/click_log.csv"),
             TestUtility.getResourceFile("/data/2-week/server_log.csv"));
         
         model.queryCampaignManager(CMQuery.LOAD_CAMPAIGN, "campaign 1");
         c = model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
+
+    }
+
+    @Test
+    public void overTimeTest() {
+        HashSet<Point2D> actual = Metrics.IMPRESSION_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
+
+        System.out.println(actual.size());
 
     }
 

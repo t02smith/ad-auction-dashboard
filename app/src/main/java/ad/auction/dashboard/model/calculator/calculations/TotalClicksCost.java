@@ -1,8 +1,11 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Campaigns.Campaign;
+import javafx.geometry.Point2D;
 
 public class TotalClicksCost implements Metric {
 
@@ -11,5 +14,12 @@ public class TotalClicksCost implements Metric {
         return c -> (double) Math.round(1000 * c.clicks()
                 .parallel()
                 .reduce(0.0, (acc, elem) -> acc + elem.clickCost(), Double::sum)) / 1000;
+    }
+
+
+    @Override
+    public Function<Campaign, HashSet<Point2D>> overTime(ChronoUnit timeResolution) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

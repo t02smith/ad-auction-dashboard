@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import ad.auction.dashboard.model.Utility;
 
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income, Context context,
-        float impressionCost) {
+        float impressionCost) implements SharedFields {
 
     /**
      * produce a new impression
