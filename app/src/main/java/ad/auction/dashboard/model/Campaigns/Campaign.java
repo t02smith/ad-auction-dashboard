@@ -1,6 +1,5 @@
 package ad.auction.dashboard.model.Campaigns;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,31 +40,12 @@ public class Campaign {
         return this.impressions.stream();
     }
 
-    public Stream<Impression> impressions(LocalDateTime from, LocalDateTime to) {
-        return this.impressions.stream()
-                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
-                .takeWhile(i -> i.dateTime().isBefore(to));
-    }
-
     public Stream<Server> server() {
         return this.server.stream();
     }
 
-    public Stream<Server> server(LocalDateTime from, LocalDateTime to) {
-        return this.server.stream()
-                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
-                .takeWhile(i -> i.dateTime().isBefore(to));
-    }
-
     public Stream<Click> clicks() {
         return this.clicks.stream();
-    }
-
-    public Stream<Click> clicks(LocalDateTime from, LocalDateTime to) {
-        return this.clicks.stream()
-                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
-                .takeWhile(i -> i.dateTime().isBefore(to));
-
     }
 
     public String name() {

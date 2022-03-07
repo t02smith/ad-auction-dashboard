@@ -1,7 +1,7 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -22,7 +22,7 @@ public class BounceRate implements Metric {
     }
 
     @Override
-    public Function<Campaign, HashSet<Point2D>> overTime(ChronoUnit timeResolution) {
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -3,7 +3,7 @@ package ad.auction.dashboard.model.calculator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -43,10 +43,10 @@ public class MetricTest {
 
     @Test
     public void overTimeTest() {
-        HashSet<Point2D> actual = Metrics.IMPRESSION_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
+        ArrayList<Point2D> actual = Metrics.CONVERSIONS_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
 
         var it = actual.iterator();
-        for (int i = 0; i < 10; i++) {
+        while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
 

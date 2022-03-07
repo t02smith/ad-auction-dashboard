@@ -1,7 +1,7 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -22,8 +22,19 @@ public class CTR implements Metric {
     }
 
     @Override
-    public Function<Campaign, HashSet<Point2D>> overTime(ChronoUnit timeResolution) {
-        // TODO Auto-generated method stub
-        return null;
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+        return c -> {           
+            ArrayList<Point2D> points = new ArrayList<>();
+
+            ArrayList<Point2D> impressionPts = Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c);
+            ArrayList<Point2D> clickPts = Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c);
+            
+            for (int i=0; i<impressionPts.size(); i++) {
+                var clk = clickPts.get(i);
+                points.add(new Point2D(clk.getX(), clk.dotProduct(0, (double)1/impressionPts.get(i).getY())));
+            }
+
+            return points;
+        };
     }
 }

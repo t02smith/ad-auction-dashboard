@@ -2,7 +2,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Campaigns.Campaign;
@@ -28,7 +28,7 @@ public interface Metric {
      * (time, metric)
      * @return function for graph points
      */
-    public Function<Campaign, HashSet<Point2D>> overTime(ChronoUnit timeResolution);
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
 
     public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time) {
         switch (resolution) {
