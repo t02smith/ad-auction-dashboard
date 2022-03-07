@@ -32,7 +32,7 @@ public class MetricTest {
         model.queryCampaignManager(
             CMQuery.NEW_CAMPAIGN, 
             "campaign 1",
-            TestUtility.getResourceFile("/data/2-week/impress.csv"),
+            TestUtility.getResourceFile("/data/2-week/impression_log.csv"),
             TestUtility.getResourceFile("/data/2-week/click_log.csv"),
             TestUtility.getResourceFile("/data/2-week/server_log.csv"));
         
@@ -45,7 +45,10 @@ public class MetricTest {
     public void overTimeTest() {
         HashSet<Point2D> actual = Metrics.IMPRESSION_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
 
-        System.out.println(actual.size());
+        var it = actual.iterator();
+        for (int i = 0; i < 10; i++) {
+            System.out.println(it.next().toString());
+        }
 
     }
 

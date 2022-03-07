@@ -43,7 +43,8 @@ public class Campaign {
 
     public Stream<Impression> impressions(LocalDateTime from, LocalDateTime to) {
         return this.impressions.stream()
-                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
+                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
+                .takeWhile(i -> i.dateTime().isBefore(to));
     }
 
     public Stream<Server> server() {
@@ -52,7 +53,8 @@ public class Campaign {
 
     public Stream<Server> server(LocalDateTime from, LocalDateTime to) {
         return this.server.stream()
-                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
+                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
+                .takeWhile(i -> i.dateTime().isBefore(to));
     }
 
     public Stream<Click> clicks() {
@@ -61,7 +63,8 @@ public class Campaign {
 
     public Stream<Click> clicks(LocalDateTime from, LocalDateTime to) {
         return this.clicks.stream()
-                .filter(i -> (i.dateTime().isAfter(from) || i.dateTime().isEqual(from)) && i.dateTime().isBefore(to));
+                .dropWhile(i -> i.dateTime().isBefore(from) || i.dateTime().isEqual(from))
+                .takeWhile(i -> i.dateTime().isBefore(to));
 
     }
 
