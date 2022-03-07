@@ -35,8 +35,8 @@ public class MetricTest {
             TestUtility.getResourceFile("/data/2-week/click_log.csv"),
             TestUtility.getResourceFile("/data/2-week/server_log.csv"));
         
-        model.queryCampaignManager(CMQuery.LOAD_CAMPAIGN, "campaign 1");
-        c = model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
+        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "campaign 1");
+        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
 
     }
 

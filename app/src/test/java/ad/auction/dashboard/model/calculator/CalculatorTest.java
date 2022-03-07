@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.TestUtility;
 import ad.auction.dashboard.model.Model;
-import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 
@@ -22,8 +21,6 @@ import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 public class CalculatorTest {
 
     private static Model model = new Model();
-    private static Campaign c;
-
 
 
     @BeforeAll
@@ -35,13 +32,12 @@ public class CalculatorTest {
             TestUtility.getResourceFile("/data/2-week/click_log.csv"),
             TestUtility.getResourceFile("/data/2-week/server_log.csv"));
         
-        model.queryCampaignManager(CMQuery.LOAD_CAMPAIGN, "campaign 1");
-        c = model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
+        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "campaign 1");
     }
     
     @Test
     public void singleCalculationTest() throws Exception {
-        Future<Object> res = model.runCalculation(c, Metrics.CPA, MetricFunction.OVERALL);
+        Future<Object> res = model.runCalculation(Metrics.CPA, MetricFunction.OVERALL);
 
         while (!res.isDone()) {}
 
@@ -54,7 +50,7 @@ public class CalculatorTest {
         HashSet<Future<Object>> correct = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
-            calcs.add(model.runCalculation(c, Metrics.CPA, MetricFunction.OVERALL));
+            calcs.add(model.runCalculation(Metrics.CPA, MetricFunction.OVERALL));
         }
 
         while (correct.size() > 0) {

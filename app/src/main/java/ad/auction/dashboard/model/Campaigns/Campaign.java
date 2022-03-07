@@ -27,6 +27,9 @@ public class Campaign {
     final String serverPath;
     List<Server> server;
 
+    //Stores info to display in the UI
+    private record CampaignData(String name) {}
+
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
         this.name = name;
         this.impressionPath = impressionPath;
@@ -34,7 +37,19 @@ public class Campaign {
         this.serverPath = serverPath;
     }
 
+    public void flushData() {
+        this.impressions.clear();
+        this.clicks.clear();
+        this.server.clear();
+    }
+
+    
+
     // GETTERS
+
+    public CampaignData getData() {
+        return new CampaignData(this.name);
+    }
 
     public Stream<Impression> impressions() {
         return this.impressions.stream();

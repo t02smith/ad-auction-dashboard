@@ -24,6 +24,10 @@ public class Model {
     //Manages different user campaigns
     private final CampaignManager campaignManager = new CampaignManager(this);
 
+    public Model() {
+        //read from file :/
+    }
+
     /**
      * Allows the controller to prompt the model to perform file actions
      * @param query The chosen command
@@ -34,20 +38,10 @@ public class Model {
         return this.fileTracker.query(query, filename);
     }
 
-    /**
-     * Run a given calculation
-     * @param c
-     * @param metric
-     * @param func
-     * @return
-     */
-    public Future<Object> runCalculation(Campaign c, Metrics metric, MetricFunction func) {
-        return calculator.runCalculation(c, metric, func);
-    }
 
-    public Future<Object> runCalculation(String campaignName, Metrics metric, MetricFunction func) {
-        var campaign = queryCampaignManager(CMQuery.GET_CAMPAIGN, campaignName).get();
-        return this.runCalculation(campaign, metric, func);
+    public Future<Object> runCalculation(Metrics metric, MetricFunction func) {
+        var campaign = (Campaign)queryCampaignManager(CMQuery.GET_CAMPAIGN).get();
+        return this.calculator.runCalculation(campaign, metric, func);
     }
 
     /**
@@ -56,7 +50,7 @@ public class Model {
      * @param args
      * @return
      */
-    public Optional<Campaign> queryCampaignManager(CMQuery query, String... args) {
+    public Optional<Object> queryCampaignManager(CMQuery query, String... args) {
         return campaignManager.query(query, args);
     }
     
