@@ -31,7 +31,7 @@ public class CTR implements Metric {
             
             for (int i=0; i<impressionPts.size(); i++) {
                 var clk = clickPts.get(i);
-                points.add(new Point2D(clk.getX(), clk.dotProduct(0, (double)1/impressionPts.get(i).getY())));
+                points.add(new Point2D(clk.getX(), (double)clk.getY()/impressionPts.get(i).getY()));
             }
 
             return points;

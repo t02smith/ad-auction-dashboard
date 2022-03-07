@@ -22,8 +22,19 @@ public class BounceRate implements Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution) {
-        // TODO Auto-generated method stub
-        return null;
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+        return c -> {
+            ArrayList<Point2D> points = new ArrayList<>();
+
+            ArrayList<Point2D> bouncesCount = Metrics.BOUNCES_COUNT.getMetric().overTime(resolution).apply(c);
+            ArrayList<Point2D> clickPts = Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c);
+            
+            for (int i=0; i<bouncesCount.size(); i++) {
+                var bounceP = bouncesCount.get(i);
+                points.add(new Point2D(bounceP.getX(), bounceP.dotProduct(0, (double)1/clickPts.get(i).getY())));
+            }
+
+            return points;
+        };
     }
 }

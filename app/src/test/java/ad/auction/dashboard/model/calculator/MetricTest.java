@@ -15,7 +15,6 @@ import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
-import ad.auction.dashboard.model.files.FileType;
 import javafx.geometry.Point2D;
 
 
@@ -43,7 +42,7 @@ public class MetricTest {
 
     @Test
     public void overTimeTest() {
-        ArrayList<Point2D> actual = Metrics.CONVERSIONS_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
+        ArrayList<Point2D> actual = Metrics.UNIQUES_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
 
         var it = actual.iterator();
         while (it.hasNext()) {
@@ -73,8 +72,8 @@ public class MetricTest {
     @DisplayName("Unqiues count")
     @Deprecated
     public void uniquesCountTest() {
-        long result = (long) ((UniquesCount) Metrics.UNIQUES_COUNT.getMetric()).overall(FileType.IMPRESSION).apply(c);
-        assertEquals(439832, result);
+        long result = (long) ((UniquesCount) Metrics.UNIQUES_COUNT.getMetric()).overall().apply(c);
+        assertEquals(23806, result);
     }
 
     @Test

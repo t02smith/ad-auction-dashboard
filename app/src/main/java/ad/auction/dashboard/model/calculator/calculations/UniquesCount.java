@@ -1,45 +1,48 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Campaigns.Campaign;
-import ad.auction.dashboard.model.files.FileType;
 import javafx.geometry.Point2D;
 
 public class UniquesCount implements Metric {
 
     @Override
     public Function<Campaign, Object> overall() {
-        throw new IllegalArgumentException("You must provde a filetype");
-    }
-
-    public Function<Campaign, Object> overall(FileType type) {
-        switch (type) {
-            case IMPRESSION:
-                return c -> c.impressions()
-                        .map(elem -> elem.ID())
-                        .distinct()
-                        .count();
-            case SERVER:
-                return c -> c.server()
-                        .map(elem -> elem.ID())
-                        .distinct()
-                        .count();
-            case CLICK:
-                return c -> c.clicks()
-                        .map(elem -> elem.ID())
-                        .distinct()
-                        .count();
-            default:
-                throw new IllegalArgumentException("Unrecognised file type");
-        }
+        return c -> c.clicks()
+                     .map(svr -> svr.ID())
+                     .distinct()
+                     .count();
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution) {
-        // TODO Auto-generated method stub
-        return null;
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+        return c -> {
+            ArrayList<Point2D> points = new ArrayList<>();
+
+            LocalDateTime[] end = new LocalDateTime[] {
+                Metric.incrementDate(resolution, c.impressions().findFirst().get().dateTime())};
+            long[] counter = new long[] {0};
+
+            HashSet<Long> seenIDs = new HashSet<>();
+            c.clicks().forEach(clk -> {
+                if (!clk.dateTime().isBefore(end[0])) {
+                    points.add(new Point2D(Metric.getXCoordinate(resolution, clk.dateTime()),counter[0]));
+                    end[0] = Metric.incrementDate(resolution, end[0]);
+                }
+
+                if (!seenIDs.contains(clk.ID())) {
+                    counter[0] += 1;
+                    seenIDs.add(clk.ID());
+                }
+            });
+
+            points.add(new Point2D(Metric.getXCoordinate(resolution, end[0]), counter[0]));
+            return points;
+        };
     }
 }

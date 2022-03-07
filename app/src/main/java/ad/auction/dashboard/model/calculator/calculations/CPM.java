@@ -22,8 +22,19 @@ public class CPM implements Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution) {
-        // TODO Auto-generated method stub
-        return null;
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+        return c -> {
+            ArrayList<Point2D> points = new ArrayList<>();
+
+            ArrayList<Point2D> totalCost = Metrics.TOTAL_COST.getMetric().overTime(resolution).apply(c);
+            ArrayList<Point2D> impressionCount = Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c);
+            
+            for (int i=0; i<totalCost.size(); i++) {
+                var tcst = totalCost.get(i);
+                points.add(new Point2D(tcst.getX(), (double)tcst.getY()/(impressionCount.get(i).getY()/1000)));
+            }
+
+            return points;
+        };
     }
 }
