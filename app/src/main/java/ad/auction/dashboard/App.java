@@ -3,6 +3,7 @@ package ad.auction.dashboard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.ui.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -17,6 +18,8 @@ public class App extends Application {
     private static final int WIDTH = 1200;
     
     private static App instance;
+
+    private final Controller controller = new Controller();
 
     @Override
     public void start(Stage stage) {

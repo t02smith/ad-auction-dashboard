@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import ad.auction.dashboard.TestUtility;
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
@@ -28,9 +27,9 @@ public class CalculatorTest {
         model.queryCampaignManager(
             CMQuery.NEW_CAMPAIGN, 
             "campaign 1",
-            TestUtility.getResourceFile("/data/2-week/impression_log.csv"),
-            TestUtility.getResourceFile("/data/2-week/click_log.csv"),
-            TestUtility.getResourceFile("/data/2-week/server_log.csv"));
+            "./data/impression_log.csv",
+            "./data/click_log.csv",
+            "./data/server_log.csv");
         
         model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "campaign 1");
     }

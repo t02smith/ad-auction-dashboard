@@ -24,10 +24,6 @@ public class Model {
     //Manages different user campaigns
     private final CampaignManager campaignManager = new CampaignManager(this);
 
-    public Model() {
-        //read from file :/
-    }
-
     /**
      * Allows the controller to prompt the model to perform file actions
      * @param query The chosen command

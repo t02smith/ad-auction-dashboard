@@ -16,9 +16,11 @@ import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
 
 /**
- * TODO store campaigns and load from file
+ * TODO store campaigns
  */
 public class CampaignManager {
+
+    private static final String CAMPAIGNS_LOCATION = "./data/campaigns.xml";
 
     private static final Logger logger = LogManager.getLogger(CampaignManager.class.getSimpleName());
     private final Model model;
@@ -27,9 +29,18 @@ public class CampaignManager {
     private final HashMap<String, Campaign> campaigns = new HashMap<>();
 
     private Campaign currentCampaign;
+    private CampaignHandler handler = new CampaignHandler();
 
     public CampaignManager(Model model) {
         this.model = model;
+
+        this.handler.parse(CAMPAIGNS_LOCATION);
+        this.handler.getCampaigns().forEach(c -> {
+            campaigns.put(c.name(), c);
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.impressionPath);
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.serverPath);
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.clickPath);
+        });
     }
 
     //Campaign manager actions

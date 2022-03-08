@@ -28,15 +28,15 @@ public class MetricTest {
     @BeforeAll
     public static void setup() {
 
-        model.queryCampaignManager(
-            CMQuery.NEW_CAMPAIGN, 
-            "campaign 1",
-            TestUtility.getResourceFile("/data/2-week/impression_log.csv"),
-            TestUtility.getResourceFile("/data/2-week/click_log.csv"),
-            TestUtility.getResourceFile("/data/2-week/server_log.csv"));
+        // model.queryCampaignManager(
+        //     CMQuery.NEW_CAMPAIGN, 
+        //     "campaign 1",
+        //     "./data/impression_log.csv",
+        //     "./data/click_log.csv",
+        //     "./data/server_log.csv");
         
-        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "campaign 1");
-        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "campaign 1").get();
+        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "Campaign 1");
+        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "Campaign 1").get();
 
     }
 
