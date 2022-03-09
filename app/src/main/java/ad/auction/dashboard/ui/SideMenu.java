@@ -24,7 +24,8 @@ public class SideMenu extends ScrollPane {
 		//Remove the scrollbar for the side menu
 		this.setHbarPolicy(ScrollBarPolicy.NEVER);
 		this.setVbarPolicy(ScrollBarPolicy.NEVER);
-		
+
+		// create side menu of the advertPage
 		createSideMenu();
 	}
 	

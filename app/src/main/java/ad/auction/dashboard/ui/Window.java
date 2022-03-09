@@ -21,16 +21,19 @@ public class Window {
 	private final Stage stage;
 	private Scene scene;
 	private BasePage currentPage;
-	
+
+	// initialize with stage height and width
 	public Window(Stage stage,int height, int width) {
 		this.stage = stage;
 		
 		this.height = height;
 		this.width = width;
-		
+
+		// setup stage
 		setupStage();
+		// setup an empty pane as default scene
 		setupDefaultWindow();
-		
+		// show menu page as the first page
 		startMenu();
 	}
 	
@@ -75,9 +78,13 @@ public class Window {
 	 * @param newPage - the new page to be loaded
 	 */
 	private void loadPage(BasePage newPage) {
+		// build the page ui
 		newPage.build();
+		// set current page
         currentPage = newPage;
+		// create scene
         scene = newPage.createScene();
+		// show scene of the new page
         stage.setScene(scene);
 	}
 	

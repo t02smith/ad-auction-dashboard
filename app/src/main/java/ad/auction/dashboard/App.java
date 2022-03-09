@@ -8,14 +8,15 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class App extends Application {
-	
+	// stage of the app
 	private Stage stage;
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
     
     //Will be changed
     private static final int HEIGHT = 600;
     private static final int WIDTH = 1200;
-    
+
+    // the singleton instance variable of app
     private static App instance;
 
     @Override
