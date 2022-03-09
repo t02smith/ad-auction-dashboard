@@ -1,4 +1,4 @@
-package ad.auction.dashboard.view.ui.pages;
+package ad.auction.dashboard.view.pages;
 
 import ad.auction.dashboard.view.ui.Window;
 import javafx.scene.Scene;

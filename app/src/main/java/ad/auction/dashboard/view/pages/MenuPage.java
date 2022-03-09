@@ -1,4 +1,4 @@
-package ad.auction.dashboard.view.ui.pages;
+package ad.auction.dashboard.view.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
