@@ -1,4 +1,4 @@
-package ad.auction.dashboard.Graph_Models.Graphs;
+package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 public class ChartModel {
 

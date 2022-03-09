@@ -38,7 +38,7 @@ public abstract class BasePage {
     public Scene createScene() {
         var previous = window.getScene();
         Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
-        //scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
         this.scene = scene;
         
         return scene;

@@ -1,9 +1,11 @@
 package ad.auction.dashboard.view.ui;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.pages.AdvertPage;
+import ad.auction.dashboard.view.pages.CampaignPage;
 import ad.auction.dashboard.view.pages.BasePage;
 import ad.auction.dashboard.view.pages.MenuPage;
+import ad.auction.dashboard.view.pages.UploadPage;
+
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,23 +19,26 @@ public class Window {
 
 	private final int height;
 	private final int width;
-	
+
 	private final Stage stage;
 	private Scene scene;
 	private BasePage currentPage;
-	
-	public Window(Stage stage,int height, int width) {
+
+	// initialize with stage height and width
+	public Window(Stage stage, int height, int width) {
 		this.stage = stage;
-		
+
 		this.height = height;
 		this.width = width;
-		
+
+		// setup stage
 		setupStage();
+		// setup an empty pane as default scene
 		setupDefaultWindow();
-		
+		// show menu page as the first page
 		startMenu();
 	}
-	
+
 	/**
 	 * Setup the basics of the stage - title, size and behaviour
 	 */
@@ -41,50 +46,72 @@ public class Window {
 		stage.setTitle("Ad Auction Dashboard");
 		stage.setMinWidth(width);
 		stage.setMinHeight(height);
-        stage.setOnCloseRequest(ev -> App.getInstance().shutdown());
+		stage.setOnCloseRequest(ev -> App.getInstance().shutdown());
 	}
-	
+
 	/**
 	 * Default scene
 	 */
 	private void setupDefaultWindow() {
-		this.scene = new Scene(new Pane(),width,height, Color.BLUE);
+		this.scene = new Scene(new Pane(), width, height, Color.BLUE);
 		stage.setScene(this.scene);
 	}
-	
+
 	/**
 	 * Loads the main menu
 	 */
-	public void startMenu() { loadPage(new MenuPage(this)); }
-	
+	public void startMenu() {
+		loadPage(new MenuPage(this));
+	}
+
 	/**
 	 * Loads an advertisement page with a given graph
+	 * 
 	 * @param graph - graph to be plotted
 	 * 
-	 * TODO: Func take actual graph to display
+	 *              TODO: Func take actual graph to display
 	 */
-	public void openAdvertPage(int graph) { loadPage(new AdvertPage(this, graph)); }
-	
+	public void openCampaignPage(String campaign) {
+		loadPage(new CampaignPage(this, campaign));
+	}
+
 	/**
 	 * Updates the advertisement page graph according to the desired plotting
 	 */
-	public void updateAdvertPage(int category) { currentPage.update(category); }
-	
+	public void updateAdvertPage(int category) {
+		currentPage.update(category);
+	}
+
+	public void openUploadPage() {
+		loadPage(new UploadPage(this));
+	}
+
 	/**
 	 * Load a given page
+	 * 
 	 * @param newPage - the new page to be loaded
 	 */
 	private void loadPage(BasePage newPage) {
+		// build the page ui
 		newPage.build();
-        currentPage = newPage;
-        scene = newPage.createScene();
-        stage.setScene(scene);
+		// set current page
+		currentPage = newPage;
+		// create scene
+		scene = newPage.createScene();
+		// show scene of the new page
+		stage.setScene(scene);
 	}
-	
-	public Scene getScene() { return this.scene; }
-	
-	public double getWidth() { return this.width; }
-	
-	public double getHeight() { return this.height; }
-	
+
+	public Scene getScene() {
+		return this.scene;
+	}
+
+	public double getWidth() {
+		return this.width;
+	}
+
+	public double getHeight() {
+		return this.height;
+	}
+
 }
