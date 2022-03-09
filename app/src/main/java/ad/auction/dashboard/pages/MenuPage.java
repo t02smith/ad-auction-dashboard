@@ -1,11 +1,8 @@
 package ad.auction.dashboard.pages;
 
-
-import ad.auction.dashboard.storage.CSVFolderDatabase;
-import javafx.stage.DirectoryChooser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import ad.auction.dashboard.App;
+import ad.auction.dashboard.model.Campaigns.Campaign;
+import ad.auction.dashboard.model.Campaigns.CampaignManager;
 import ad.auction.dashboard.ui.Window;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -16,7 +13,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import java.io.File;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+
 
 /**
  * Main Menu page that holds the UI elements for its controls
@@ -26,14 +28,16 @@ import java.io.File;
 public class MenuPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(MenuPage.class.getSimpleName());
-    // create a database when menu page created
-    private CSVFolderDatabase database = new CSVFolderDatabase();
     // the flow pane contains advertise buttons
     private FlowPane flowPane = null;
+    private CampaignManager campaignManager = App.getInstance().getCampaignManager();
+
+
 
     public MenuPage(Window window) {
         super(window);
         logger.info("Creating Menu Page");
+
     }
 
     /**
@@ -73,20 +77,7 @@ public class MenuPage extends BasePage {
         sideMenu.getChildren().addAll(rangeDateButton, rangeSegmentButton, uploadButton);
         // click event of upload button
         uploadButton.setOnAction(event -> {
-            // choose a folder from user
-            DirectoryChooser fileChooser = new DirectoryChooser();
-            File file = fileChooser.showDialog(null);
-            // if a folder selected
-            if (file != null) {
-                // get the folder path
-                String folderPath = file.getAbsolutePath();
-                // add the folder path to database
-                database.addFolder(folderPath);
-                // save the database
-                database.saveToFile();
-                // update the flow pane of advertise buttons
-                updateAdvertiseList();
-            }
+            window.openUploadPage();
 
         });
 
@@ -133,10 +124,11 @@ public class MenuPage extends BasePage {
     private void updateAdvertiseList() {
         int index = 0;
         flowPane.getChildren().clear();
-        for (String folderPath : database.getFolders()) {
-            //String folderName = FileUtils.toFileName(folderPath);
-            // create each button from 1 to n
-            var advertButton = new Button("Advertisement " + (index + 1));
+
+        List<Campaign> campaignList = campaignManager.getAllCampaign();
+        for (Campaign campaign : campaignList) {
+            String name = campaign.name();
+            var advertButton = new Button(name);
             advertButton.getStyleClass().add("advertButton");
             int finalIndex = index;
             // set click event handler
