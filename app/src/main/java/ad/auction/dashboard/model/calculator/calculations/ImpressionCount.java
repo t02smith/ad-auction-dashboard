@@ -9,8 +9,11 @@ import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
 
-public class ImpressionCount implements Metric {
+public class ImpressionCount extends Metric {
     
+    public ImpressionCount() {
+        super("Number of Impressions");
+    }
     
     @Override
     public Function<Campaign, Object> overall() {

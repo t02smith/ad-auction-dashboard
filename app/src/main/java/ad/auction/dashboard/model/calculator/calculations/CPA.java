@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class CPA implements Metric {
+public class CPA extends Metric {
+
+    public CPA() {
+        super("Cost per Acquisition");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

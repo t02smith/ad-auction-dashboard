@@ -31,7 +31,7 @@ public class MetricSelection extends ScrollPane {
 
 
         Arrays.asList(Metrics.values()).forEach(m -> {
-            var btn = new Label(m.toString().replace("_", " ").toLowerCase());
+            var btn = new Label(m.getMetric().displayName());
             btn.setMaxWidth(Double.MAX_VALUE);
             btn.setOnMouseClicked(e -> {
                 loadMetric.accept(m);

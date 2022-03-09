@@ -9,7 +9,11 @@ import java.util.function.Function;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class UniquesCount implements Metric {
+public class UniquesCount extends Metric {
+
+    public UniquesCount() {
+        super("Number of Uniques");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

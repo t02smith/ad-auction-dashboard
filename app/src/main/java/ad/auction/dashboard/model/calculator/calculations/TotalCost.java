@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class TotalCost implements Metric {
+public class TotalCost extends Metric {
+
+    public TotalCost() {
+        super("Total Cost");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

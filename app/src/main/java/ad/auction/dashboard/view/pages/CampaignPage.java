@@ -47,7 +47,7 @@ public class CampaignPage extends BasePage {
     public CampaignPage(Window window, String campaignName) {
         super(window);
         this.campaignName = campaignName;
-        this.graph = new LineChartModel(campaignName, "time", "");
+        this.graph = new LineChartModel(campaignName, "Time (days)", "");
 
     }
 
@@ -108,6 +108,8 @@ public class CampaignPage extends BasePage {
 
             try {
                 this.graph.setData(data.get());
+                this.graph.setTitleName(m.getMetric().displayName());
+                this.graph.setYName(m.getMetric().displayName());
                 this.screen.setCenter(this.graph.getLineChart());
                 
             } catch (InterruptedException | ExecutionException e) {

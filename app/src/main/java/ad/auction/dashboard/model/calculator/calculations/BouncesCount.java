@@ -8,9 +8,13 @@ import java.util.function.Function;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class BouncesCount implements Metric {
+public class BouncesCount extends Metric {
 
     public static final long BOUNCE_MAX_TIME_SEC = 60;
+
+    public BouncesCount() {
+        super("Number of Bounces");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

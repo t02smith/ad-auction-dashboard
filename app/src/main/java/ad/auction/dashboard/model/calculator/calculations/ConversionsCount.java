@@ -8,7 +8,11 @@ import java.util.function.Function;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class ConversionsCount implements Metric {
+public class ConversionsCount extends Metric {
+
+    public ConversionsCount() {
+        super("Number of Conversions");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

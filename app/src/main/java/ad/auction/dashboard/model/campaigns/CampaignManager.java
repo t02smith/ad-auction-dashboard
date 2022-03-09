@@ -72,7 +72,6 @@ public class CampaignManager {
                     throw new IllegalArgumentException("Incorrect number of arguments for new campaign");
 
                 this.newCampaign(args[0], args[1], args[2], args[3]);
-                this.openCampaign(args[0]);
                 return Optional.empty();
             case GET_CAMPAIGN:
                 return Optional.of(this.currentCampaign);
@@ -80,7 +79,7 @@ public class CampaignManager {
                 return Optional.of(this.currentCampaign.getData());
             case GET_CAMPAIGNS:
                 return Optional.of(this.campaigns.values().stream()
-                        .map(c -> c.getData())
+                        .map(c -> {System.out.println(c.name()); return c.getData();})
                         .toList());
         }
 
@@ -91,6 +90,7 @@ public class CampaignManager {
      * Generate a new campaign to track
      */
     private void newCampaign(String name, String impressionPath, String clickPath, String serverPath) {
+        
         if (campaigns.containsKey(name))
             return;
 

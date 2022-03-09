@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class BounceRate implements Metric {
+public class BounceRate extends Metric {
+
+    public BounceRate() {
+        super("Bounce Rate");
+    }
     
     @Override
     public Function<Campaign, Object> overall() {

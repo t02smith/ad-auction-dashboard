@@ -9,7 +9,12 @@ import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
 
-public class ClickCount implements Metric {
+public class ClickCount extends Metric {
+
+    public ClickCount() {
+        super("Number of Clicks");
+    }
+
     
     @Override
     public Function<Campaign, Object> overall() {

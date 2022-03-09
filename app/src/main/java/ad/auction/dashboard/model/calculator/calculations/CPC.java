@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class CPC implements Metric {
+public class CPC extends Metric {
+
+    public CPC() {
+        super("Cost per Click");
+    }
     
     @Override
     public Function<Campaign, Object> overall() {

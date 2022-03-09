@@ -15,20 +15,31 @@ import javafx.geometry.Point2D;
  * 
  * @author tcs1g20
  */
-public interface Metric {
+public abstract class Metric {
     
+    private final String displayName;
+
+    public Metric(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public enum MetricFunction {
+        OVERALL,
+        OVER_TIME;
+    } 
+
     /**
      * Calculate the overall metric
      * @return function for overall metric
      */
-    public Function<Campaign, Object> overall();
+    public abstract Function<Campaign, Object> overall();
 
     /**
      * Calculate a set of graph points
      * (time, metric)
      * @return function for graph points
      */
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
+    public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
 
     public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time) {
         switch (resolution) {
@@ -54,8 +65,10 @@ public interface Metric {
         }
     }
 
-    public enum MetricFunction {
-        OVERALL,
-        OVER_TIME;
-    } 
+    //GETTERS
+
+    public String displayName() {
+        return this.displayName;
+    }
+    
 }

@@ -62,5 +62,6 @@ jar {
         attributes "Main-Class": "ad.auction.dashboard.Main"
     }  
 
+    archiveBaseName = "ad-auction-dashboard"
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }

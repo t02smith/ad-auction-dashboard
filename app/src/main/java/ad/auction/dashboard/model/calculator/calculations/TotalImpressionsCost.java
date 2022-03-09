@@ -8,7 +8,11 @@ import java.util.function.Function;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class TotalImpressionsCost implements Metric {
+public class TotalImpressionsCost extends Metric {
+
+    public TotalImpressionsCost() {
+        super("Impressions Cost");
+    }
 
     @Override
     public Function<Campaign, Object> overall() {

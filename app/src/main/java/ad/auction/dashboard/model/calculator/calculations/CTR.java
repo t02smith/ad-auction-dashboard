@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class CTR implements Metric {
+public class CTR extends Metric {
+
+    public CTR() {
+        super("Click Through Rate");
+    }
     
     @Override
     public Function<Campaign, Object> overall() {

@@ -9,7 +9,11 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class CPM implements Metric {
+public class CPM extends Metric {
+
+    public CPM() {
+        super("Cost per 1000 Impressions");
+    }
     
     @Override
     public Function<Campaign, Object> overall() {
