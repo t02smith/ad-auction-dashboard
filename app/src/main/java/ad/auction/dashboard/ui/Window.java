@@ -4,6 +4,7 @@ import ad.auction.dashboard.App;
 import ad.auction.dashboard.pages.AdvertPage;
 import ad.auction.dashboard.pages.BasePage;
 import ad.auction.dashboard.pages.MenuPage;
+import ad.auction.dashboard.pages.UploadPage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -72,6 +73,10 @@ public class Window {
 	 * Updates the advertisement page graph according to the desired plotting
 	 */
 	public void updateAdvertPage(int category) { currentPage.update(category); }
+
+	public void openUploadPage() {
+		loadPage(new UploadPage(this));
+	}
 	
 	/**
 	 * Load a given page

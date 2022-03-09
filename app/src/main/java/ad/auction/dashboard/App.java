@@ -1,5 +1,7 @@
 package ad.auction.dashboard;
 
+import ad.auction.dashboard.model.Campaigns.CampaignManager;
+import ad.auction.dashboard.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,12 +13,22 @@ public class App extends Application {
 	// stage of the app
 	private Stage stage;
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
-    
+
+
+
     //Will be changed
     private static final int HEIGHT = 600;
     private static final int WIDTH = 1200;
     // the singleton instance variable of app
     private static App instance;
+
+
+    private CampaignManager manager = new CampaignManager(new Model());
+
+
+    public CampaignManager getCampaignManager() {
+        return manager;
+    }
 
     @Override
     public void start(Stage stage) {

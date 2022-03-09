@@ -1,7 +1,5 @@
 package ad.auction.dashboard.pages;
 
-import ad.auction.dashboard.storage.CSVFolderDatabase;
-import ad.auction.dashboard.storage.FileUtils;
 import javafx.scene.control.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,9 +29,6 @@ public class AdvertPage extends BasePage {
     private static final Logger logger = LogManager.getLogger(AdvertPage.class.getSimpleName());
     private Rectangle graph;
     // create a database when the advertisement page created
-    private CSVFolderDatabase database = new CSVFolderDatabase();
-    // the data folder path for the advertisement page
-    private String folderPath;
 
     public AdvertPage(Window window) {
         super(window);
@@ -50,14 +45,6 @@ public class AdvertPage extends BasePage {
     public AdvertPage(Window window, int graphIndex) {
         super(window);
         this.graph = new Rectangle();
-        // range check
-        if (graphIndex >= 0 && graphIndex < database.getFolders().size()) {
-            // get folder path
-            folderPath = database.getFolders().get(graphIndex);
-            // get folder name
-            String title = FileUtils.toFileName(folderPath);
-            // TODO: update title ....
-        }
 
     }
 
@@ -105,17 +92,6 @@ public class AdvertPage extends BasePage {
         graphPane.setBottom(graphButtonPane);
         //TODO: graphPane.setCenter(graph);
 
-        // add a test label to graph region
-        Label label = new Label();
-        graphPane.setTop(label);
-        // show the detail of the data folder
-        String message = "FolderPath: " + folderPath;
-        File folder = new File(folderPath);
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
-            message += "\n" + file.getName();
-        }
-        // show message
-        label.setText(message);
 
         menuPane.setTop(title);
         menuPane.setLeft(new SideMenu(window));

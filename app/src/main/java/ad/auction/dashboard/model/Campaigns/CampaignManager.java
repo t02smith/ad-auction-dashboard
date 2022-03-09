@@ -1,8 +1,6 @@
 package ad.auction.dashboard.model.Campaigns;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -32,15 +30,25 @@ public class CampaignManager {
 
     //Campaign manager actions
     public enum CMQuery {
-        NEW_CAMPAIGN,
-        LOAD_CAMPAIGN,
-        GET_CAMPAIGN;
+        NEW_CAMPAIGN, LOAD_CAMPAIGN, GET_CAMPAIGN;
     }
 
     /**
+     * Get all campaign from campaign manager
+     * @return all campaign sorted in ascending order by name
+     */
+    public List<Campaign> getAllCampaign() {
+        ArrayList<Campaign> list = new ArrayList<>(campaigns.values());
+        list.sort(Comparator.comparing(Campaign::name));
+        return list;
+    }
+
+
+    /**
      * Tell the CampaignManager to perform an action
+     *
      * @param query The action to perform
-     * @param args The list of arguments to pass in
+     * @param args  The list of arguments to pass in
      */
     public Optional<Campaign> query(CMQuery query, String... args) {
         switch (query) {
@@ -59,9 +67,9 @@ public class CampaignManager {
             case GET_CAMPAIGN:
                 if (args.length < 1)
                     throw new IllegalArgumentException("Incorrect number of arguments for new campaign");
-                
+
                 if (!this.campaigns.containsKey(args[0]))
-                    throw new IllegalArgumentException("Campaign '"+args[0]+"' not found");
+                    throw new IllegalArgumentException("Campaign '" + args[0] + "' not found");
 
                 return Optional.of(this.campaigns.get(args[0]));
         }
@@ -96,11 +104,12 @@ public class CampaignManager {
         }
 
         logger.info("Reading data for campaing '{}'", campaign);
-        var impressions = (Future<List<Impression>>)model.queryFileTracker(FileTrackerQuery.READ, c.impressionPath).get();
-        var clicks = (Future<List<Click>>)model.queryFileTracker(FileTrackerQuery.READ, c.clickPath).get();
-        var server = (Future<List<Server>>)model.queryFileTracker(FileTrackerQuery.READ, c.serverPath).get();
+        var impressions = (Future<List<Impression>>) model.queryFileTracker(FileTrackerQuery.READ, c.impressionPath).get();
+        var clicks = (Future<List<Click>>) model.queryFileTracker(FileTrackerQuery.READ, c.clickPath).get();
+        var server = (Future<List<Server>>) model.queryFileTracker(FileTrackerQuery.READ, c.serverPath).get();
 
-        while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {}
+        while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {
+        }
 
         try {
             c.impressions = impressions.get();
@@ -109,7 +118,7 @@ public class CampaignManager {
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error reading campaign '{}'", c.name());
         }
-        
+
 
         c.dataLoaded = true;
 
