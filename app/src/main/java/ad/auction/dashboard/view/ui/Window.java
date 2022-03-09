@@ -7,6 +7,7 @@ import ad.auction.dashboard.view.pages.MenuPage;
 import ad.auction.dashboard.view.pages.UploadPage;
 
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -44,6 +45,7 @@ public class Window {
 	 */
 	private void setupStage() {
 		stage.setTitle("Ad Auction Dashboard");
+		stage.getIcons().add(new Image(this.getClass().getResource("/img/logo.png").toExternalForm()));
 		stage.setMinWidth(width);
 		stage.setMinHeight(height);
 		stage.setOnCloseRequest(ev -> App.getInstance().shutdown());
@@ -75,12 +77,6 @@ public class Window {
 		loadPage(new CampaignPage(this, campaign));
 	}
 
-	/**
-	 * Updates the advertisement page graph according to the desired plotting
-	 */
-	public void updateAdvertPage(int category) {
-		currentPage.update(category);
-	}
 
 	public void openUploadPage() {
 		loadPage(new UploadPage(this));

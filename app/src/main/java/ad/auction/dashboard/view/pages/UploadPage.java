@@ -136,8 +136,4 @@ public class UploadPage extends BasePage {
         boarderPane.setCenter(gridPane);
     }
 
-    @Override
-    public void update(int category) {
-
-    }
 }

@@ -27,11 +27,6 @@ public abstract class BasePage {
     public abstract void build();
     
     /**
-     * Updates advertisement page
-     */
-    public abstract void update(int category);
-    
-    /**
      * Create a new JavaFX scene
      * @return JavaFX scene
      */

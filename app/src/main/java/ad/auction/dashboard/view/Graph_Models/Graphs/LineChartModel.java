@@ -1,29 +1,34 @@
 package ad.auction.dashboard.view.Graph_Models.Graphs;
 
-import java.util.Map;
+import java.util.ArrayList;
 
+import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
-public class LineChartModel extends ChartModel{
+public class LineChartModel extends ChartModel {
 
-    private Map<Number, Number> data;
+    // Set of data points
+    private ArrayList<Point2D> data;
 
-    public LineChartModel(String titleName, String xAxisName, String yAxisName, Map<Number, Number> dataList) {
+    public LineChartModel(String titleName, String xAxisName, String yAxisName) {
         super(titleName, xAxisName, yAxisName);
-        this.data = dataList;
     }
 
-    public Map<Number, Number> getData() { return data;}
+    public ArrayList<Point2D> getData() {
+        return data;
+    }
 
-    public void setData(Map<Number, Number> newData) {this.data = newData;}
-    
+    public void setData(ArrayList<Point2D> newData) {
+        this.data = newData;
+    }
+
     private void setSeries(XYChart.Series<Number, Number> dataSeries) {
+        if (data == null)
+            return;
 
-        for (Map.Entry<Number, Number> entry : data.entrySet()) {
-            dataSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-        }
+        data.forEach(p -> dataSeries.getData().add(new XYChart.Data<>(p.getX(), p.getY())));
     }
 
     public LineChart<Number, Number> getLineChart() {
@@ -41,6 +46,6 @@ public class LineChartModel extends ChartModel{
         lChart.getData().add(dataSeries);
 
         return lChart;
-        
+
     }
 }

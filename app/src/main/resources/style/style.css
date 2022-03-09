@@ -1,35 +1,63 @@
+
+
 .topTitle {
 	-fx-fill: white;
 	-fx-font-family: 'Sen';
-	-fx-font-size: 50px;
+	-fx-font-size: 40px;
 	-fx-stroke: black;
 	-fx-stroke-width: 0.5px;
 }
 
 .topBackground {
-	-fx-background-color: linear-gradient(#3b3DA9, #0A1769);
+	-fx-background-color: #202020;
 }
 
 .sideBackground {
-	-fx-background-color: #7B7B7B;
+	-fx-background-color: #232323;
 }
 
 .buttonStyle {
-    -fx-background-color: linear-gradient(#F57D49, #FB6C2E);
+    -fx-background-color: #004CBE;
     -fx-background-radius: 10;
     -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
     -fx-padding: 9 18 9 18;
+	-fx-cursor: hand;
 }
 
 .advertButton {
-	-fx-background-color: linear-gradient(#F7C17C, #DA861B);
-	-fx-background-radius: 10;
+	-fx-background-color: #002a69;
+	-fx-background-radius: 5;
     -fx-text-fill: #FFFFFF;
 	-fx-font-weight: bold;
 	-fx-font-size: 20px;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
 	-fx-padding: 32 18 32 18;
+	-fx-cursor: hand;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
+
+.advertButton:active {
+	-fx-background-color: white;
+	-fx-text-fill: #232323;
+}
+
+.advertButton:hover {
+	-fx-background-color: white;
+	-fx-text-fill: #232323;
+}
+
+.campaign-list {
+	-fx-font-size: 25px;
+	-fx-font-weight: bold;
+	-fx-padding: 15px;
+	-fx-background-color: #272822;
+	-fx-text-fill: white;
+}
+
+.metric-panel {
+	-fx-background-color: #232323;
 }
