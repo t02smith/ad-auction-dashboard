@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import ad.auction.dashboard.model.calculator.Metrics;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
@@ -26,11 +26,13 @@ public class MetricSelection extends ScrollPane {
     private void build() {
         var elems = new VBox();
         elems.getStyleClass().add("metric-panel");
+
         this.setContent(elems);
 
 
         Arrays.asList(Metrics.values()).forEach(m -> {
-            var btn = new Button(m.toString().replace("_", " ").toLowerCase());
+            var btn = new Label(m.toString().replace("_", " ").toLowerCase());
+            btn.setMaxWidth(Double.MAX_VALUE);
             btn.setOnMouseClicked(e -> {
                 loadMetric.accept(m);
             });

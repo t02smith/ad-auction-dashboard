@@ -1,6 +1,5 @@
 package ad.auction.dashboard;
 
-import ad.auction.dashboard.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,9 +59,5 @@ public class App extends Application {
      */
     public static App getInstance() { return instance; }
 
-    public static void main(String[] args) {
-    	logger.info("Launching Application");
-        launch();
-    }
 
 }

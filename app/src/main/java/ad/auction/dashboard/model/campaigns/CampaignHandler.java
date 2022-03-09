@@ -47,7 +47,7 @@ public class CampaignHandler extends DefaultHandler {
             parser.parse(filename, this);
             logger.info("Parsed campaign file '{}'", filename);
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            logger.error("Error reading campaign file '{}'", filename);
+            logger.error("Error reading campaign file '{}': {}", filename, e.getMessage());
         }       
     }
 

@@ -11,6 +11,8 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.12'
 
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java'
 }
 
 repositories {
@@ -34,7 +36,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'ad.auction.dashboard.App'
+    mainClass = "ad.auction.dashboard.Main"
 }
 
 test {
@@ -51,4 +53,14 @@ test {
 javafx {
     version = "17.0.1"
     modules = [ 'javafx.controls' ]
+}
+
+jar {
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest { 
+        attributes "Main-Class": "ad.auction.dashboard.Main"
+    }  
+
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }

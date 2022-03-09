@@ -100,10 +100,14 @@ public class FileTracker {
         FileType type = file.getType();
 
         final PipedInputStream pipe = new PipedInputStream();
+
+        file.reloadPipe();
         file.connect(pipe);
 
         //Start reading the file
         executor.submit(file);
+
+       
 
         //Start parsing the file
         return executor.submit(new FileParser(pipe, type));  

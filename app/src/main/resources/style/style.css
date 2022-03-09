@@ -40,9 +40,8 @@
     -fx-background-insets: 5px;
 }
 
-.advertButton:active {
+.advertButton:focus {
 	-fx-background-color: white;
-	-fx-text-fill: #232323;
 }
 
 .advertButton:hover {
@@ -60,4 +59,11 @@
 
 .metric-panel {
 	-fx-background-color: #232323;
+}
+
+
+
+.metric-btn {
+	-fx-background-color: red;
+	-fx-width: 100%;
 }

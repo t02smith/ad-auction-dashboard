@@ -23,7 +23,7 @@ public class TrackedFile implements Runnable {
     private final String filename;
 
     //Output stream
-    private final PipedOutputStream pipe = new PipedOutputStream();
+    private PipedOutputStream pipe;
 
     private final FileType type;
 
@@ -48,6 +48,10 @@ public class TrackedFile implements Runnable {
 
         return null;
         
+    }
+
+    public void reloadPipe() {
+        this.pipe = new PipedOutputStream();
     }
 
     /**

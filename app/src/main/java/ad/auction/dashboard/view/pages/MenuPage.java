@@ -62,11 +62,11 @@ public class MenuPage extends BasePage {
         sideMenu.getStyleClass().add("sideBackground");
 
         // Buttons in the side menu
-        var rangeDateButton = new Button("Range by date");
-        var rangeSegmentButton = new Button("Range by segment");
+        // var rangeDateButton = new Button("Range by date");
+        // var rangeSegmentButton = new Button("Range by segment");
         // create a upload button on side menu
         var uploadButton = new Button("Upload a folder");
-        sideMenu.getChildren().addAll(rangeDateButton, rangeSegmentButton, uploadButton);
+        sideMenu.getChildren().addAll(uploadButton);
         // click event of upload button
         uploadButton.setOnAction(event -> {
             window.openUploadPage();

@@ -39,6 +39,7 @@ public class LineChartModel extends ChartModel {
         yAxis.setLabel(getYName());
 
         var dataSeries = new XYChart.Series<Number, Number>();
+        dataSeries.setName(this.getTitleName());
         setSeries(dataSeries);
 
         var lChart = new LineChart<>(xAxis, yAxis);

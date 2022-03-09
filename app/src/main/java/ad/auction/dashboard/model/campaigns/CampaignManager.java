@@ -20,7 +20,7 @@ import ad.auction.dashboard.model.files.records.Server;
  */
 public class CampaignManager {
 
-    private static final String CAMPAIGNS_LOCATION = "./data/campaigns.xml";
+    private static final String CAMPAIGNS_LOCATION = "./campaigns.xml";
 
     private static final Logger logger = LogManager.getLogger(CampaignManager.class.getSimpleName());
     private final Model model;
