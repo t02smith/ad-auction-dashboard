@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.controller.Controller;
-import ad.auction.dashboard.ui.Window;
+import ad.auction.dashboard.view.ui.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

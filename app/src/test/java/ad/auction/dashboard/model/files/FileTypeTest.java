@@ -6,8 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import ad.auction.dashboard.TestUtility;
-
 public class FileTypeTest {
 
     //Identifying file types
@@ -16,9 +14,7 @@ public class FileTypeTest {
     @DisplayName("Correct type: Impression")
     @Tag("model/files")
     public void correctTypeImpression() {
-        var file = TestUtility.getResourceFile("/data/2-week/impression_log.csv");
-
-        TrackedFile tf = new TrackedFile(file);
+        TrackedFile tf = new TrackedFile("./data/impression_log.csv");
         assertEquals(FileType.IMPRESSION, tf.getType());
     }
 
@@ -26,9 +22,7 @@ public class FileTypeTest {
     @DisplayName("Correct type: Click")
     @Tag("model/files")
     public void correctTypeClick() {
-        var file = TestUtility.getResourceFile("/data/2-week/click_log.csv");
-
-        TrackedFile tf = new TrackedFile(file);
+        TrackedFile tf = new TrackedFile("./data/click_log.csv");
         assertEquals(FileType.CLICK, tf.getType());
     }
 
@@ -36,9 +30,7 @@ public class FileTypeTest {
     @DisplayName("Correct type: Server")
     @Tag("model/files")
     public void correctTypeServer() {
-        var file = TestUtility.getResourceFile("/data/2-week/server_log.csv");
-
-        TrackedFile tf = new TrackedFile(file);
+        TrackedFile tf = new TrackedFile("./data/server_log.csv");
         assertEquals(FileType.SERVER, tf.getType());
     }
 

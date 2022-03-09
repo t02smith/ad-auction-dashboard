@@ -1,6 +1,6 @@
-package ad.auction.dashboard.pages;
+package ad.auction.dashboard.view.ui.pages;
 
-import ad.auction.dashboard.ui.Window;
+import ad.auction.dashboard.view.ui.Window;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -38,7 +38,7 @@ public abstract class BasePage {
     public Scene createScene() {
         var previous = window.getScene();
         Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
-        scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
+        //scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
         this.scene = scene;
         
         return scene;

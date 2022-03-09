@@ -3,12 +3,12 @@ package ad.auction.dashboard.model;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
-import ad.auction.dashboard.model.Campaigns.Campaign;
-import ad.auction.dashboard.model.Campaigns.CampaignManager;
-import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.Calculator;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
+import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.model.campaigns.CampaignManager;
+import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 
@@ -34,7 +34,12 @@ public class Model {
         return this.fileTracker.query(query, filename);
     }
 
-
+    /**
+     * Run a calculation for the current open campaign
+     * @param metric
+     * @param func
+     * @return
+     */
     public Future<Object> runCalculation(Metrics metric, MetricFunction func) {
         var campaign = (Campaign)queryCampaignManager(CMQuery.GET_CAMPAIGN).get();
         return this.calculator.runCalculation(campaign, metric, func);

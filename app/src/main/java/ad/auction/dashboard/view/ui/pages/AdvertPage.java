@@ -1,10 +1,10 @@
-package ad.auction.dashboard.pages;
+package ad.auction.dashboard.view.ui.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.ui.SideMenu;
-import ad.auction.dashboard.ui.Window;
+import ad.auction.dashboard.view.ui.SideMenu;
+import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;

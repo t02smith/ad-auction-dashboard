@@ -1,4 +1,4 @@
-package ad.auction.dashboard.model.Campaigns;
+package ad.auction.dashboard.model.campaigns;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,6 +9,9 @@ import ad.auction.dashboard.model.files.records.Server;
 
 /**
  * A campaign must consist of files for the impressions, clicks and server logs
+ * It will also contain the data but this will only be fetched when required
+ * 
+ * @author tcs1g20
  */
 public class Campaign {
 
@@ -28,7 +31,8 @@ public class Campaign {
     List<Server> server;
 
     //Stores info to display in the UI
-    private record CampaignData(String name) {}
+    public record CampaignData(String name, String clkPath, String impPath, String svrPath) {
+    }
 
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
         this.name = name;
@@ -48,7 +52,7 @@ public class Campaign {
     // GETTERS
 
     public CampaignData getData() {
-        return new CampaignData(this.name);
+        return new CampaignData(this.name, this.clickPath, this.impressionPath, this.serverPath);
     }
 
     public Stream<Impression> impressions() {

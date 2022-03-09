@@ -10,11 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import ad.auction.dashboard.TestUtility;
 import ad.auction.dashboard.model.Model;
-import ad.auction.dashboard.model.Campaigns.Campaign;
-import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
+import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 import javafx.geometry.Point2D;
 
 

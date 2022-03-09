@@ -1,9 +1,9 @@
-package ad.auction.dashboard.ui;
+package ad.auction.dashboard.view.ui;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.pages.AdvertPage;
-import ad.auction.dashboard.pages.BasePage;
-import ad.auction.dashboard.pages.MenuPage;
+import ad.auction.dashboard.view.ui.pages.AdvertPage;
+import ad.auction.dashboard.view.ui.pages.BasePage;
+import ad.auction.dashboard.view.ui.pages.MenuPage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

@@ -1,4 +1,4 @@
-package ad.auction.dashboard.model.Campaigns;
+package ad.auction.dashboard.model.campaigns;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +13,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * This class is used to read data from the campaigns .xml file
+ * 
+ * @author tcs1g20
+ */
 public class CampaignHandler extends DefaultHandler {
 
     private static final Logger logger = LogManager.getLogger(CampaignHandler.class.getSimpleName());
@@ -22,13 +27,17 @@ public class CampaignHandler extends DefaultHandler {
     private CampaignTemp current;
 
     //A temporary class to store the campaign currently being read
-    private class CampaignTemp {
+    class CampaignTemp {
         String name;
         String impPath;
         String clkPath;
         String svrPath;
     }
 
+    /**
+     * Get the data from the .xml file
+     * @param filename
+     */
     public void parse(String filename) {
         logger.info("Parsing campaign file '{}'", filename);
         SAXParserFactory factory = SAXParserFactory.newInstance();

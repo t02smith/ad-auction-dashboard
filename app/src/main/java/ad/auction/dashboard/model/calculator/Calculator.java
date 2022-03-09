@@ -1,17 +1,24 @@
 package ad.auction.dashboard.model.calculator;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.model.Campaigns.Campaign;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
+import ad.auction.dashboard.model.campaigns.Campaign;
+import javafx.geometry.Point2D;
 import javafx.util.Pair;
 
+/**
+ * Manages the calculations
+ * 
+ * @author tcs1g20
+ */
 public class Calculator {
 
     private static final Logger logger = LogManager.getLogger(Calculator.class.getSimpleName());
@@ -33,16 +40,15 @@ public class Calculator {
 
         if (!campaign.dataLoaded()) throw new IllegalAccessError("Data must be loaded before running calculations");
         
-        Function<Campaign, Object> function;
         switch (func) {
             case OVERALL:
-                function = metric.getMetric().overall();
-                break;
+                return executor.submit(new Calculation<Object>(metric.getMetric().overall(), campaign));
+            case OVER_TIME:
+                return executor.submit(new Calculation<ArrayList<Point2D>>(metric.getMetric().overTime(ChronoUnit.DAYS), campaign));
             default:
                 throw new IllegalArgumentException("//");
         }
 
-        return executor.submit(new Calculation(function, campaign));
 
     }
 

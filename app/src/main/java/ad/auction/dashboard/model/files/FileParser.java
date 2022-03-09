@@ -8,10 +8,15 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * This class will connect to the filestream
+ * and process the data into records
+ * 
+ * @author tcs1g20
+ */
 public class FileParser implements Callable<List<Object>> {
 
     private static final Logger logger = LogManager.getLogger(FileParser.class.getSimpleName());
-
 
     private final PipedInputStream pipe;
     private final FileType type;
@@ -37,9 +42,7 @@ public class FileParser implements Callable<List<Object>> {
         }
         
         pipe.close();
-
         logger.info("File processed in {}ms", System.currentTimeMillis()-startTime);
-
         return objs;        
     }
 }

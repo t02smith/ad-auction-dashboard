@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.model.Model;
-import ad.auction.dashboard.model.Campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
+import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 
 
 @Tag("model/calculator")

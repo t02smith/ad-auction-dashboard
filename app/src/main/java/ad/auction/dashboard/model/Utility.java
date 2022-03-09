@@ -1,6 +1,5 @@
 package ad.auction.dashboard.model;
 
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,19 +21,12 @@ public final class Utility {
         return LocalDateTime.parse(date, Utility.formatter);
     }
 
-    public static String getResourceFile(String target) {
-        try {
-            return Utility.class
-                .getResource(target)
-                .toURI()
-                .getPath();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
+    /**
+     * Rounds a number to n decimal places
+     * @param number
+     * @param n
+     * @return
+     */
     public static double roundNDp(double number, int n) {
         final double factor = Math.pow(10, n);
         return (double)Math.round(number*factor)/factor;

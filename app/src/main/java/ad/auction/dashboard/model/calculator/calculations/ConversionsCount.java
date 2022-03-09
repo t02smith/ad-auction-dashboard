@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.Campaigns.Campaign;
+import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
 public class ConversionsCount implements Metric {
