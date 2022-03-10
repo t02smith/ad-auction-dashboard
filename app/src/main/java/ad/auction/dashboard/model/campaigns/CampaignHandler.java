@@ -85,7 +85,6 @@ public class CampaignHandler extends DefaultHandler {
                 current.impPath = element.toString();
                 break;
             case "svrPath":
-                System.out.println(element.toString());
                 current.svrPath = element.toString();
                 break;
             case "clkPath":

@@ -25,23 +25,15 @@ public class MetricTest {
     private static Campaign c;
 
     @BeforeAll
-    public static void setup() {
-
-        // model.queryCampaignManager(
-        //     CMQuery.NEW_CAMPAIGN, 
-        //     "campaign 1",
-        //     "./data/impression_log.csv",
-        //     "./data/click_log.csv",
-        //     "./data/server_log.csv");
-        
-        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "Campaign 1");
-        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "Campaign 1").get();
+    public static void setup() {       
+        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "2 Week Campaign");
+        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "2 Week Campaign").get();
 
     }
 
     @Test
     public void overTimeTest() {
-        ArrayList<Point2D> actual = Metrics.UNIQUES_COUNT.getMetric().overTime(ChronoUnit.DAYS).apply(c);
+        ArrayList<Point2D> actual = Metrics.TOTAL_COST.getMetric().overTime(ChronoUnit.DAYS).apply(c);
 
         var it = actual.iterator();
         while (it.hasNext()) {
@@ -101,6 +93,14 @@ public class MetricTest {
     public void totalCostClickTest() {
         double result = (double) Metrics.TOTAL_COST_CLICK.getMetric().overall().apply(c);
         assertEquals(117610.866, result);
+
+    }
+
+    @Test
+    @DisplayName("Total cost")
+    public void totalCostTest() {
+        double result = (double) Metrics.TOTAL_COST.getMetric().overall().apply(c);
+        assertEquals(118097.921, result);
 
     }
 

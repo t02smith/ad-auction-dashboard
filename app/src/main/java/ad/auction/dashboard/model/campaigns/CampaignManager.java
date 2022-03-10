@@ -16,7 +16,9 @@ import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
 
 /**
- * TODO store campaigns
+ * Used to perform operations concerning campaigns
+ * 
+ * TODO store campaigns to file
  */
 public class CampaignManager {
 
@@ -30,7 +32,6 @@ public class CampaignManager {
 
     private Campaign currentCampaign;
     private CampaignHandler handler = new CampaignHandler();
-
 
     public CampaignManager(Model model) {
         this.model = model;
@@ -46,10 +47,25 @@ public class CampaignManager {
 
     // Campaign manager actions
     public enum CMQuery {
+
+        // args = (name, impPath, clkPath, serverPath)
+        // returns = void
         NEW_CAMPAIGN,
+
+        // args = void
+        // returns = Campaign (current campaing)
         GET_CAMPAIGN,
+
+        // args = void
+        // returns = campaign data class (currentCampaign)
         GET_CAMPAIGN_DATA,
+
+        // args = (String)
+        // returns = void
         OPEN_CAMPAIGN,
+
+        // args = void
+        // returns = List<CampaignData>
         GET_CAMPAIGNS;
     }
 
@@ -66,7 +82,7 @@ public class CampaignManager {
                     throw new IllegalArgumentException("Incorrect number of arguments to open campaign");
 
                 this.openCampaign(args[0]);
-                return Optional.of(this.currentCampaign);
+                return Optional.empty();
             case NEW_CAMPAIGN:
                 if (args.length < 4)
                     throw new IllegalArgumentException("Incorrect number of arguments for new campaign");
@@ -79,7 +95,7 @@ public class CampaignManager {
                 return Optional.of(this.currentCampaign.getData());
             case GET_CAMPAIGNS:
                 return Optional.of(this.campaigns.values().stream()
-                        .map(c -> {System.out.println(c.name()); return c.getData();})
+                        .map(c -> c.getData())
                         .toList());
         }
 
@@ -136,6 +152,10 @@ public class CampaignManager {
         currentCampaign.dataLoaded = true;
     }
 
+    /**
+     * Opens the specified campaign if it is stored
+     * @param name
+     */
     private void openCampaign(String name) {
         if (!this.campaigns.containsKey(name))
             return;

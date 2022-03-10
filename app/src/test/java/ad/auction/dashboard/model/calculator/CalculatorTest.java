@@ -24,14 +24,7 @@ public class CalculatorTest {
 
     @BeforeAll
     public static void setUp() {
-        model.queryCampaignManager(
-            CMQuery.NEW_CAMPAIGN, 
-            "campaign 1",
-            "./data/impression_log.csv",
-            "./data/click_log.csv",
-            "./data/server_log.csv");
-        
-        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "campaign 1");
+        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "2 Week Campaign");
     }
     
     @Test

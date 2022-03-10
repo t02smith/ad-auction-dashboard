@@ -21,6 +21,7 @@ public class Campaign {
     private final String name;
     boolean dataLoaded = false;
 
+    //Paths and data for all files
     final String impressionPath;
     List<Impression> impressions;
 
@@ -41,6 +42,10 @@ public class Campaign {
         this.serverPath = serverPath;
     }
 
+    /**
+     * Clear out the data currently stored data
+     * to free up memory
+     */
     public void flushData() {
         this.impressions.clear();
         this.clicks.clear();

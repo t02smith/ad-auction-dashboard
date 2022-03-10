@@ -32,6 +32,11 @@ public class TrackedFile implements Runnable {
         this.type = this.determineFileType();
     }
 
+    /**
+     * Determines whether a file is of type impression, 
+     * server or click
+     * @return
+     */
     private FileType determineFileType() {
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
@@ -50,6 +55,9 @@ public class TrackedFile implements Runnable {
         
     }
 
+    /**
+     * Restart the outputstream pipe
+     */
     public void reloadPipe() {
         this.pipe = new PipedOutputStream();
     }
@@ -107,8 +115,14 @@ public class TrackedFile implements Runnable {
      * Close the pipe
      */
     public void close() {
+        if (this.pipe == null) {
+            logger.error("'{}' No pipe to close", filename);
+            return;
+        };
+
         try {
             this.pipe.close();
+            logger.info("'{}' pipe closed", filename);
         } catch (IOException e) {
             logger.error("Error closing pipe");
         }

@@ -13,6 +13,8 @@ import javafx.geometry.Point2D;
  *  -> an overall value
  *  -> a set of graph points over time
  * 
+ * Calculation references can be found in the spec
+ * 
  * @author tcs1g20
  */
 public abstract class Metric {

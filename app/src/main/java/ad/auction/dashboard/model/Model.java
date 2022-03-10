@@ -12,7 +12,12 @@ import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 
-
+/**
+ * Central class for model components
+ * Used by the Controller to interact with the backend
+ * 
+ * @author tcs1g20
+ */
 public class Model {
 
     //Tracks and reads data files
