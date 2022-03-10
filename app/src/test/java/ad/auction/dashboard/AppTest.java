@@ -10,9 +10,8 @@ public class AppTest {
     @Test
     @Tag("setup")
     public void javaVersionTest() {
-        int version = Integer.parseInt(System.getProperty("java.version"));
+        int version = Integer.parseInt(System.getProperty("java.version").split("\\.")[0]);
         assertTrue(version >= 17);
-
     }
 
 

@@ -21,6 +21,13 @@ To run with command line arguments use:
   gradle run --args='arg1 arg2 ...'
 ```
 
+You can create and run fat JAR using:
+
+```bash
+  gradle jar
+  java -jar ./app/build/libs/app.jar
+```
+
 > NOTE: If you do not have Gradle installed use ./gradlew instead of gradle
 
 ## Running Tests
