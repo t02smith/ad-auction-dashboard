@@ -40,7 +40,11 @@ public class Controller {
 
         // args = void
         // returns List<CampaignData>
-        GET_CAMPAIGNS;
+        GET_CAMPAIGNS,
+
+        // args = void
+        // returns = void
+        CLOSE;
     }
 
     /**
@@ -64,6 +68,9 @@ public class Controller {
                 return Optional.of(model.queryCampaignManager(CMQuery.GET_CAMPAIGN_DATA).get());
             case GET_CAMPAIGNS:
                 return Optional.of(model.queryCampaignManager(CMQuery.GET_CAMPAIGNS).get());
+            case CLOSE:
+                this.model.close();
+                return Optional.empty();
         }
 
         return Optional.empty();

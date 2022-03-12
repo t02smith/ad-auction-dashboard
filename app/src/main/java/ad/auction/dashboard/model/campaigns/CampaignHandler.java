@@ -1,17 +1,31 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * This class is used to read data from the campaigns .xml file
@@ -26,7 +40,7 @@ public class CampaignHandler extends DefaultHandler {
     private StringBuilder element;
     private CampaignTemp current;
 
-    //A temporary class to store the campaign currently being read
+    // A temporary class to store the campaign currently being read
     class CampaignTemp {
         String name;
         String impPath;
@@ -36,6 +50,7 @@ public class CampaignHandler extends DefaultHandler {
 
     /**
      * Get the data from the .xml file
+     * 
      * @param filename
      */
     public void parse(String filename) {
@@ -48,18 +63,69 @@ public class CampaignHandler extends DefaultHandler {
             logger.info("Parsed campaign file '{}'", filename);
         } catch (IOException | SAXException | ParserConfigurationException e) {
             logger.error("Error reading campaign file '{}': {}", filename, e.getMessage());
-        }       
+        }
     }
+
+    public void writeToFile(String filename, List<CampaignData> campaingnLs) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+
+            Element campaigns = doc.createElement("campaigns");
+            doc.appendChild(campaigns);
+
+            campaingnLs.forEach(c -> {
+                Element camp = doc.createElement("campaign");
+
+                var name = doc.createElement("name");
+                name.appendChild(doc.createTextNode(c.name()));
+                camp.appendChild(name);
+
+                var impPath = doc.createElement("impPath");
+                impPath.appendChild(doc.createTextNode(c.impPath()));
+                camp.appendChild(impPath);
+
+                var svrPath = doc.createElement("svrPath");
+                svrPath.appendChild(doc.createTextNode(c.svrPath()));
+                camp.appendChild(svrPath);
+
+                var clkPath = doc.createElement("clkPath");
+                clkPath.appendChild(doc.createTextNode(c.clkPath()));
+                camp.appendChild(clkPath);
+
+                campaigns.appendChild(camp);
+
+            });
+
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
+            DOMSource domSource = new DOMSource(campaigns);
+            StreamResult streamResult = new StreamResult(new File(filename));
+
+            transformer.transform(domSource, streamResult);
+
+            logger.info("Campaings written to {}", filename);
+
+        } catch (ParserConfigurationException | TransformerException e) {
+            logger.error("Error writing to {}: {}", filename, e.getMessage());
+        }
+
+    }
+
+    // PARSER FUNCTIONS
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (element == null) element = new StringBuilder();
-        else element.append(ch, start, length);
+        if (element == null)
+            element = new StringBuilder();
+        else
+            element.append(ch, start, length);
     }
-    
+
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
-        switch(qName) {
+        switch (qName) {
             case "campaigns":
                 this.campaigns = new ArrayList<>();
                 break;
@@ -92,13 +158,13 @@ public class CampaignHandler extends DefaultHandler {
                 break;
             case "campaign":
                 campaigns.add(new Campaign(
-                    current.name, current.impPath, current.clkPath, current.svrPath));
+                        current.name, current.impPath, current.clkPath, current.svrPath));
                 logger.info("Campaign '{}' loaded", current.name);
                 break;
         }
     }
 
     public ArrayList<Campaign> getCampaigns() {
-        return this.campaigns == null ? new ArrayList<>(): this.campaigns;
+        return this.campaigns == null ? new ArrayList<>() : this.campaigns;
     }
 }

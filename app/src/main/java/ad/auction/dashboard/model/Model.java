@@ -60,5 +60,8 @@ public class Model {
         return campaignManager.query(query, args);
     }
     
+    public void close() {
+        this.campaignManager.query(CMQuery.CLOSE);
+    }
 
 }

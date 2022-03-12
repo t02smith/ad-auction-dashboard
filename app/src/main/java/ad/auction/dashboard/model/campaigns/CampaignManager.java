@@ -66,7 +66,11 @@ public class CampaignManager {
 
         // args = void
         // returns = List<CampaignData>
-        GET_CAMPAIGNS;
+        GET_CAMPAIGNS,
+
+        // args = void
+        // returns = void
+        CLOSE;
     }
 
     /**
@@ -97,6 +101,9 @@ public class CampaignManager {
                 return Optional.of(this.campaigns.values().stream()
                         .map(c -> c.getData())
                         .toList());
+            case CLOSE:
+                this.close();
+                return Optional.empty();
         }
 
         return Optional.empty();
@@ -106,7 +113,7 @@ public class CampaignManager {
      * Generate a new campaign to track
      */
     private void newCampaign(String name, String impressionPath, String clickPath, String serverPath) {
-        
+
         if (campaigns.containsKey(name))
             return;
 
@@ -154,6 +161,7 @@ public class CampaignManager {
 
     /**
      * Opens the specified campaign if it is stored
+     * 
      * @param name
      */
     private void openCampaign(String name) {
@@ -171,4 +179,8 @@ public class CampaignManager {
         this.loadCampaignData();
     }
 
+    private void close() {
+        this.handler.writeToFile(CAMPAIGNS_LOCATION, this.campaigns.values().stream().map(Campaign::getData).toList());
+        
+    }
 }
