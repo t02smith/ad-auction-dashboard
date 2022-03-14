@@ -32,8 +32,7 @@ import java.util.List;
 public class MenuPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(MenuPage.class.getSimpleName());
-    
-    private FlowPane flowPane; // the flow pane contains campaign buttons
+    private FlowPane flowPane; // the flow pane contains the campaign buttons
 
     public MenuPage(Window window) {
         super(window);

@@ -177,6 +177,7 @@ public class UploadPage extends BasePage {
     	for (String field:fields) {
             Button selectButton = new Button("Select " + field + "..");
 
+            var ind = index + 1;
             gridPane.add(selectButton, 1, insetRow);
             insetRow++;
             
@@ -188,11 +189,13 @@ public class UploadPage extends BasePage {
                 
                 if (file != null) { 
                 	if (buttonIndex.get(selectButton) == null) { 
-                        buttonIndex.put(selectButton, index);
+                        buttonIndex.put(selectButton, ind);                        
                 		filePaths.add(file.getAbsolutePath()); 
-                	} else filePaths.add(buttonIndex.get(selectButton), file.getAbsolutePath());
+                	} else filePaths.set(buttonIndex.get(selectButton), file.getAbsolutePath());
                 }
             });
+            
+            index++;
     	}
     	
     	return filePaths;
