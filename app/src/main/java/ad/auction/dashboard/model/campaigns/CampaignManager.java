@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.campaigns;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.model.Model;
+import ad.auction.dashboard.model.files.FileType;
 import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
@@ -17,8 +19,7 @@ import ad.auction.dashboard.model.files.records.Server;
 
 /**
  * Used to perform operations concerning campaigns
- * 
- * TODO store campaigns to file
+ *
  */
 public class CampaignManager {
 
@@ -39,9 +40,9 @@ public class CampaignManager {
         this.handler.parse(CAMPAIGNS_LOCATION);
         this.handler.getCampaigns().forEach(c -> {
             campaigns.put(c.name(), c);
-            model.queryFileTracker(FileTrackerQuery.TRACK, c.impressionPath);
-            model.queryFileTracker(FileTrackerQuery.TRACK, c.serverPath);
-            model.queryFileTracker(FileTrackerQuery.TRACK, c.clickPath);
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.getData().impPath());
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.getData().clkPath());
+            model.queryFileTracker(FileTrackerQuery.TRACK, c.getData().svrPath());
         });
     }
 
@@ -112,16 +113,33 @@ public class CampaignManager {
     /**
      * Generate a new campaign to track
      */
-    private void newCampaign(String name, String impressionPath, String clickPath, String serverPath) {
+    private boolean[] newCampaign(String name, String impressionPath, String clickPath, String serverPath) {
+        this.cleanFiles();
 
         if (campaigns.containsKey(name))
-            return;
+            throw new IllegalArgumentException("Campaign already exists");
 
         logger.info("Creating new campaign '{}'", name);
-        this.campaigns.put(name, new Campaign(name, impressionPath, clickPath, serverPath));
+        
         this.model.queryFileTracker(FileTrackerQuery.TRACK, impressionPath);
         this.model.queryFileTracker(FileTrackerQuery.TRACK, clickPath);
         this.model.queryFileTracker(FileTrackerQuery.TRACK, serverPath);
+
+        var output = new boolean[] {
+            (boolean)this.model.queryFileTracker(FileTrackerQuery.IS_TYPE, clickPath, FileType.CLICK).get(),
+            (boolean)this.model.queryFileTracker(FileTrackerQuery.IS_TYPE, impressionPath, FileType.IMPRESSION).get(),
+            (boolean)this.model.queryFileTracker(FileTrackerQuery.IS_TYPE, serverPath, FileType.SERVER).get()
+        };
+
+        if (output[0] && output[1] && output[2]) {
+            this.campaigns.put(name, new Campaign(name, impressionPath, clickPath, serverPath));
+            logger.info("Campaign '{}' successfully created", name);
+        } else {
+            logger.error("Incorrect file formats submitted for campaign '{}'", name);
+        }
+
+        return output;
+        
     }
 
     /**
@@ -139,10 +157,10 @@ public class CampaignManager {
 
         logger.info("Reading data for campaing '{}'", this.currentCampaign.name());
         var impressions = (Future<List<Impression>>) model
-                .queryFileTracker(FileTrackerQuery.READ, currentCampaign.impressionPath).get();
-        var clicks = (Future<List<Click>>) model.queryFileTracker(FileTrackerQuery.READ, currentCampaign.clickPath)
+                .queryFileTracker(FileTrackerQuery.READ, currentCampaign.getData().impPath()).get();
+        var clicks = (Future<List<Click>>) model.queryFileTracker(FileTrackerQuery.READ, currentCampaign.getData().clkPath())
                 .get();
-        var server = (Future<List<Server>>) model.queryFileTracker(FileTrackerQuery.READ, currentCampaign.serverPath)
+        var server = (Future<List<Server>>) model.queryFileTracker(FileTrackerQuery.READ, currentCampaign.getData().svrPath())
                 .get();
 
         while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {
@@ -179,8 +197,36 @@ public class CampaignManager {
         this.loadCampaignData();
     }
 
+    /**
+     * Will untrack any files not currently needed for any campaign
+     */
+    private void cleanFiles() {
+        HashSet<String> files = new HashSet<>();
+
+        campaigns.values().forEach(c -> {
+            files.add(c.clkPath);
+            files.add(c.impPath);
+            files.add(c.svrPath);
+        });
+
+        this.model.queryFileTracker(FileTrackerQuery.CLEAN, null, files);
+    }
+
+
+    // TODO finish edit campaign
+    private void editCampaign(String campaign, String name, String clkPath, String impPath, String svrPath) {
+
+        if (!campaigns.containsKey(campaign)) {
+            logger.error("Campaign '{}' not found", campaign); 
+            return;
+        }
+
+        var c = campaigns.get(campaign);
+
+        if (name != null) c.name = name;
+    }
+
     private void close() {
         this.handler.writeToFile(CAMPAIGNS_LOCATION, this.campaigns.values().stream().map(Campaign::getData).toList());
-        
     }
 }

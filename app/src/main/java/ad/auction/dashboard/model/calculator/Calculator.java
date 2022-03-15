@@ -37,7 +37,6 @@ public class Calculator {
      * @return The future result
      */
     public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func) {
-        //this.dashboardValues(campaign);
         logger.info("Running calculation {}:{} on {}", metric, func, campaign.name());
 
         if (!campaign.dataLoaded())

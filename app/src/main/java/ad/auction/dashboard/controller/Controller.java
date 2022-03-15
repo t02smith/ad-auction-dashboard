@@ -69,8 +69,8 @@ public class Controller {
                 break;
             case NEW_CAMPAIGN:
                 c = () -> model.queryCampaignManager(CMQuery.NEW_CAMPAIGN, (String) args[0], (String) args[1], (String) args[2],
-                        (String) args[3]);
-                        break;
+                        (String) args[3]).get();
+                break;
             case CALCULATE:
                 return model.runCalculation((Metrics) args[0], (MetricFunction) args[1]);
             case GET_CAMPAIGN_DATA:

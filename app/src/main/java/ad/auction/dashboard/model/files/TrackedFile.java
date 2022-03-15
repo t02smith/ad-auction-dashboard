@@ -37,7 +37,7 @@ public class TrackedFile implements Runnable {
      * server or click
      * @return
      */
-    private FileType determineFileType() {
+    public FileType determineFileType() {
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
 

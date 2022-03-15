@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.files;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Manages all the files being tracked by the system
  * Provides interface for Model to interact with files
+ * 
+ * TODO check file type upon track
  * 
  * @author tcs1g20
  */
@@ -39,7 +42,9 @@ public class FileTracker {
         TRACK,
         UNTRACK,
         IS_TRACKED,
-        READ;
+        READ,
+        IS_TYPE,
+        CLEAN;
     }
 
     /**
@@ -48,7 +53,8 @@ public class FileTracker {
      * @param filename The target file
      * @return the output of the query if there is one
      */
-    public Optional<Object> query(FileTrackerQuery query, String filename) {
+    @SuppressWarnings("unchecked")
+    public Optional<Object> query(FileTrackerQuery query, String filename, Object... args) {
         logger.info("Performing {} on '{}'", query, filename);
 
         switch (query) {
@@ -66,6 +72,18 @@ public class FileTracker {
             case UNTRACK:
                 this.untrackFile(filename);
                 return Optional.empty();
+            case IS_TYPE:
+                return Optional.of(this.trackedFiles.get(filename).getType() == (FileType)args[0]);
+            case CLEAN:
+                logger.info("Cleaning files");
+                HashSet<String> files = (HashSet<String>)args[0];
+                trackedFiles.keySet().forEach(f -> {
+                    if (!files.contains(f)) {
+                        this.untrackFile(f);
+                    }
+                });
+                return Optional.empty();
+
         }
 
         return Optional.empty();
@@ -79,6 +97,12 @@ public class FileTracker {
         synchronized (this.trackedFiles) {
             logger.info("Tracking file '{}'", filename);
             this.trackedFiles.put(filename, new TrackedFile(filename));
+        }
+    }
+
+    public boolean correctFileType(String filename, FileType expected) {
+        synchronized (this.trackedFiles) {
+            return this.trackedFiles.get(filename).getType() == expected;
         }
     }
 
@@ -107,8 +131,7 @@ public class FileTracker {
         //Start reading the file
         executor.submit(file);
 
-       
-
+    
         //Start parsing the file
         return executor.submit(new FileParser(pipe, type));  
     }

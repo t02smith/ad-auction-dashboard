@@ -29,9 +29,9 @@ public class CampaignHandlerTests {
 
         assertTrue(
             campaign.name().equals("Campaign 1") &&
-            campaign.impressionPath.equals("./data/impression_log.csv") &&
-            campaign.serverPath.equals("./data/server_log.csv") &&
-            campaign.clickPath.equals("./data/click_log.csv")
+            campaign.getData().impPath().equals("./data/impression_log.csv") &&
+            campaign.getData().svrPath().equals("./data/server_log.csv") &&
+            campaign.getData().clkPath().equals("./data/click_log.csv")
         );
     }
 

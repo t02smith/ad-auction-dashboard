@@ -1,5 +1,7 @@
 package ad.auction.dashboard;
 
+import java.util.concurrent.Future;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,8 +48,11 @@ public class App extends Application {
      * Shuts down the application
      */
     public void shutdown() {
-        this.controller.query(ControllerQuery.CLOSE);
-    	logger.info("Closing application");
+        logger.info("Closing application");
+        Future<Object> process = this.controller.query(ControllerQuery.CLOSE);
+        while (!process.isDone()) {}
+
+    	
     	System.exit(0);
     }
 

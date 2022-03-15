@@ -31,21 +31,20 @@ public class UploadPage extends BasePage {
     public void build() {
         logger.info("Building Main Menu");
 
-        //The root is a stack pane
+        // The root is a stack pane
         root = new StackPane();
         root.setMaxWidth(window.getWidth());
         root.setMaxHeight(window.getHeight());
 
-        //Root holds Border Pane, Border Pane holds everything else
+        // Root holds Border Pane, Border Pane holds everything else
         var boarderPane = new BorderPane();
         root.getChildren().add(boarderPane);
 
-
-        //Title background on top
+        // Title background on top
         var title = new BorderPane();
         title.getStyleClass().add("topBackground");
 
-        //Title text on top
+        // Title text on top
         var mainMenuText = new Text("Upload file");
         mainMenuText.getStyleClass().add("topTitle");
         title.setCenter(mainMenuText);
@@ -61,7 +60,6 @@ public class UploadPage extends BasePage {
         TextField campaignsNameText = new TextField("");
         gridPane.add(campaignsLabel, 0, 0);
         gridPane.add(campaignsNameText, 1, 0);
-
 
         // impression file selection
         Label impressionsLabel = new Label("Impression file:");
@@ -114,7 +112,7 @@ public class UploadPage extends BasePage {
         // submit and cancel button
         Button okButton = new Button("Submit");
         Button cancelButton = new Button("Cancel");
-        FlowPane flowPane =new FlowPane(okButton, cancelButton);
+        FlowPane flowPane = new FlowPane(okButton, cancelButton);
         flowPane.setHgap(20);
         okButton.setOnAction(event -> {
             String campaignsName = campaignsNameText.getText();
@@ -123,7 +121,21 @@ public class UploadPage extends BasePage {
             String serverFilePath = serverText.getText();
             // check if the input is ok
             if (!campaignsName.isEmpty() && !impressionsFilePath.isEmpty() && !clicksFilePath.isEmpty() && !serverFilePath.isEmpty()) {
-                controller.query(ControllerQuery.NEW_CAMPAIGN, campaignsName, impressionsFilePath, clicksFilePath, serverFilePath);
+
+                try {
+                    boolean[] output = (boolean[]) controller.query(ControllerQuery.NEW_CAMPAIGN, campaignsName,
+                        impressionsFilePath, clicksFilePath, serverFilePath).get();
+
+                    if (!(output[0] && output[1] && output[2])) {
+                        // alert message
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Hint");
+                        alert.setHeaderText("Warning");
+                        alert.setContentText("Incorrect file formats submitted");
+                        alert.showAndWait();
+                    }
+                } catch (Exception err) {}
+
                 window.startMenu();
             } else {
                 // alert message
@@ -134,7 +146,6 @@ public class UploadPage extends BasePage {
                 alert.showAndWait();
             }
 
-            
         });
         cancelButton.setOnAction(event -> {
             window.startMenu();

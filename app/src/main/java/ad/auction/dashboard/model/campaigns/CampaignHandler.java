@@ -50,7 +50,6 @@ public class CampaignHandler extends DefaultHandler {
 
     /**
      * Get the data from the .xml file
-     * 
      * @param filename
      */
     public void parse(String filename) {
@@ -66,6 +65,11 @@ public class CampaignHandler extends DefaultHandler {
         }
     }
 
+    /**
+     * Writes a list of campaigns to a file
+     * @param filename
+     * @param campaingnLs
+     */
     public void writeToFile(String filename, List<CampaignData> campaingnLs) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

@@ -17,18 +17,16 @@ public class Campaign {
 
     // Lists of values read from file
     // From a list we can generate any number of streams
+    
+    String name;
+    String clkPath;
+    String impPath;
+    String svrPath;
 
-    private final String name;
     boolean dataLoaded = false;
 
-    //Paths and data for all files
-    final String impressionPath;
     List<Impression> impressions;
-
-    final String clickPath;
     List<Click> clicks;
-
-    final String serverPath;
     List<Server> server;
 
     //Stores info to display in the UI
@@ -37,9 +35,9 @@ public class Campaign {
 
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
         this.name = name;
-        this.impressionPath = impressionPath;
-        this.clickPath = clickPath;
-        this.serverPath = serverPath;
+        this.impPath = impressionPath;
+        this.clkPath = clickPath;
+        this.svrPath = serverPath;
     }
 
     /**
@@ -50,14 +48,12 @@ public class Campaign {
         this.impressions.clear();
         this.clicks.clear();
         this.server.clear();
-    }
-
-    
+    }  
 
     // GETTERS
 
     public CampaignData getData() {
-        return new CampaignData(this.name, this.clickPath, this.impressionPath, this.serverPath);
+        return new CampaignData(name, clkPath, impPath, svrPath);
     }
 
     public Stream<Impression> impressions() {
