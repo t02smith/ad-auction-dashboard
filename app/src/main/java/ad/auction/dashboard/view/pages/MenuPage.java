@@ -151,10 +151,12 @@ public class MenuPage extends BasePage {
         campaigns.forEach(c -> {
             var advertButton = makeAdvertButton(c.name());
             advertButton.setOnMouseClicked((e) -> {
-            	window.openLoadPage();
+            	window.openLoadPage(c.name());
             	
             	Task<Void> task = new Task<Void>() {
-            	    @Override public Void call() {
+            		
+            	    @Override 
+            	    public Void call() {
             	    	App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
             	        return null;
             	    }

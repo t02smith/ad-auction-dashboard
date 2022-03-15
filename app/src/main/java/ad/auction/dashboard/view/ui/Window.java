@@ -121,9 +121,9 @@ public class Window {
 		loadPage(new UploadPage(this));
 	}
 
-	public void openLoadPage() {
+	public void openLoadPage(String name) {
 		var window = this;
-		loadPage(new LoadPage(window));
+		loadPage(new LoadPage(window,name));
 	}
 	/**
 	 * Load a given page
