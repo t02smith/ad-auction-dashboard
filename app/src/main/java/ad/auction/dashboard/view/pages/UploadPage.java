@@ -168,16 +168,16 @@ public class UploadPage extends BasePage {
     private ArrayList<String> createFieldAll(String...fields) {
     	logger.info("Creating Input Fields");
     	
-    	var filePaths = new ArrayList<String>();
-        var buttonIndex = new HashMap<Button, Integer>();
+    	var filePaths = new ArrayList<String>(); //each filepath selected
+        var buttonIndex = new HashMap<Button, Integer>(); //map each button to an index
         
     	int insetRow = 1;
     	int index = 0;
     	
     	for (String field:fields) {
             Button selectButton = new Button("Select " + field + "..");
-
             var ind = index + 1;
+            
             gridPane.add(selectButton, 1, insetRow);
             insetRow++;
             

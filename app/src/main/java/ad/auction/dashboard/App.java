@@ -17,7 +17,7 @@ public class App extends Application {
 
     //Will be changed
     private static final int HEIGHT = 600;
-    private static final int WIDTH = 1200;
+    private static final int WIDTH = 800;
 
     // the singleton instance variable of app
     private static App instance;

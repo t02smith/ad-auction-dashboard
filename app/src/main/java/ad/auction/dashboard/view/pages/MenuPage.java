@@ -150,9 +150,10 @@ public class MenuPage extends BasePage {
         campaigns.forEach(c -> {
             var advertButton = makeAdvertButton(c.name());
             advertButton.setOnMouseClicked((e) -> {
-                window.openCampaignPage(c.name());
-                App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
-
+            	window.openLoadPage();
+//            	  App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
+            	
+//                window.openCampaignPage(c.name());
             });
             flowPane.getChildren().add(advertButton);
         });
