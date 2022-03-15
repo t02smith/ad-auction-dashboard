@@ -7,6 +7,7 @@ import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller.ControllerQuery;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.view.ui.Window;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -151,10 +152,21 @@ public class MenuPage extends BasePage {
             var advertButton = makeAdvertButton(c.name());
             advertButton.setOnMouseClicked((e) -> {
             	window.openLoadPage();
-                App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
-            	//TODO: LOOP in load page
-                window.openCampaignPage(c.name());
+            	
+            	Task<Void> task = new Task<Void>() {
+            	    @Override public Void call() {
+            	    	App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
+            	        return null;
+            	    }
+            	};
+            	
+            	task.setOnSucceeded((ee) -> {
+            		window.openCampaignPage(c.name());
+            	});            		
+            	
+            	new Thread(task).start();
             });
+            
             flowPane.getChildren().add(advertButton);
         });
 

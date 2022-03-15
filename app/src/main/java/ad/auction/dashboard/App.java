@@ -14,8 +14,8 @@ public class App extends Application {
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
 
     //Will be changed
-    private static final int WIDTH = 300;
-    private static final int HEIGHT = 300;
+    private static final int WIDTH = 853;
+    private static final int HEIGHT = 420;
 
     // the singleton instance variable of app
     private static App instance;

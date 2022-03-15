@@ -12,13 +12,13 @@ import ad.auction.dashboard.view.pages.CampaignPage;
 import ad.auction.dashboard.view.pages.LoadPage;
 import ad.auction.dashboard.view.pages.MenuPage;
 import ad.auction.dashboard.view.pages.UploadPage;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -38,9 +38,6 @@ public class Window {
 	//External listeners
 	private ArrayList<ScaleListener> scaleListeners = new ArrayList<ScaleListener>();
 	
-	//Internal listeners
-	protected RescaleListener rescaleListener;
-
 	// initialize with stage height and width
 	public Window(Stage stage, int height, int width) {
 		this.stage = stage;
@@ -53,8 +50,7 @@ public class Window {
 		// setup an empty pane as default scene
 		setupDefaultWindow();
 		// show menu page as the first page
-//		startMenu();
-		openLoadPage();
+		startMenu();
 	}
 
 	/**
@@ -85,13 +81,23 @@ public class Window {
 		stage.setMaxWidth(1280);
 		stage.setMaxHeight(720);
 		
-		stage.setWidth(853);
-		stage.setHeight(420);
-		
-		rescaleListener = new RescaleListener(scene);
-		
-		stage.widthProperty().addListener(rescaleListener);
-		stage.heightProperty().addListener(rescaleListener);
+		//Notify listeners for change in scaling
+		stage.widthProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
+			}
+			
+		});
+		stage.heightProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
+			}
+			
+		});
 	}
 
 	/**
@@ -116,7 +122,8 @@ public class Window {
 	}
 
 	public void openLoadPage() {
-		loadPage(new LoadPage(this));
+		var window = this;
+		loadPage(new LoadPage(window));
 	}
 	/**
 	 * Load a given page
@@ -145,54 +152,4 @@ public class Window {
 	}
 
 	public void addScaleListener(ScaleListener scaleListener) { this.scaleListeners.add(scaleListener); }
-	/**
-	 * Listener bound to the scaling of the scene
-	 * @author hhg1u20
-	 *
-	 */
-	public class RescaleListener implements ChangeListener<Number>{
-
-		private Scene scene;
-		private double width;
-		private double height;
-		private double scalar;
-		
-		//Get the scene
-		public RescaleListener(Scene sceneP) {
-			this.scene = sceneP;
-			this.width = scene.getWidth();
-			this.height = scene.getHeight();
-		}
-		
-		//The method invoked automatically on change
-		@Override
-		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-			//Notify external listeners
-			for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
-			
-			//The new size of the window
-			double newWidth = scene.getWidth();
-			double newHeight = scene.getHeight();
-			
-			//Update the scalar for resizing nodes depending on the aspect ratio
-			if (newWidth/newHeight > width/height) setScalar(newHeight/height);
-			else setScalar(newWidth/width);
-			
-			if (scalar < 1) {
-				scene.getRoot().prefHeight(Math.max(height, newHeight));
-				scene.getRoot().prefWidth(Math.max(width, newWidth));
-			} else {
-				Scale scale = new Scale(scalar, scalar);
-		        scale.setPivotX(0);
-		        scale.setPivotY(0);
-		        scene.getRoot().getTransforms().setAll(scale);
-
-		        scene.getRoot().prefWidth (newWidth / scalar);
-		        scene.getRoot().prefHeight(newHeight / scalar);
-			}
-		}
-		
-		//The scalar to multiply scaling with
-		private void setScalar(double scalar) { this.scalar = scalar; }
-	}
 }

@@ -23,7 +23,7 @@ import javafx.util.Duration;
  * @author hhg1u20
  *
  */
-public class LoadPage extends BasePage {
+public class LoadPage extends BasePage implements Runnable {
 
     private static final Logger logger = LogManager.getLogger(LoadPage.class.getSimpleName());
     private GridPane mainPane;
@@ -71,14 +71,14 @@ public class LoadPage extends BasePage {
 			//The fade animation for each circle
 			var timeline = new Timeline();
 			timeline.setCycleCount(Timeline.INDEFINITE);
-	        timeline.setAutoReverse(true);
+			timeline.setAutoReverse(true);
 			dotCircle.setFill(Color.WHITE);
-			
+					
 			timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1400),
-	        		new KeyValue(dotCircle.opacityProperty(), 0, Interpolator.EASE_BOTH)));
-			
+					new KeyValue(dotCircle.opacityProperty(), 0, Interpolator.EASE_BOTH)));
+				
 			timeline.play();
-			
+					
 			try { TimeUnit.MILLISECONDS.sleep(400);	} 
 			catch (InterruptedException e) { e.printStackTrace(); }
 		}
@@ -97,5 +97,12 @@ public class LoadPage extends BasePage {
 		
 		mainPane.setHgap(window.getWidth()/scaleFactorW);
 	    mainPane.setVgap(window.getHeight()/scaleFactorH);
+	    
+	    
+	}
+
+	@Override
+	public void run() {
+		build();
 	}
 }
