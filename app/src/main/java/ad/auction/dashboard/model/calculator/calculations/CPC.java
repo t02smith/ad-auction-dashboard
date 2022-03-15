@@ -16,7 +16,7 @@ public class CPC extends Metric {
     }
     
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> {
             double totalCost = (double)Metrics.TOTAL_COST.getMetric().overall().apply(c);
             double clickCount = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(c);

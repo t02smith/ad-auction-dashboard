@@ -16,7 +16,7 @@ public class CPA extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> {
             double totalCost = (double)Metrics.TOTAL_COST.getMetric().overall().apply(c);
             long conversionNo = (long)Metrics.CONVERSIONS_COUNT.getMetric().overall().apply(c);

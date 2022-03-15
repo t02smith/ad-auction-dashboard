@@ -16,7 +16,7 @@ public class CPM extends Metric {
     }
     
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> {
             long impressionCount = (long)Metrics.IMPRESSION_COUNT.getMetric().overall().apply(c)/1000;
             double totalCost = (double)Metrics.TOTAL_COST.getMetric().overall().apply(c);

@@ -16,7 +16,7 @@ public class BounceRate extends Metric {
     }
     
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> {
             long bounceCount = (long)Metrics.BOUNCES_COUNT.getMetric().overall().apply(c);
             long clickCount = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(c);

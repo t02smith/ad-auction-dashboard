@@ -16,7 +16,7 @@ public class ImpressionCount extends Metric {
     }
     
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> c.impressions().count();
     }
 

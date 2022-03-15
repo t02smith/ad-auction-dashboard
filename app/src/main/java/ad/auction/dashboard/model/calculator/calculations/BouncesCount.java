@@ -17,7 +17,7 @@ public class BouncesCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> c.server()
                 .filter(e -> e.pagesViewed() == 1 || e.secondsOnWebsite() < BOUNCE_MAX_TIME_SEC)
                 .count();

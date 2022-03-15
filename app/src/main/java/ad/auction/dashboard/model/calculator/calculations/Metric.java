@@ -34,7 +34,7 @@ public abstract class Metric {
      * Calculate the overall metric
      * @return function for overall metric
      */
-    public abstract Function<Campaign, Object> overall();
+    public abstract Function<Campaign, Number> overall();
 
     /**
      * Calculate a set of graph points

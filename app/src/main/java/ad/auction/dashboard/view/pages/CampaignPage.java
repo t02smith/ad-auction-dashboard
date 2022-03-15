@@ -1,6 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -102,12 +102,13 @@ public class CampaignPage extends BasePage {
     @SuppressWarnings("unchecked")
     private MetricSelection metricSelection() {
         return new MetricSelection(m -> {
-            Future<ArrayList<Point2D>> data = (Future<ArrayList<Point2D>>)controller.query(ControllerQuery.CALCULATE, m, MetricFunction.OVER_TIME).get();
-
-            while (!data.isDone()) {}
+            var future = (Future<Object>)controller.query(ControllerQuery.CALCULATE, m, MetricFunction.OVER_TIME);
+            while (!future.isDone()) {}
 
             try {
-                this.graph.setData(data.get());
+                var data = (List<Point2D>)future.get();
+
+                this.graph.setData(data);
                 this.graph.setTitleName(m.getMetric().displayName());
                 this.graph.setYName(m.getMetric().displayName());
                 this.screen.setCenter(this.graph.getLineChart());

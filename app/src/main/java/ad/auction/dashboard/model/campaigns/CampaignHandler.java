@@ -105,7 +105,7 @@ public class CampaignHandler extends DefaultHandler {
 
             transformer.transform(domSource, streamResult);
 
-            logger.info("Campaings written to {}", filename);
+            logger.info("Campaigns written to {}", filename);
 
         } catch (ParserConfigurationException | TransformerException e) {
             logger.error("Error writing to {}: {}", filename, e.getMessage());

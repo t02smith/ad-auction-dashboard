@@ -16,7 +16,7 @@ public class TotalClicksCost extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> Utility.roundNDp(c.clicks()
                 .parallel()
                 .reduce(0.0, (acc, elem) -> acc + elem.clickCost(), Double::sum),3);

@@ -16,7 +16,7 @@ public class UniquesCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> c.clicks()
                      .map(svr -> svr.ID())
                      .distinct()

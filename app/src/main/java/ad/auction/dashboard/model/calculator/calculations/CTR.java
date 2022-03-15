@@ -16,7 +16,7 @@ public class CTR extends Metric {
     }
     
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> {
             long clickCount = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(c);
             long impressionCount = (long)Metrics.IMPRESSION_COUNT.getMetric().overall().apply(c);

@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Main Menu page that holds the UI elements for its controls
@@ -143,18 +144,28 @@ public class MenuPage extends BasePage {
     private void updateAdvertiseList() {
         flowPane.getChildren().clear();
 
-        List<CampaignData> campaigns = (List<CampaignData>) App.getInstance().controller()
-                .query(ControllerQuery.GET_CAMPAIGNS).get();
-        campaigns.forEach(c -> {
-            var advertButton = new Button(c.name());
-            advertButton.getStyleClass().add("advertButton");
-            advertButton.setOnMouseClicked((e) -> {
-                window.openCampaignPage(c.name());
-                App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
+        var future = (Future<Object>)App.getInstance().controller().query(ControllerQuery.GET_CAMPAIGNS);
+        while (!future.isDone()) {}
+        
+        try {
+            var campaigns = (List<CampaignData>)future.get();
 
+            campaigns.forEach(c -> {
+                logger.info(c.name());
+                var advertButton = new Button(c.name());
+                advertButton.getStyleClass().add("advertButton");
+                advertButton.setOnMouseClicked((e) -> {
+                    
+                    var done = (Future<Object>)App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
+    
+                    while (!done.isDone()) {}
+                    window.openCampaignPage(c.name());
+                });
+                flowPane.getChildren().add(advertButton);
             });
-            flowPane.getChildren().add(advertButton);
-        });
+        } catch (Exception e) {}
+
+        
 
     }
 

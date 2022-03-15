@@ -17,7 +17,7 @@ public class TotalCost extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> Utility.roundNDp((double) Metrics.TOTAL_COST_CLICK.getMetric().overall().apply(c) +
                 (double) Metrics.TOTAL_COST_IMPRESSION.getMetric().overall().apply(c),3);
 

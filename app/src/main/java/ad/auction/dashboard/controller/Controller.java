@@ -1,6 +1,9 @@
 package ad.auction.dashboard.controller;
 
-import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.Metrics;
@@ -19,6 +22,10 @@ import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 public class Controller {
 
     private final Model model = new Model();
+
+        //Max calculations to be ran at once
+        private static final int CONTROLLER_THREAD_COUNT = 10;
+        private final ExecutorService executor = Executors.newFixedThreadPool(CONTROLLER_THREAD_COUNT);
 
     public enum ControllerQuery {
         // args = (String campaignName)
@@ -53,27 +60,31 @@ public class Controller {
      * @param args
      * @return
      */
-    public Optional<Object> query(ControllerQuery query, Object... args) {
+    public Future<Object> query(ControllerQuery query, Object... args) {
+        Callable<Object> c = () -> null;
+
         switch (query) {
             case OPEN_CAMPAIGN:
-                model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, (String) args[0]);
-                return Optional.empty();
+                c = () -> model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, (String) args[0]);
+                break;
             case NEW_CAMPAIGN:
-                model.queryCampaignManager(CMQuery.NEW_CAMPAIGN, (String) args[0], (String) args[1], (String) args[2],
+                c = () -> model.queryCampaignManager(CMQuery.NEW_CAMPAIGN, (String) args[0], (String) args[1], (String) args[2],
                         (String) args[3]);
-                return Optional.empty();
+                        break;
             case CALCULATE:
-                return Optional.of(model.runCalculation((Metrics) args[0], (MetricFunction) args[1]));
+                return model.runCalculation((Metrics) args[0], (MetricFunction) args[1]);
             case GET_CAMPAIGN_DATA:
-                return Optional.of(model.queryCampaignManager(CMQuery.GET_CAMPAIGN_DATA).get());
+                c = () -> model.queryCampaignManager(CMQuery.GET_CAMPAIGN_DATA).get();
+                break;
             case GET_CAMPAIGNS:
-                return Optional.of(model.queryCampaignManager(CMQuery.GET_CAMPAIGNS).get());
+                c = () -> model.queryCampaignManager(CMQuery.GET_CAMPAIGNS).get();
+                break;
             case CLOSE:
-                this.model.close();
-                return Optional.empty();
+                c = () -> {this.model.close(); return null;};
+                break;
         }
 
-        return Optional.empty();
+        return executor.submit(c);
     }
 
 }

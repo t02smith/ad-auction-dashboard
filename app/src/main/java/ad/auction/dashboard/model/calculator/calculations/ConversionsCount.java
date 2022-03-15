@@ -15,7 +15,7 @@ public class ConversionsCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, Object> overall() {
+    public Function<Campaign, Number> overall() {
         return c -> c.server()
                 .filter(e -> e.conversion())
                 .count();

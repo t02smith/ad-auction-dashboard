@@ -1,6 +1,6 @@
 package ad.auction.dashboard.view.Graph_Models.Graphs;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
@@ -10,17 +10,17 @@ import javafx.scene.chart.XYChart;
 public class LineChartModel extends ChartModel {
 
     // Set of data points
-    private ArrayList<Point2D> data;
+    private List<Point2D> data;
 
     public LineChartModel(String titleName, String xAxisName, String yAxisName) {
         super(titleName, xAxisName, yAxisName);
     }
 
-    public ArrayList<Point2D> getData() {
+    public List<Point2D> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Point2D> newData) {
+    public void setData(List<Point2D> newData) {
         this.data = newData;
     }
 
