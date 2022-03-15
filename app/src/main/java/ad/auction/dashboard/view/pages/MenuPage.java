@@ -151,9 +151,9 @@ public class MenuPage extends BasePage {
             var advertButton = makeAdvertButton(c.name());
             advertButton.setOnMouseClicked((e) -> {
             	window.openLoadPage();
-//            	  App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
-            	
-//                window.openCampaignPage(c.name());
+                App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
+            	//TODO: LOOP in load page
+                window.openCampaignPage(c.name());
             });
             flowPane.getChildren().add(advertButton);
         });

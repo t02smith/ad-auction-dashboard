@@ -13,11 +13,9 @@ public class App extends Application {
 	private Stage stage;
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
 
-
-
     //Will be changed
-    private static final int HEIGHT = 600;
-    private static final int WIDTH = 800;
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 300;
 
     // the singleton instance variable of app
     private static App instance;
@@ -37,7 +35,7 @@ public class App extends Application {
      * Opens the window of the application
      */
     private void openWindow() {
-    	var window = new Window(stage,HEIGHT,WIDTH);
+    	new Window(stage,HEIGHT,WIDTH);
     	stage.show();
     }
     

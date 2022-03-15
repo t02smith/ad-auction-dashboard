@@ -18,9 +18,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+/**
+ * Loading page to be presented when something is loading up
+ * @author hhg1u20
+ *
+ */
 public class LoadPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(LoadPage.class.getSimpleName());
+    private GridPane mainPane;
 
 	public LoadPage(Window window) {
 		super(window);
@@ -36,14 +42,17 @@ public class LoadPage extends BasePage {
 	    root.setMaxHeight(window.getHeight());
 	    
 	    //BorderPane to hold the things on the center
-	    var mainPane = new GridPane();
-        mainPane.setHgap(window.getWidth()/1.7);
-        mainPane.setVgap(window.getHeight()/1.7);
+	    mainPane = new GridPane();
+        updateScaling();
         
-	    root.getChildren().add(mainPane);
+	    root.getChildren().addAll(mainPane);
 	    mainPane.getStyleClass().add("campaign-list");
 
 	    mainPane.add(threeDotsAnim(), 1, 1);
+	    
+	    window.addScaleListener(() -> {
+	    	updateScaling();
+	    });
 	}
 
 	/*
@@ -54,10 +63,12 @@ public class LoadPage extends BasePage {
 
 		
 		for (int i = 0; i < 30; i+=10) {
+			//Circles to represent dots
 			var dotCircle = new Circle(0, i, 10);
 			hbox.getChildren().add(dotCircle);
 			HBox.setMargin(dotCircle, new Insets(0, 7, 0, 0));
 			
+			//The fade animation for each circle
 			var timeline = new Timeline();
 			timeline.setCycleCount(Timeline.INDEFINITE);
 	        timeline.setAutoReverse(true);
@@ -73,5 +84,18 @@ public class LoadPage extends BasePage {
 		}
 		
 		return hbox;
+	}
+	/**
+	 * Update scaling of the gridpane according to the window
+	 */
+	private void updateScaling() {
+		var scaleFactorW = 2.3;
+		var scaleFactorH = 2.6;
+		
+		if (window.getWidth() > 600) scaleFactorW = 2.3 - (window.getWidth()/100)/100;
+		if (window.getHeight() > 600) scaleFactorH = 2.6 - (window.getHeight()/50)/100;
+		
+		mainPane.setHgap(window.getWidth()/scaleFactorW);
+	    mainPane.setVgap(window.getHeight()/scaleFactorH);
 	}
 }

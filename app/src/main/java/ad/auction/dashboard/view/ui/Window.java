@@ -1,6 +1,12 @@
 package ad.auction.dashboard.view.ui;
 
+import java.util.ArrayList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ad.auction.dashboard.App;
+import ad.auction.dashboard.view.events.ScaleListener;
 import ad.auction.dashboard.view.pages.BasePage;
 import ad.auction.dashboard.view.pages.CampaignPage;
 import ad.auction.dashboard.view.pages.LoadPage;
@@ -15,20 +21,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
-/*
+/**
  * The window of the application
  * @auth hhg1u20
  */
 public class Window {
+
+    private static final Logger logger = LogManager.getLogger(Window.class.getSimpleName());
 
 	private final int height;
 	private final int width;
 
 	private final Stage stage;
 	private Scene scene;
-	private BasePage currentPage;
 	
-	protected ScaleListener scaleListener;
+	//External listeners
+	private ArrayList<ScaleListener> scaleListeners = new ArrayList<ScaleListener>();
+	
+	//Internal listeners
+	protected RescaleListener rescaleListener;
 
 	// initialize with stage height and width
 	public Window(Stage stage, int height, int width) {
@@ -42,14 +53,16 @@ public class Window {
 		// setup an empty pane as default scene
 		setupDefaultWindow();
 		// show menu page as the first page
-		startMenu();
-		//openLoadPage();
+//		startMenu();
+		openLoadPage();
 	}
 
 	/**
 	 * Setup the basics of the stage - title, size and behaviour
 	 */
 	private void setupStage() {
+		logger.info("Setting up the stage");
+		
 		stage.setTitle("Ad Auction Dashboard");
 		stage.getIcons().add(new Image(this.getClass().getResource("/img/logo.png").toExternalForm()));
 		stage.setMinWidth(width);
@@ -61,13 +74,24 @@ public class Window {
 	 * Default scene
 	 */
 	private void setupDefaultWindow() {
+		logger.info("Setting up default scaling");
+		
 		this.scene = new Scene(new Pane(), width, height, Color.BLUE);
+		
 		stage.setScene(this.scene);
+		stage.setMinWidth(300);
+		stage.setMinHeight(300);
 		
-		scaleListener = new ScaleListener(scene);
+		stage.setMaxWidth(1280);
+		stage.setMaxHeight(720);
 		
-		stage.widthProperty().addListener(scaleListener);
-		stage.heightProperty().addListener(scaleListener);
+		stage.setWidth(853);
+		stage.setHeight(420);
+		
+		rescaleListener = new RescaleListener(scene);
+		
+		stage.widthProperty().addListener(rescaleListener);
+		stage.heightProperty().addListener(rescaleListener);
 	}
 
 	/**
@@ -102,8 +126,6 @@ public class Window {
 	private void loadPage(BasePage newPage) {
 		// build the page ui
 		newPage.build();
-		// set current page
-		currentPage = newPage;
 		// create scene
 		scene = newPage.createScene();
 		// show scene of the new page
@@ -115,19 +137,20 @@ public class Window {
 	}
 
 	public double getWidth() {
-		return this.width;
+		return stage.getWidth();
 	}
 
 	public double getHeight() {
-		return this.height;
+		return stage.getHeight();
 	}
 
+	public void addScaleListener(ScaleListener scaleListener) { this.scaleListeners.add(scaleListener); }
 	/**
 	 * Listener bound to the scaling of the scene
 	 * @author hhg1u20
 	 *
 	 */
-	public class ScaleListener implements ChangeListener<Number>{
+	public class RescaleListener implements ChangeListener<Number>{
 
 		private Scene scene;
 		private double width;
@@ -135,7 +158,7 @@ public class Window {
 		private double scalar;
 		
 		//Get the scene
-		public ScaleListener(Scene sceneP) {
+		public RescaleListener(Scene sceneP) {
 			this.scene = sceneP;
 			this.width = scene.getWidth();
 			this.height = scene.getHeight();
@@ -144,6 +167,9 @@ public class Window {
 		//The method invoked automatically on change
 		@Override
 		public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+			//Notify external listeners
+			for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
+			
 			//The new size of the window
 			double newWidth = scene.getWidth();
 			double newHeight = scene.getHeight();
