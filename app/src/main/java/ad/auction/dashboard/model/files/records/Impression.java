@@ -48,7 +48,7 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
         BETWEEN_45_54("45-54"),
         OVER_54(">54");
 
-        private final String str;
+        public final String str;
         
         private AgeGroup(String str) {this.str=str;}
 

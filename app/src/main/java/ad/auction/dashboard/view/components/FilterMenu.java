@@ -1,6 +1,10 @@
 package ad.auction.dashboard.view.components;
 
+import ad.auction.dashboard.App;
+import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.files.records.Impression;
+import ad.auction.dashboard.model.files.records.Impression.Gender;
+import ad.auction.dashboard.model.files.records.Impression.Income;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
@@ -13,13 +17,22 @@ import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-
+/**
+ * 
+ */
 public class FilterMenu extends GridPane {
 
     public static final Logger logger = LogManager.getLogger(FilterMenu.class.getSimpleName());
 
-    public FilterMenu() {
+    private final Controller controller = App.getInstance().controller();
+
+    private final Runnable reloadMetric;
+
+    public FilterMenu(Runnable reloadMetric) {
+        this.reloadMetric = reloadMetric;
         build();
     }
 
@@ -36,58 +49,67 @@ public class FilterMenu extends GridPane {
         // Gender section
         var gender = new Text("Gender");
         gender.getStyleClass().add("filter-sub-heading");
-        CheckBox[] genders = new CheckBox[2];
-        for (int i = 0; i < Impression.Gender.values().length; i++) {
-            String toDisplay = Impression.Gender.values()[i].toString();
-            genders[i] = new CheckBox(toDisplay.charAt(0) + toDisplay.substring(1).toLowerCase());
-            genders[i].setSelected(true);
-        }
+
+        List<CheckBox> genders = Arrays.asList(Gender.values()).stream().map(g -> {
+            int hash = controller.addImpFilter(i -> i.gender() != g);
+
+            var box = new CheckBox(g.toString().charAt(0) + g.toString().substring(1).toLowerCase());
+            box.setSelected(true);
+            box.selectedProperty().addListener(e -> {
+                controller.toggleFilter(hash);
+            });
+
+            return box;
+        }).toList();
+
 
         // Income section
         var income = new Text("Income");
         income.getStyleClass().add("filter-sub-heading");
-        CheckBox[] incomes = new CheckBox[3];
-        for (int i = 0; i < Impression.Income.values().length; i++) {
-            String toDisplay = Impression.Income.values()[i].toString();
-            incomes[i] = new CheckBox(toDisplay.charAt(0) + toDisplay.substring(1).toLowerCase());
-            incomes[i].setSelected(true);
-        }
+        List<CheckBox> incomes = Arrays.asList(Income.values()).stream().map(i -> {
+            int hash = controller.addImpFilter(imp -> imp.income() != i);
+
+            var box = new CheckBox(i.toString().charAt(0) + i.toString().substring(1).toLowerCase());
+            box.setSelected(true);
+            box.selectedProperty().addListener(e -> {
+                controller.toggleFilter(hash);
+                this.reloadMetric.run();
+            });
+
+            return box;
+        }).toList();
 
         // Age Group section
         var ageGroup = new Text("Age Group");
         ageGroup.getStyleClass().add("filter-sub-heading");
-        CheckBox[] ageGroups = new CheckBox[5];
-        for (int i = 0; i < Impression.AgeGroup.values().length; i++) {
-            String toDisplay = Impression.AgeGroup.values()[i].toString();
+        List<CheckBox> ageGroups = Arrays.asList(Impression.AgeGroup.values()).stream().map(ag -> {
+            int hash = controller.addImpFilter(i -> i.ageGroup() != ag);
 
-            if (toDisplay.contains("UNDER")) {
-                toDisplay = "<25";
-            } else if (toDisplay.contains("OVER")) {
-                toDisplay = ">54";
-            } else {
-                toDisplay = toDisplay.substring(8).replace("_", "-");
-            }
-            ageGroups[i] = new CheckBox(toDisplay);
-            ageGroups[i].setSelected(true);
-        }
+            var box = new CheckBox(ag.str);
+            box.setSelected(true);
+            box.selectedProperty().addListener(e -> {
+                controller.toggleFilter(hash);
+                this.reloadMetric.run();
+            });
+
+            return box;
+        }).toList();
 
         // Context section
         var context = new Text("Context");
         context.getStyleClass().add("filter-sub-heading");
-        CheckBox[] contexts = new CheckBox[6];
-        for (int i = 0; i < Impression.Context.values().length; i++) {
-            String toDisplay = Impression.Context.values()[i].toString();
+        List<CheckBox> contexts = Arrays.asList(Impression.Context.values()).stream().map(c -> {
+            int hash = controller.addImpFilter(i -> i.context() != c);
 
-            if (toDisplay.equals("SOCIAL_MEDIA")) {
-                toDisplay = "Social Media";
-                contexts[i] = new CheckBox(toDisplay);
-            }
-            else {
-                contexts[i] = new CheckBox(toDisplay.charAt(0) + toDisplay.substring(1).toLowerCase());
-            }
+            var box = new CheckBox(c.toString().charAt(0) + c.toString().substring(1).toLowerCase());
+            box.setSelected(true);
+            box.selectedProperty().addListener(e -> {
+                controller.toggleFilter(hash);
+                this.reloadMetric.run();
+            });
 
-            contexts[i].setSelected(true);
-        }
+            return box;
+        }).toList();
 
         // Add it all to the grid pane
         add(date, 0, 0);
@@ -96,18 +118,18 @@ public class FilterMenu extends GridPane {
         addRow(3, dates.get(2).getKey(), dates.get(2).getValue());
         addRow(4, dates.get(3).getKey(), dates.get(3).getValue());
         add(gender,0, 5);
-        addRow(6, genders[0], genders[1]);
+        addRow(6, genders.get(0), genders.get(1));
         add(income, 0, 7);
-        addRow(8, incomes[0], incomes[1]);
-        add(incomes[2], 0, 9);
+        addRow(8, incomes.get(0), incomes.get(1));
+        add(incomes.get(2), 0, 9);
         add(ageGroup, 0, 10);
-        addRow(11, ageGroups[0], ageGroups[1]);
-        addRow(12, ageGroups[2], ageGroups[3]);
-        add(ageGroups[4], 0, 13);
+        addRow(11, ageGroups.get(0), ageGroups.get(1));
+        addRow(12, ageGroups.get(2), ageGroups.get(3));
+        add(ageGroups.get(4), 0, 13);
         add(context, 0, 14);
-        addRow(15, contexts[0], contexts[1]);
-        addRow(16, contexts[2], contexts[3]);
-        addRow(17, contexts[4], contexts[5]);
+        addRow(15, contexts.get(0), contexts.get(1));
+        addRow(16, contexts.get(2), contexts.get(3));
+        addRow(17, contexts.get(4), contexts.get(5));
 
         // Add spacing and margins
         setVgap(5);

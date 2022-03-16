@@ -3,6 +3,7 @@ package ad.auction.dashboard.view.pages;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 import ad.auction.dashboard.view.components.FilterMenu;
 import javafx.geometry.Pos;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller;
+import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
 import ad.auction.dashboard.view.components.MetricSelection;
@@ -34,6 +36,30 @@ public class CampaignPage extends BasePage {
 
     private LineChartModel graph;
     private BorderPane screen = new BorderPane();
+
+    private Metrics currentMetric = Metrics.IMPRESSION_COUNT;
+
+    //Function to load a given metric
+    @SuppressWarnings("unchecked")
+    private final Consumer<Metrics> loadMetric = m -> {
+        this.currentMetric = m;
+
+        Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
+        while (!future.isDone()) {}
+
+        try {
+            var data = (List<Point2D>)future.get();
+
+            this.graph.setData(data);
+            this.graph.setTitleName(m.getMetric().displayName());
+            this.graph.setYName(m.getMetric().displayName());
+            this.screen.setCenter(this.graph.getLineChart());
+            
+        } catch (InterruptedException | ExecutionException e) {
+            //
+        }
+        
+    };
 
     /**
      * Handles the new page according to the graph to be plotted
@@ -82,7 +108,7 @@ public class CampaignPage extends BasePage {
         var backButton = new Button("<");
         backButton.getStyleClass().add("buttonStyle");
         backButton.setOnMouseClicked((e) -> window.startMenu());
-        var filterMenu = new FilterMenu();
+        var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric));
         rightMenu.getChildren().addAll(backButton, filterTitle, filterMenu);
 
         //Title text on top
@@ -94,33 +120,13 @@ public class CampaignPage extends BasePage {
         graphPane.setCenter(graph.getLineChart());
 
         screen.setTop(title);
-        screen.setLeft(this.metricSelection());
+        screen.setLeft(new MetricSelection(loadMetric));
         screen.setRight(rightMenu);
         screen.setCenter(graphPane);
 
         //Style the buttons under the graph
         styleButtons(graphButtonPane);
-    }
-
-    @SuppressWarnings("unchecked")
-    private MetricSelection metricSelection() {
-        return new MetricSelection(m -> {
-            Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
-            while (!future.isDone()) {}
-
-            try {
-                var data = (List<Point2D>)future.get();
-
-                this.graph.setData(data);
-                this.graph.setTitleName(m.getMetric().displayName());
-                this.graph.setYName(m.getMetric().displayName());
-                this.screen.setCenter(this.graph.getLineChart());
-                
-            } catch (InterruptedException | ExecutionException e) {
-                //
-            }
-            
-        });
+        this.loadMetric.accept(this.currentMetric);
     }
 
     /**

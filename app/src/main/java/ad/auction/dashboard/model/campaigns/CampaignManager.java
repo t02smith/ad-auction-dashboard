@@ -32,7 +32,7 @@ public class CampaignManager {
     // Set of loaded campaigns
     private final HashMap<String, FilteredCampaign> campaigns = new HashMap<>();
 
-    private Campaign currentCampaign;
+    private FilteredCampaign currentCampaign;
     private CampaignHandler handler = new CampaignHandler();
 
     public CampaignManager(Model model) {
@@ -172,24 +172,16 @@ public class CampaignManager {
 
     // FILTERS
 
-    @SuppressWarnings({"unchecked","rawtypes"})
-    public void addFilter(String campaign, FileType type, Predicate filter) {
-        if (!campaigns.containsKey(campaign)) {
-            logger.error("Campaign '{}' not found", campaign);
-            return;
-        }
+    public void toggleFilter(int hash) {
+        this.currentCampaign.toggleFilter(hash);
+    }
 
-        FilteredCampaign c = campaigns.get(campaign);
-        if (type == null) c.addFilter((Predicate<SharedFields>)filter);
-        else {
-            switch (type) {
-                case IMPRESSION:
-                    c.addImpFilter((Predicate<Impression>) filter);
-                default:
-                    throw new IllegalArgumentException("No specific filter for " + type);
-            }
-        }
-        
+    public int addFilter(Predicate<SharedFields> filter) {
+        return this.currentCampaign.addFilter(filter);
+    }
+
+    public int addImpFilter(Predicate<Impression> impFilter) {
+        return this.currentCampaign.addImpFilter(impFilter);
     }
 
     // GETTERS

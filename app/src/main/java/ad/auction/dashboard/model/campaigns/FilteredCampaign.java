@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
@@ -17,6 +20,8 @@ import ad.auction.dashboard.model.files.records.SharedFields;
  * it using the hashcode
  */
 public class FilteredCampaign extends Campaign {
+
+    private static final Logger logger = LogManager.getLogger(FilteredCampaign.class.getSimpleName());
 
     //Currently active filters
     private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
@@ -37,22 +42,8 @@ public class FilteredCampaign extends Campaign {
     public void toggleFilter(int filterHash) {
         if (filterActive.containsKey(filterHash))
             filterActive.replace(filterHash, !filterActive.get(filterHash));
-    }
 
-    /**
-     * Add a filter to just the impressions data
-     * e.g. Gender,
-     * 
-     * @param filter
-     */
-    public int addImpFilter(Predicate<Impression> filter) {
-        int hash = filter.hashCode();
-        if (!impFilters.containsKey(hash)) {
-            this.impFilters.put(hash, filter);
-            this.filterActive.put(hash, false);
-        }
-
-        return hash;
+        logger.info("Toggling filter {} to {}", filterHash, filterActive.get(filterHash));
     }
 
     /**
@@ -66,6 +57,22 @@ public class FilteredCampaign extends Campaign {
         int hash = filter.hashCode();
         if (!allFilters.containsKey(hash)) {
             this.allFilters.put(hash, filter);
+            this.filterActive.put(hash, false);
+        }
+
+        return hash;
+    }
+
+    /**
+     * Add a filter to just the impressions data
+     * e.g. Gender,
+     * 
+     * @param filter
+     */
+    public int addImpFilter(Predicate<Impression> filter) {
+        int hash = filter.hashCode();
+        if (!impFilters.containsKey(hash)) {
+            this.impFilters.put(hash, filter);
             this.filterActive.put(hash, false);
         }
 
