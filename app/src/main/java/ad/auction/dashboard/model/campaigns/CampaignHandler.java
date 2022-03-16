@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 public class CampaignHandler extends DefaultHandler {
 
     private static final Logger logger = LogManager.getLogger(CampaignHandler.class.getSimpleName());
-    private ArrayList<Campaign> campaigns;
+    private ArrayList<FilteredCampaign> campaigns;
 
     private StringBuilder element;
     private CampaignTemp current;
@@ -161,14 +161,14 @@ public class CampaignHandler extends DefaultHandler {
                 current.clkPath = element.toString();
                 break;
             case "campaign":
-                campaigns.add(new Campaign(
+                campaigns.add(new FilteredCampaign(
                         current.name, current.impPath, current.clkPath, current.svrPath));
                 logger.info("Campaign '{}' loaded", current.name);
                 break;
         }
     }
 
-    public ArrayList<Campaign> getCampaigns() {
+    public ArrayList<FilteredCampaign> getCampaigns() {
         return this.campaigns == null ? new ArrayList<>() : this.campaigns;
     }
 }

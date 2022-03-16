@@ -15,9 +15,8 @@ import ad.auction.dashboard.model.files.records.Server;
  */
 public class Campaign {
 
-    // Lists of values read from file
-    // From a list we can generate any number of streams
-    
+    //Campaign data is package protected so the CampaignManager can
+    // access it but nothing else can unless there is getter/setter    
     String name;
     String clkPath;
     String impPath;
