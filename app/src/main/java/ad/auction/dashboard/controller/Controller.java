@@ -35,7 +35,7 @@ public class Controller {
      * @param name 
      * @return The process that must finish before opening campaign screen
      */
-    public Future<Object> openCampaign(String name) {
+    public Future<Void> openCampaign(String name) {
         return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
     }
 

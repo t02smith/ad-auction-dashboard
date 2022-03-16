@@ -19,8 +19,6 @@ import ad.auction.dashboard.model.files.records.SharedFields;
  * Manages all the files being tracked by the system
  * Provides interface for Model to interact with files
  * 
- * TODO check file type upon track
- * 
  * @author tcs1g20
  */
 public class FileTracker {
@@ -34,61 +32,6 @@ public class FileTracker {
     private final HashMap<String, TrackedFile> trackedFiles = new HashMap<>();
 
     private final ExecutorService executor = Executors.newFixedThreadPool(FILE_TRACKER_THREAD_COUNT);
-
-
-    // /**
-    //  * Types of query to the FileTracker
-    //  */
-    // public enum FileTrackerQuery {
-    //     TRACK,
-    //     UNTRACK,
-    //     IS_TRACKED,
-    //     READ,
-    //     IS_TYPE,
-    //     CLEAN;
-    // }
-
-    // /**
-    //  * Allows the model to interface with this class via a query
-    //  * @param query The type of action
-    //  * @param filename The target file
-    //  * @return the output of the query if there is one
-    //  */
-    // @SuppressWarnings("unchecked")
-    // public Optional<Object> query(FileTrackerQuery query, String filename, Object... args) {
-    //     logger.info("Performing {} on '{}'", query, filename);
-
-    //     switch (query) {
-    //         case TRACK:
-    //             this.trackFile(filename);
-    //             return Optional.empty();
-    //         case READ:
-    //             try {return Optional.of(this.readFile(filename));}
-    //             catch (IOException e) {
-    //                 logger.error("Error executing READ query: {}", e.getMessage());
-    //                 return Optional.empty();
-    //             }
-    //         case IS_TRACKED:
-    //             return Optional.of(this.isFileTracked(filename));
-    //         case UNTRACK:
-    //             this.untrackFile(filename);
-    //             return Optional.empty();
-    //         case IS_TYPE:
-    //             return Optional.of(this.trackedFiles.get(filename).getType() == (FileType)args[0]);
-    //         case CLEAN:
-    //             logger.info("Cleaning files");
-    //             HashSet<String> files = (HashSet<String>)args[0];
-    //             trackedFiles.keySet().forEach(f -> {
-    //                 if (!files.contains(f)) {
-    //                     this.untrackFile(f);
-    //                 }
-    //             });
-    //             return Optional.empty();
-
-    //     }
-
-    //     return Optional.empty();
-    // }
 
     /**
      * Start tracking a file but don't read it

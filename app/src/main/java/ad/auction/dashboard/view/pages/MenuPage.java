@@ -1,10 +1,13 @@
 package ad.auction.dashboard.view.pages;
 
+import java.util.concurrent.Future;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.view.ui.Window;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,8 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.concurrent.Future;
-
 /**
  * Main Menu page that holds the UI elements for its controls
  *
@@ -30,8 +31,7 @@ import java.util.concurrent.Future;
 public class MenuPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(MenuPage.class.getSimpleName());
-    // the flow pane contains advertise buttons
-    private FlowPane flowPane = null;
+    private FlowPane flowPane; // the flow pane contains the campaign buttons
 
     public MenuPage(Window window) {
         super(window);
@@ -59,42 +59,41 @@ public class MenuPage extends BasePage {
         var sideMenu = new VBox();
         sideMenu.getStyleClass().add("sideBackground");
 
-        // Buttons in the side menu
-        // var rangeDateButton = new Button("Range by date");
-        // var rangeSegmentButton = new Button("Range by segment");
-        // create a upload button on side menu
+        // create an upload button on side menu
         var uploadButton = new Button("Upload a folder");
         sideMenu.getChildren().addAll(uploadButton);
+        
         // click event of upload button
         uploadButton.setOnAction(event -> {
             window.openUploadPage();
 
         });
 
+        // Scroll pane to hold the flow pane and enable scrolling
+        var scrollPane = new ScrollPane();
+        scrollPane.setContent(flowPane);
+        scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        
+        // menu pane layout
+        menuPane.setTop(title());
+        menuPane.setLeft(sideMenu);
+        menuPane.setCenter(campaignList());
+        BorderPane.setMargin(menuPane, new Insets(15, 0, 0, 15));
+        
         var iter = sideMenu.getChildren().iterator();
 
         while (iter.hasNext()) {
             var currentButton = iter.next();
             VBox.setMargin(currentButton, new Insets(10, 10, 10, 10));
             currentButton.getStyleClass().add("buttonStyle");
-
-            // Scroll pane to hold the flow pane and enable scrolling
-            var scrollPane = new ScrollPane();
-            scrollPane.setContent(flowPane);
-            scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
-            scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
-
-            // menu pane layout
-            menuPane.setTop(title());
-            menuPane.setLeft(sideMenu);
-            menuPane.setCenter(campaignList());
-            BorderPane.setMargin(menuPane, new Insets(15, 0, 0, 15));
-
         }
     }
 
+    /*
+     * The title on the page
+     */
     private HBox title() {
-        // Title text on top
         var mainMenuTextA = new Label("Ad Auction ");
         mainMenuTextA.getStyleClass().add("topTitle");
         mainMenuTextA.setTextFill(Color.WHITE);
@@ -115,6 +114,10 @@ public class MenuPage extends BasePage {
         return title;
     }
 
+    /*
+     * Returns a borderpane that holds a flowpane in the center
+     * FlowPane holds all campaigns
+     */
     private BorderPane campaignList() {
         var txt = new Label("Your Campaigns");
         txt.setMaxWidth(Double.MAX_VALUE);
@@ -147,11 +150,24 @@ public class MenuPage extends BasePage {
             var advertButton = new Button(c.name());
             advertButton.getStyleClass().add("advertButton");
             advertButton.setOnMouseClicked((e) -> {
-                
-                Future<Object> done = App.getInstance().controller().openCampaign(c.name());
+                window.openLoadPage(c.name());
+            	
+            	Task<Void> task = new Task<Void>() {
+            		
+            	    @Override 
+            	    public Void call() {
+            	    	Future<Void> res = App.getInstance().controller().openCampaign(c.name());
+                        while (!res.isDone()) {}
+            	        return null;
+            	    }
+            	};
+            	
+            	task.setOnSucceeded((ee) -> {
+                    logger.info("sajdask");
+            		window.openCampaignPage(c.name());
+            	});  
 
-                while (!done.isDone()) {}
-                window.openCampaignPage(c.name());
+                new Thread(task).start();
             });
             flowPane.getChildren().add(advertButton);
         });

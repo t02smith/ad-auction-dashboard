@@ -126,7 +126,6 @@ public class CampaignPage extends BasePage {
 
         //Style the buttons under the graph
         styleButtons(graphButtonPane);
-        this.loadMetric.accept(this.currentMetric);
     }
 
     /**

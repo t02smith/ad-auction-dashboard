@@ -1,30 +1,42 @@
 package ad.auction.dashboard.view.ui;
 
+import java.util.ArrayList;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.pages.CampaignPage;
+import ad.auction.dashboard.view.events.ScaleListener;
 import ad.auction.dashboard.view.pages.BasePage;
+import ad.auction.dashboard.view.pages.CampaignPage;
+import ad.auction.dashboard.view.pages.LoadPage;
 import ad.auction.dashboard.view.pages.MenuPage;
 import ad.auction.dashboard.view.pages.UploadPage;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-/*
+/**
  * The window of the application
  * @auth hhg1u20
  */
 public class Window {
+
+    private static final Logger logger = LogManager.getLogger(Window.class.getSimpleName());
 
 	private final int height;
 	private final int width;
 
 	private final Stage stage;
 	private Scene scene;
-	private BasePage currentPage;
-
+	
+	//External listeners
+	private ArrayList<ScaleListener> scaleListeners = new ArrayList<ScaleListener>();
+	
 	// initialize with stage height and width
 	public Window(Stage stage, int height, int width) {
 		this.stage = stage;
@@ -44,6 +56,8 @@ public class Window {
 	 * Setup the basics of the stage - title, size and behaviour
 	 */
 	private void setupStage() {
+		logger.info("Setting up the stage");
+		
 		stage.setTitle("Ad Auction Dashboard");
 		stage.getIcons().add(new Image(this.getClass().getResource("/img/logo.png").toExternalForm()));
 		stage.setMinWidth(width);
@@ -55,8 +69,34 @@ public class Window {
 	 * Default scene
 	 */
 	private void setupDefaultWindow() {
+		logger.info("Setting up default scaling");
+		
 		this.scene = new Scene(new Pane(), width, height, Color.BLUE);
+		
 		stage.setScene(this.scene);
+		stage.setMinWidth(300);
+		stage.setMinHeight(300);
+		
+		stage.setMaxWidth(1280);
+		stage.setMaxHeight(720);
+		
+		//Notify listeners for change in scaling
+		stage.widthProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
+			}
+			
+		});
+		stage.heightProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
+			}
+			
+		});
 	}
 
 	/**
@@ -70,8 +110,6 @@ public class Window {
 	 * Loads an advertisement page with a given graph
 	 * 
 	 * @param graph - graph to be plotted
-	 * 
-	 *              TODO: Func take actual graph to display
 	 */
 	public void openCampaignPage(String campaign) {
 		loadPage(new CampaignPage(this, campaign));
@@ -82,6 +120,10 @@ public class Window {
 		loadPage(new UploadPage(this));
 	}
 
+	public void openLoadPage(String name) {
+		var window = this;
+		loadPage(new LoadPage(window,name));
+	}
 	/**
 	 * Load a given page
 	 * 
@@ -90,8 +132,6 @@ public class Window {
 	private void loadPage(BasePage newPage) {
 		// build the page ui
 		newPage.build();
-		// set current page
-		currentPage = newPage;
 		// create scene
 		scene = newPage.createScene();
 		// show scene of the new page
@@ -103,11 +143,12 @@ public class Window {
 	}
 
 	public double getWidth() {
-		return this.width;
+		return stage.getWidth();
 	}
 
 	public double getHeight() {
-		return this.height;
+		return stage.getHeight();
 	}
 
+	public void addScaleListener(ScaleListener scaleListener) { this.scaleListeners.add(scaleListener); }
 }
