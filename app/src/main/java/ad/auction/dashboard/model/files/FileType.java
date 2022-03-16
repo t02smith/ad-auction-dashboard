@@ -7,6 +7,7 @@ import java.util.function.Function;
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
+import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Lists all possible file types
@@ -17,7 +18,7 @@ public enum FileType {
     SERVER(line -> Server.producer(line), "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion");
 
     //Produces a record from a csv line
-    private final Function<String, ?> producer;
+    private final Function<String, SharedFields> producer;
 
     //List of column headers in .csv file
     private final String[] headers;
@@ -27,7 +28,7 @@ public enum FileType {
      * @param producer
      * @param headers
      */
-    private FileType(Function<String, ?> producer, String... headers) {
+    private FileType(Function<String, SharedFields> producer, String... headers) {
         this.producer = producer;
         this.headers = headers;
     }
@@ -37,7 +38,7 @@ public enum FileType {
      * @param line
      * @return
      */
-    public Object produce(String line) {
+    public SharedFields produce(String line) {
         return this.producer.apply(line);
     }
 

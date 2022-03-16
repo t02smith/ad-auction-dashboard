@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
 import ad.auction.dashboard.model.campaigns.Campaign;
-import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 import javafx.geometry.Point2D;
 
 
@@ -26,8 +25,8 @@ public class MetricTest {
 
     @BeforeAll
     public static void setup() {       
-        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "2 Week Campaign");
-        c = (Campaign)model.queryCampaignManager(CMQuery.GET_CAMPAIGN, "2 Week Campaign").get();
+        model.campaigns().openCampaign("2 Week Campaign");
+        c = (Campaign)model.campaigns().getCurrentCampaign();
 
     }
 

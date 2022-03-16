@@ -8,13 +8,15 @@ import java.util.concurrent.Callable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ad.auction.dashboard.model.files.records.SharedFields;
+
 /**
  * This class will connect to the filestream
  * and process the data into records
  * 
  * @author tcs1g20
  */
-public class FileParser implements Callable<List<Object>> {
+public class FileParser implements Callable<List<SharedFields>> {
 
     private static final Logger logger = LogManager.getLogger(FileParser.class.getSimpleName());
 
@@ -27,8 +29,8 @@ public class FileParser implements Callable<List<Object>> {
     }
     
     @Override
-    public List<Object> call() throws Exception {
-        final ArrayList<Object> objs = new ArrayList<>();
+    public List<SharedFields> call() throws Exception {
+        final ArrayList<SharedFields> objs = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
 
         long startTime = System.currentTimeMillis();

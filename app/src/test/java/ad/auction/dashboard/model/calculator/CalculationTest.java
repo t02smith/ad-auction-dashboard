@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
-import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
 import javafx.geometry.Point2D;
 
 public class CalculationTest {
@@ -19,7 +18,7 @@ public class CalculationTest {
 
     @BeforeAll
     public static void setUp() {
-        model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, "2 Week Campaign");
+        model.campaigns().openCampaign("2 Week Campaign");
     }
     
     @Test

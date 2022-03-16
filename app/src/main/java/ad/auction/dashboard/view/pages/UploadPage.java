@@ -1,8 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.controller.Controller;
-import ad.auction.dashboard.controller.Controller.ControllerQuery;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -20,8 +18,6 @@ import java.util.List;
  */
 public class UploadPage extends BasePage {
     private static final Logger logger = LogManager.getLogger(UploadPage.class.getSimpleName());
-
-    private final Controller controller = App.getInstance().controller();
 
     public UploadPage(Window window) {
         super(window);
@@ -123,7 +119,7 @@ public class UploadPage extends BasePage {
             if (!campaignsName.isEmpty() && !impressionsFilePath.isEmpty() && !clicksFilePath.isEmpty() && !serverFilePath.isEmpty()) {
 
                 try {
-                    boolean[] output = (boolean[]) controller.query(ControllerQuery.NEW_CAMPAIGN, campaignsName,
+                    boolean[] output = App.getInstance().controller().newCampaign(campaignsName,
                         impressionsFilePath, clicksFilePath, serverFilePath).get();
 
                     if (!(output[0] && output[1] && output[2])) {

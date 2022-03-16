@@ -1,6 +1,6 @@
 package ad.auction.dashboard.controller;
 
-import java.util.concurrent.Callable;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -8,7 +8,7 @@ import java.util.concurrent.Future;
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
-import ad.auction.dashboard.model.campaigns.CampaignManager.CMQuery;
+import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 
 /**
  * The controller class acts as the interface for the 
@@ -23,68 +23,55 @@ public class Controller {
 
     private final Model model = new Model();
 
-        //Max calculations to be ran at once
-        private static final int CONTROLLER_THREAD_COUNT = 10;
-        private final ExecutorService executor = Executors.newFixedThreadPool(CONTROLLER_THREAD_COUNT);
+    //Max calculations to be ran at once
+    private static final int CONTROLLER_THREAD_COUNT = 10;
+    private final ExecutorService executor = Executors.newFixedThreadPool(CONTROLLER_THREAD_COUNT);
 
-    public enum ControllerQuery {
-        // args = (String campaignName)
-        // returns = void
-        OPEN_CAMPAIGN,
-
-        // args = (String campaignName, String impressionPath, String impressionPath,
-        // String clickPath, String serverPath)
-        // returns = void
-        NEW_CAMPAIGN,
-
-        // args = (Metrics metric, MetricFunction function)
-        // returns = Future<Object>
-        CALCULATE,
-
-        // args = void
-        // returns = CampaignData
-        GET_CAMPAIGN_DATA,
-
-        // args = void
-        // returns List<CampaignData>
-        GET_CAMPAIGNS,
-
-        // args = void
-        // returns = void
-        CLOSE;
+    /**
+     * Opens a new campaign
+     * @param name 
+     * @return The process that must finish before opening campaign screen
+     */
+    public Future<Object> openCampaign(String name) {
+        return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
     }
 
     /**
-     * Query the model
-     * @param query
-     * @param args
+     * Create a new campaign
+     * @param name
+     * @param clkPath
+     * @param impPath
+     * @param svrPath
+     */
+    public Future<boolean[]> newCampaign(String name, String clkPath, String impPath, String svrPath) {
+        return executor.submit(() -> model.campaigns().newCampaign(name, clkPath, impPath, svrPath));
+    }
+
+    /**
+     * Run a calculation
+     * @param m The metric being calculated
+     * @param function The function of that metric
      * @return
      */
-    public Future<Object> query(ControllerQuery query, Object... args) {
-        Callable<Object> c = () -> null;
+    public Future<Object> runCalculation(Metrics m, MetricFunction function) {
+        return model.runCalculation(m, function);
+    }
 
-        switch (query) {
-            case OPEN_CAMPAIGN:
-                c = () -> model.queryCampaignManager(CMQuery.OPEN_CAMPAIGN, (String) args[0]);
-                break;
-            case NEW_CAMPAIGN:
-                c = () -> model.queryCampaignManager(CMQuery.NEW_CAMPAIGN, (String) args[0], (String) args[1], (String) args[2],
-                        (String) args[3]).get();
-                break;
-            case CALCULATE:
-                return model.runCalculation((Metrics) args[0], (MetricFunction) args[1]);
-            case GET_CAMPAIGN_DATA:
-                c = () -> model.queryCampaignManager(CMQuery.GET_CAMPAIGN_DATA).get();
-                break;
-            case GET_CAMPAIGNS:
-                c = () -> model.queryCampaignManager(CMQuery.GET_CAMPAIGNS).get();
-                break;
-            case CLOSE:
-                c = () -> {this.model.close(); return null;};
-                break;
-        }
+    /**
+     * Shut down the model
+     */
+    public void close() {
+        this.model.close();
+    }
 
-        return executor.submit(c);
+    //GETTERS
+
+    public CampaignData getCampaignData() {
+        return this.model.campaigns().getCurrentCampaign().getData();
+    }
+
+    public List<CampaignData> getCampaigns() {
+        return this.model.campaigns().getCampaigns();
     }
 
 }

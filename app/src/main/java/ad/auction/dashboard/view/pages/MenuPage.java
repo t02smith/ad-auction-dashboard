@@ -4,8 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.controller.Controller.ControllerQuery;
-import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -140,33 +137,24 @@ public class MenuPage extends BasePage {
         return bp;
     }
 
-    @SuppressWarnings("unchecked")
     private void updateAdvertiseList() {
         flowPane.getChildren().clear();
 
-        var future = (Future<Object>)App.getInstance().controller().query(ControllerQuery.GET_CAMPAIGNS);
-        while (!future.isDone()) {}
-        
-        try {
-            var campaigns = (List<CampaignData>)future.get();
+        var campaigns = App.getInstance().controller().getCampaigns();
 
-            campaigns.forEach(c -> {
-                logger.info(c.name());
-                var advertButton = new Button(c.name());
-                advertButton.getStyleClass().add("advertButton");
-                advertButton.setOnMouseClicked((e) -> {
-                    
-                    var done = (Future<Object>)App.getInstance().controller().query(ControllerQuery.OPEN_CAMPAIGN, c.name());
-    
-                    while (!done.isDone()) {}
-                    window.openCampaignPage(c.name());
-                });
-                flowPane.getChildren().add(advertButton);
+        campaigns.forEach(c -> {
+            logger.info(c.name());
+            var advertButton = new Button(c.name());
+            advertButton.getStyleClass().add("advertButton");
+            advertButton.setOnMouseClicked((e) -> {
+                
+                Future<Object> done = App.getInstance().controller().openCampaign(c.name());
+
+                while (!done.isDone()) {}
+                window.openCampaignPage(c.name());
             });
-        } catch (Exception e) {}
-
-        
-
+            flowPane.getChildren().add(advertButton);
+        });
     }
 
 }

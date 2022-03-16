@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.TestUtility;
-import ad.auction.dashboard.model.files.FileTracker.FileTrackerQuery;
 
 public class FileTrackerTest {
 
@@ -36,13 +35,10 @@ public class FileTrackerTest {
         var filename = TestUtility.getResourceFile("/data/test-1.txt");
         if (filename == null) fail();
 
-        fileTracker.query(
-            FileTrackerQuery.TRACK,
-            filename
-        );
+        fileTracker.trackFile(filename);
 
         assertTrue(
-            (boolean)fileTracker.query(FileTrackerQuery.IS_TRACKED, filename).get(),
+            fileTracker.isFileTracked(filename),
             "File not tracked by filetracker"
         );
         
@@ -56,22 +52,16 @@ public class FileTrackerTest {
         var filename = TestUtility.getResourceFile("/data/test-1.txt");
         if (filename == null) fail();
 
-        fileTracker.query(
-            FileTrackerQuery.TRACK, 
-            filename
-        );
+        fileTracker.trackFile(filename);
 
-        if (!(boolean)fileTracker.query(FileTrackerQuery.IS_TRACKED, filename).get()) {
+        if (!fileTracker.isFileTracked(filename)) {
             fail("Failed to track file");
         }
 
-        fileTracker.query(
-            FileTrackerQuery.UNTRACK, 
-            filename
-        );
+        fileTracker.untrackFile(filename);
 
         assertFalse(
-            (boolean)fileTracker.query(FileTrackerQuery.IS_TRACKED, filename).get(),
+            fileTracker.isFileTracked(filename),
             "File wasn't untracked"
         );
     }

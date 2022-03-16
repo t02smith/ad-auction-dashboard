@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller;
-import ad.auction.dashboard.controller.Controller.ControllerQuery;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
 import ad.auction.dashboard.view.components.MetricSelection;
@@ -102,7 +101,7 @@ public class CampaignPage extends BasePage {
     @SuppressWarnings("unchecked")
     private MetricSelection metricSelection() {
         return new MetricSelection(m -> {
-            var future = (Future<Object>)controller.query(ControllerQuery.CALCULATE, m, MetricFunction.OVER_TIME);
+            Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
             while (!future.isDone()) {}
 
             try {

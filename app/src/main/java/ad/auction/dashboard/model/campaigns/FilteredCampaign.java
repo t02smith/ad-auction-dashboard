@@ -9,12 +9,21 @@ import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
 import ad.auction.dashboard.model.files.records.SharedFields;
 
+/**
+ * A filtered campaign applies filters to the data before returning it
+ * Filters are identified by their hashCode.
+ * 
+ * The view will specify what the filter is initially and then reference
+ * it using the hashcode
+ */
 public class FilteredCampaign extends Campaign {
 
-    private HashMap<Integer, Boolean> filterActive = new HashMap<>();
+    //Currently active filters
+    private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
 
-    private HashMap<Integer, Predicate<SharedFields>> allFilters = new HashMap<>();
-    private HashMap<Integer, Predicate<Impression>> impFilters = new HashMap<>();
+    //Filters to be applied to all datasets and just the impressions
+    private final HashMap<Integer, Predicate<SharedFields>> allFilters = new HashMap<>();
+    private final HashMap<Integer, Predicate<Impression>> impFilters = new HashMap<>();
 
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
         super(name, impressionPath, clickPath, serverPath);
