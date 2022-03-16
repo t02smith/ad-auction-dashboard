@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import ad.auction.dashboard.model.Utility;
 import ad.auction.dashboard.view.components.FilterMenu;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,16 +86,19 @@ public class CampaignPage extends BasePage {
 
         var filterTitle = new Text("Filters");
         filterTitle.getStyleClass().add("filter-title");
-        var backButton = new Button("<");
-        backButton.getStyleClass().add("buttonStyle");
-        backButton.setOnMouseClicked((e) -> window.startMenu());
         var filterMenu = new FilterMenu();
-        rightMenu.getChildren().addAll(backButton, filterTitle, filterMenu);
+        rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
         //Title text on top
         var mainMenuText = new Text(campaignName);
         mainMenuText.getStyleClass().add("topTitle");
         title.setCenter(mainMenuText);
+
+        // Add back button
+        var backButton = buildBackButton();
+        BorderPane.setAlignment(backButton, Pos.CENTER);
+        BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
+        title.setLeft(backButton);
 
         graphPane.setBottom(graphButtonPane);
         graphPane.setCenter(graph.getLineChart());
@@ -135,4 +144,39 @@ public class CampaignPage extends BasePage {
             iter.next().getStyleClass().add("buttonStyle");
         }
     }
+
+    /**
+     * Build the back button
+     * @return back button
+     */
+    private StackPane buildBackButton() {
+        //Create the button
+        var backButton = new Button();
+        backButton.getStyleClass().add("buttonStyle");
+        backButton.setMaxWidth(50);
+        backButton.setMaxHeight(40);
+        var buttonWidth = backButton.getMaxWidth();
+        var buttonHeight = backButton.getMaxHeight();
+        backButton.setOnMouseClicked((e) -> window.startMenu());
+
+
+        // Draw arrow with canvas
+        var canvas = new Canvas(buttonWidth, buttonHeight);
+        canvas.setMouseTransparent(true);
+
+        var gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(3);
+        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.75,  buttonHeight * 0.5);
+        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.725);
+        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.275);
+
+        // Stack the drawn arrow on the button
+        var pane = new StackPane();
+        pane.getChildren().addAll(backButton, canvas);
+
+        return pane;
+    }
+
+
 }
