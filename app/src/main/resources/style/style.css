@@ -67,3 +67,12 @@
 	-fx-background-color: red;
 	-fx-width: 100%;
 }
+
+.filter-title {
+	-fx-font-size: 16px;
+}
+
+.filter-sub-heading {
+	-fx-font-size: 12px;
+	-fx-font-weight: bold;
+}

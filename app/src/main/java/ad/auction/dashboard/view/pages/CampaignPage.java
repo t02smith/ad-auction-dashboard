@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import ad.auction.dashboard.view.components.FilterMenu;
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +18,6 @@ import ad.auction.dashboard.view.components.MetricSelection;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 /**
@@ -74,12 +73,17 @@ public class CampaignPage extends BasePage {
         //HBox to hold the buttons below the graph
         var graphButtonPane = new HBox();
 
+        var rightMenu = new VBox();
+        rightMenu.setAlignment(Pos.TOP_CENTER);
+        rightMenu.setSpacing(10);
 
-
-        //Back button
+        var filterTitle = new Text("Filters");
+        filterTitle.getStyleClass().add("filter-title");
         var backButton = new Button("<");
         backButton.getStyleClass().add("buttonStyle");
         backButton.setOnMouseClicked((e) -> window.startMenu());
+        var filterMenu = new FilterMenu();
+        rightMenu.getChildren().addAll(backButton, filterTitle, filterMenu);
 
         //Title text on top
         var mainMenuText = new Text(campaignName);
@@ -91,7 +95,7 @@ public class CampaignPage extends BasePage {
 
         screen.setTop(title);
         screen.setLeft(this.metricSelection());
-        screen.setRight(backButton);
+        screen.setRight(rightMenu);
         screen.setCenter(graphPane);
 
         //Style the buttons under the graph
