@@ -1,6 +1,5 @@
 package ad.auction.dashboard.model.campaigns;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
