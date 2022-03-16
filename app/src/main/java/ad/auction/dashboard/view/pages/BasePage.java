@@ -17,6 +17,8 @@ public abstract class BasePage {
     protected Scene scene;
     protected StackPane root;
 
+    private String styleClass; // The customisation style the user has chosen
+    
     public BasePage(Window window) {
         this.window = window;
     }
@@ -33,7 +35,7 @@ public abstract class BasePage {
     public Scene createScene() {
         var previous = window.getScene();
         Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
-        scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/darkandblue.css").toExternalForm());
         this.scene = scene;
         
         return scene;

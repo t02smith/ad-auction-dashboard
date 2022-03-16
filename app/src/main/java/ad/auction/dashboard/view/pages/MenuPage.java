@@ -1,5 +1,7 @@
 package ad.auction.dashboard.view.pages;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -7,6 +9,12 @@ import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller.ControllerQuery;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.view.ui.Window;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,8 +30,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
-import java.util.List;
+import javafx.util.Duration;
 
 /**
  * Main Menu page that holds the UI elements for its controls
@@ -34,6 +41,8 @@ public class MenuPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(MenuPage.class.getSimpleName());
     private FlowPane flowPane; // the flow pane contains the campaign buttons
+    
+    private double sideMenuWidth;
 
     public MenuPage(Window window) {
         super(window);
@@ -57,14 +66,74 @@ public class MenuPage extends BasePage {
         var menuPane = new BorderPane();
         root.getChildren().add(menuPane);
 
+        //The whole left side that will hold the side menu and a button to hide it
+        var leftSide = new HBox();
+        leftSide.getStyleClass().add("campaign-list-bg");
+        
         // Side menu on the left
         var sideMenu = new VBox();
         sideMenu.getStyleClass().add("sideBackground");
+        sideMenu.setMinWidth(0);
+        
+        //Button next to the side menu to indicate sliding
+        var slideButton = new Button("<");
+        slideButton.getStyleClass().add("slideButton");
+        
+        //Compose the left side with the side menu and the slide button next to it
+        leftSide.getChildren().addAll(sideMenu,slideButton);
+		HBox.setMargin(slideButton, new Insets(sideMenu.getHeight()/2-26, 0, 0, 0)); //set slide btn in the mid
+        
+		//Update the slide button to be positioned in the middle of the side menu when it's resiszed
+        sideMenu.heightProperty().addListener(new ChangeListener<Number>() {
 
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				HBox.setMargin(slideButton, new Insets(newValue.doubleValue()/2-26, 0, 0, 0));
+			}
+        	
+        });
+        
         // create an upload button on side menu
         var uploadButton = new Button("Upload a folder");
+        uploadButton.setMinWidth(0);
+        
         sideMenu.getChildren().addAll(uploadButton);
         
+        //Functionality of the slide button
+        slideButton.setOnMouseClicked((e) -> {
+        	//Create timeline for animating the sidemenu
+        	var timeline = new Timeline();
+        	timeline.setCycleCount(1);
+        	
+        	if (sideMenu.getMaxWidth() != 0) {
+        		//Save the calculated width of the side menu
+        		sideMenuWidth = sideMenu.getWidth();
+        		
+        		//Set the max width of the side menu and upload button to the calculated widths on launch
+        		sideMenu.setMaxWidth(sideMenuWidth);
+        		uploadButton.setMaxWidth(uploadButton.getWidth());
+	    		
+        		//Animate max width of both properties to 0 to hide them
+	    		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+	    				new KeyValue(sideMenu.maxWidthProperty(), 0, Interpolator.EASE_OUT),
+	    				new KeyValue(uploadButton.maxWidthProperty(), 0, Interpolator.EASE_OUT)));
+	    		timeline.play();
+	    		
+	    		//Change the text on the button to indicate that the menu can now be opened
+	    		timeline.setOnFinished((ee) -> {
+	    			slideButton.setText(">");
+	    		});
+        	} else {
+        		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+	    				new KeyValue(sideMenu.maxWidthProperty(), sideMenuWidth, Interpolator.EASE_OUT),
+	    				new KeyValue(uploadButton.maxWidthProperty(), sideMenuWidth, Interpolator.EASE_OUT)));
+	    		timeline.play();
+	    		
+	    		timeline.setOnFinished((ee) -> {
+	    			slideButton.setText("<");
+	    		});
+        	}
+        });
         // click event of upload button
         uploadButton.setOnAction(event -> {
             window.openUploadPage();
@@ -79,7 +148,7 @@ public class MenuPage extends BasePage {
         
         // menu pane layout
         menuPane.setTop(title());
-        menuPane.setLeft(sideMenu);
+        menuPane.setLeft(leftSide);
         menuPane.setCenter(campaignList());
         BorderPane.setMargin(menuPane, new Insets(15, 0, 0, 15));
         

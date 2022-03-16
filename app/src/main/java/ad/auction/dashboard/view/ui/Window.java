@@ -12,7 +12,6 @@ import ad.auction.dashboard.view.pages.CampaignPage;
 import ad.auction.dashboard.view.pages.LoadPage;
 import ad.auction.dashboard.view.pages.MenuPage;
 import ad.auction.dashboard.view.pages.UploadPage;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
@@ -115,7 +114,6 @@ public class Window {
 	public void openCampaignPage(String campaign) {
 		loadPage(new CampaignPage(this, campaign));
 	}
-
 
 	public void openUploadPage() {
 		loadPage(new UploadPage(this));
