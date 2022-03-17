@@ -84,7 +84,7 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Click> clicks() {
         return this.clicks.stream()
-                .filter(i -> allFilters.keySet().stream().filter(f -> filterActive.get(f))
+                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> allFilters.get(f).test(i)));
 
     }
@@ -92,16 +92,16 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Impression> impressions() {
         return this.impressions.stream()
-                .filter(i -> allFilters.keySet().stream().filter(f -> filterActive.get(f))
+                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> allFilters.get(f).test(i)))
-                .filter(i -> impFilters.keySet().stream().filter(f -> filterActive.get(f))
+                .filter(i -> impFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> impFilters.get(f).test(i)));
     }
 
     @Override
     public Stream<Server> server() {
         return this.server.stream()
-                .filter(i -> allFilters.keySet().stream().filter(f -> filterActive.get(f))
+                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> allFilters.get(f).test(i)));
     }
 

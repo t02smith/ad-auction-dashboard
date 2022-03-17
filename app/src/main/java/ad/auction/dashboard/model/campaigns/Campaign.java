@@ -44,9 +44,12 @@ public class Campaign {
      * to free up memory
      */
     public void flushData() {
-        this.impressions.clear();
-        this.clicks.clear();
-        this.server.clear();
+        System.out.println("jsajdask");
+        this.impressions = null;
+        this.clicks = null;
+        this.server = null;
+        this.dataLoaded = false;
+        System.out.println("jsajdask");
     }  
 
     // GETTERS

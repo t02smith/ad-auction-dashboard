@@ -7,6 +7,18 @@ import ad.auction.dashboard.model.Utility;
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income, Context context,
         float impressionCost) implements SharedFields {
 
+    
+    public static Impression producer(String[] line) {
+        return new Impression(
+                Utility.parseDate(line[0]),                //Date of impression
+                Long.parseLong(line[1]),                   //ID
+                Gender.valueOf(line[2]),     //Gender
+                AgeGroup.getAgeGroup(line[3]),             //Age Group
+                Income.valueOf(line[4]),     //Income
+                Context.valueOf(line[5].replace(" ", "_")),    //Context
+                Float.parseFloat(line[6]));                //Impression cost
+    }
+
     /**
      * produce a new impression
      * 
@@ -15,8 +27,6 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
      */
     public static Impression producer(String line) {
         String[] parts = line.split(",");
-
-
 
         return new Impression(
                 Utility.parseDate(parts[0]),                //Date of impression
@@ -31,14 +41,14 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
     //ENUM
 
     public enum Gender {
-        MALE,
-        FEMALE;
+        Male,
+        Female;
     }
 
     public enum Income {
-        LOW,
-        MEDIUM,
-        HIGH;
+        Low,
+        Medium,
+        High;
     }
 
     public enum AgeGroup {
@@ -61,12 +71,23 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
     }
 
     public enum Context {
-        NEWS,
-        SHOPPING,
-        SOCIAL_MEDIA,
-        BLOG,
-        HOBBIES,
-        TRAVEL;
+        News("News"),
+        Shopping("Shopping"),
+        Social_Media("Social Media"),
+        Blog("Blog"),
+        Hobbies("Hobbies"),
+        Travel("Travel");
+
+        private String display;
+
+        private Context(String display) {this.display = display;}
+
+        public static Context getFromString(String s) {
+            for (Context c: Context.values()) {
+                if (c.display.equals(s)) return c;
+            }
+            return null;
+        }
     }
 
 

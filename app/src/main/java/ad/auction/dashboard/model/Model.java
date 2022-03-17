@@ -27,9 +27,9 @@ public class Model {
 
     /**
      * Run a calculation for the current open campaign
-     * @param metric
-     * @param func
-     * @return
+     * @param metric The calculation
+     * @param func The function to calculate for the metric
+     * @return The result of the calculation
      */
     public Future<Object> runCalculation(Metrics metric, MetricFunction func) {
         var campaign = this.campaignManager.getCurrentCampaign();

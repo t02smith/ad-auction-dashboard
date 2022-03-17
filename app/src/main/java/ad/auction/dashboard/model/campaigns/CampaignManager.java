@@ -33,7 +33,7 @@ public class CampaignManager {
     private final HashMap<String, FilteredCampaign> campaigns = new HashMap<>();
 
     private FilteredCampaign currentCampaign;
-    private CampaignHandler handler = new CampaignHandler();
+    private final CampaignHandler handler = new CampaignHandler();
 
     public CampaignManager(Model model) {
         this.model = model;
@@ -91,7 +91,7 @@ public class CampaignManager {
             return;
         }
 
-        logger.info("Reading data for campaing '{}'", this.currentCampaign.name());
+        logger.info("Reading data for campaign '{}'", this.currentCampaign.name());
 
         try {
             var impressions = this.model.files().readFile(currentCampaign.getData().impPath());
@@ -103,7 +103,7 @@ public class CampaignManager {
 
             currentCampaign.impressions = impressions.get().stream().map(i -> (Impression)i).toList();
             currentCampaign.clicks = clicks.get().stream().map(c -> (Click)c).toList();
-            currentCampaign.server = server.get().stream().map(c -> (Server)c).toList();;
+            currentCampaign.server = server.get().stream().map(c -> (Server)c).toList();
 
             currentCampaign.dataLoaded = true;
     
@@ -115,9 +115,8 @@ public class CampaignManager {
     }
 
     /**
-     * Opens the specified campaign if it is stored
-     * 
-     * @param name
+     * Opens the specified campaign if it is store
+     * @param name The campaigns name
      */
     public void openCampaign(String name) {
         if (!this.campaigns.containsKey(name))
@@ -127,6 +126,7 @@ public class CampaignManager {
                 return;
             logger.info("Flushing data from campaign '{}'", currentCampaign.name());
             this.currentCampaign.flushData();
+            logger.info("testing");
         }
 
         logger.info("Opening campaign '{}'", name);

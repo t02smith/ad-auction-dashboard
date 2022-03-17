@@ -18,7 +18,7 @@ public enum FileType {
     SERVER(line -> Server.producer(line), "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion");
 
     //Produces a record from a csv line
-    private final Function<String, SharedFields> producer;
+    private final Function<String[], SharedFields> producer;
 
     //List of column headers in .csv file
     private final String[] headers;
@@ -28,17 +28,21 @@ public enum FileType {
      * @param producer
      * @param headers
      */
-    private FileType(Function<String, SharedFields> producer, String... headers) {
+    private FileType(Function<String[], SharedFields> producer, String... headers) {
         this.producer = producer;
         this.headers = headers;
     }
 
-    /**
-     * Apply producer function
-     * @param line
-     * @return
-     */
-    public SharedFields produce(String line) {
+    // /**
+    //  * Apply producer function
+    //  * @param line
+    //  * @return
+    //  */
+    // public SharedFields produce(String line) {
+    //     return this.producer.apply(line);
+    // }
+
+    public SharedFields produce(String[] line) {
         return this.producer.apply(line);
     }
 

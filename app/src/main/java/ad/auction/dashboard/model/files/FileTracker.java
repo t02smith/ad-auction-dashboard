@@ -1,7 +1,6 @@
 package ad.auction.dashboard.model.files;
 
 import java.io.IOException;
-import java.io.PipedInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +54,7 @@ public class FileTracker {
      * its corresponding record type.
      * @param filename The file location/id
      * @return A stream of all the records
-     * @throws IOException
+     * @throws IOException file reading error
      */
     public Future<List<SharedFields>> readFile(String filename) throws IOException  {
         TrackedFile file;
@@ -64,31 +63,19 @@ public class FileTracker {
             if (!this.isFileTracked(filename)) return null;
             file = trackedFiles.get(filename);
         }
-        
-        FileType type = file.getType();
-
-        final PipedInputStream pipe = new PipedInputStream();
-
-        file.reloadPipe();
-        file.connect(pipe);
 
         //Start reading the file
-        executor.submit(file);
+        return executor.submit(file);
 
-    
-        //Start parsing the file
-        return executor.submit(new FileParser(pipe, type));  
     }
 
     /**
      * Remove a file from a tracked list
-     * @param filename
+     * @param filename name of file
      */
     public void untrackFile(String filename) {
         synchronized (this.trackedFiles) {
             if (!isFileTracked(filename)) return;
-
-            this.trackedFiles.get(filename).close();
             this.trackedFiles.remove(filename);
     
             logger.info("File '{}' untracked", filename);
@@ -97,13 +84,13 @@ public class FileTracker {
 
     /**
      * Checking whether a file is being tracked
-     * @param filename
-     * @return
+     * @param filename name of file to track
+     * @return whether the file has been tracked
      */
     public boolean isFileTracked(String filename) {
         synchronized(this.trackedFiles) {
             if (!trackedFiles.containsKey(filename)) {
-                logger.error("File '{}' not being tracked");
+                logger.error("File '{}' not being tracked", filename);
                 return false;
             }
     
@@ -113,7 +100,7 @@ public class FileTracker {
 
     /**
      * Takes a set of expected files and removes any not mentioned
-     * @param files
+     * @param files expected files
      */
     public void clean(Set<String> files) {
         logger.info("Cleaning files");

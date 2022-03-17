@@ -1,30 +1,31 @@
 package ad.auction.dashboard.model.files;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Represents a file that is to be read from
  * 
  * @author tcs1g20
  */
-public class TrackedFile implements Runnable {
+public class TrackedFile implements Callable<List<SharedFields>> {
 
     private static final Logger logger = LogManager.getLogger(TrackedFile.class.getSimpleName());
 
-    //File location
+    //File location and type
     private final String filename;
-
-    //Output stream
-    private PipedOutputStream pipe;
-
     private final FileType type;
 
     public TrackedFile(String filename) {
@@ -35,7 +36,7 @@ public class TrackedFile implements Runnable {
     /**
      * Determines whether a file is of type impression, 
      * server or click
-     * @return
+     * @return the determined filetype
      */
     public FileType determineFileType() {
         try {
@@ -55,77 +56,31 @@ public class TrackedFile implements Runnable {
         
     }
 
-    /**
-     * Restart the outputstream pipe
-     */
-    public void reloadPipe() {
-        this.pipe = new PipedOutputStream();
-    }
-
-    /**
-     * Reads a file line by line and sends it through the pipe
-     */
     @Override
-    public void run() {
-        long time = System.nanoTime();
+    public List<SharedFields> call() {
+        long time = System.currentTimeMillis();
         logger.info("Attempting to read file '{}'", filename);
+
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.setHeaders(type.getHeaders());
+        //settings.setProcessor(new ConcurrentRowProcessor());
         
-        try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.filename));
-            if (this.type != null) reader.readLine();
+        CsvParser parser = new CsvParser(settings);
 
-            byte[] newline = "\n".getBytes();
+        List<SharedFields> records = new ArrayList<>();
 
-            String msg;
-            logger.info("Reading file '{}'", filename);
-            while ((msg = reader.readLine()) != null) {
-                pipe.write(msg.getBytes());
-                pipe.write(newline);
-            }
+        parser.beginParsing(new File(filename));
+        parser.parseNext();
 
-            pipe.write(-1);
-
-            logger.info("Finished reading '{}'", filename);
-            reader.close();
-
-        } catch (FileNotFoundException e) {
-            logger.error("File '{}' not found", filename);
-        } catch (IOException e) {
-            logger.error("Error reading '{}': {}", filename, e.getMessage());
+        String[] ln;
+        while ((ln = parser.parseNext()) != null) {
+            records.add(type.produce(ln));
         }
 
-        long timeEnd = System.nanoTime();
-        logger.info("Read '{}' in {}ms", filename, (timeEnd-time)/1000000);
+        logger.info("{} parsed in {}ms", filename, System.currentTimeMillis()-time);
         
-    }
+        return records;
 
-    /**
-     * Connect to the output stream
-     * @param p an input stream
-     */
-    public void connect(PipedInputStream p) {
-        try {
-            this.pipe.connect(p);
-        } catch (IOException e) {
-            logger.error("Unable to connect to '{}'s pipe",filename);
-        }
-    }
-
-    /**
-     * Close the pipe
-     */
-    public void close() {
-        if (this.pipe == null) {
-            logger.error("'{}' No pipe to close", filename);
-            return;
-        };
-
-        try {
-            this.pipe.close();
-            logger.info("'{}' pipe closed", filename);
-        } catch (IOException e) {
-            logger.error("Error closing pipe");
-        }
     }
 
     public FileType getType() {

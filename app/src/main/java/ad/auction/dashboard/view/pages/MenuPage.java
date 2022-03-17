@@ -163,7 +163,6 @@ public class MenuPage extends BasePage {
             	};
             	
             	task.setOnSucceeded((ee) -> {
-                    logger.info("sajdask");
             		window.openCampaignPage(c.name());
             	});  
 
