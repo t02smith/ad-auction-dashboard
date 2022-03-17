@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.controller.Controller;
+import ad.auction.dashboard.controller.Controller.ControllerQuery;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -38,11 +39,12 @@ public class App extends Application {
     	new Window(stage,HEIGHT,WIDTH);
     	stage.show();
     }
-    
+
     /**
      * Shuts down the application
      */
     public void shutdown() {
+        this.controller.query(ControllerQuery.CLOSE);
     	logger.info("Closing application");
     	System.exit(0);
     }
