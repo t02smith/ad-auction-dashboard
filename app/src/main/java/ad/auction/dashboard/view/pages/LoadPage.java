@@ -12,8 +12,10 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -29,7 +31,6 @@ import javafx.util.Duration;
 public class LoadPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(LoadPage.class.getSimpleName());
-    private GridPane mainPane;
     private String campaignName;
     private Label campaignNameLabel;
     private HBox threeDots;
@@ -52,26 +53,26 @@ public class LoadPage extends BasePage {
 	    root.setMaxWidth(window.getWidth());
 	    root.setMaxHeight(window.getHeight());
 	    
-	    //BorderPane to hold the things on the center
-	    mainPane = new GridPane();
-        
-	    root.getChildren().addAll(mainPane);
-	    mainPane.getStyleClass().add("campaign-list");
-
-	    threeDots = threeDotsAnim();
+	    //BorderPane to hold a vbox in the center with the animation and the label
+	    var mainPane = new BorderPane();
 	    var vbox = new VBox();
-	    vbox.getChildren().add(threeDots);
-	    mainPane.add(vbox, 1, 1);
 	    
+	    mainPane.getStyleClass().add("campaign-list");
+	    
+	    //Initialise the animation and the label
+	    threeDots = threeDotsAnim();
 	    campaignNameLabel = new Label(campaignName);
 	    campaignNameLabel.setTextFill(Color.WHITE);
 	    
-	    vbox.getChildren().add(campaignNameLabel);
-	    updateScaling();
-	    
-	    window.addScaleListener(() -> {
-	    	updateScaling();
-	    });
+	    //Attach nodes to each other
+	    mainPane.setCenter(vbox);
+	    root.getChildren().addAll(mainPane);
+	    vbox.getChildren().addAll(threeDots,campaignNameLabel);
+
+	    //Position everything in the center
+	    threeDots.setAlignment(Pos.CENTER);
+	    campaignNameLabel.setAlignment(Pos.CENTER);
+	    vbox.setAlignment(Pos.CENTER);
 	}
 
 	/*
@@ -122,23 +123,5 @@ public class LoadPage extends BasePage {
     	task.exceptionProperty().addListener((observable, oldValue, newValue) ->  { newValue.printStackTrace();	});
     	
 		return hbox;
-	}
-	/*
-	 * Update position of the dots and the label according to the window and label size
-	 */
-	private void updateScaling() {
-		int letterInPixels = 5;
-		if (campaignNameLabel.getText().length() < 15) letterInPixels = 3;
-
-		var campNameOffset = window.getWidth()/2-40-campaignNameLabel.getText().length()*letterInPixels;
-		VBox.setMargin(threeDots, new Insets(0, 0, 0, window.getWidth()/2-40));
-		VBox.setMargin(campaignNameLabel, new Insets(0, 0, 0, campNameOffset));
-		
-		var scaleFactorH = 2.6;
-		
-		if (window.getHeight() > 600) scaleFactorH = 2.6 - (window.getHeight()/50)/100;
-		else scaleFactorH = 2.6;
-		
-		mainPane.setVgap(window.getHeight()/scaleFactorH);
 	}
 }

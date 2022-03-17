@@ -21,6 +21,8 @@ public class MetricSelection extends ScrollPane {
     public MetricSelection(Consumer<Metrics> loadMetric) {
         this.loadMetric = loadMetric;
         this.build();
+        
+        this.setFocusTraversable(false);
     }
 
     private void build() {
@@ -43,4 +45,8 @@ public class MetricSelection extends ScrollPane {
             elems.getChildren().add(btn);
         });
     }
+    
+    //Override request focus so clicking on the scrollpane won't do anything
+    @Override
+    public void requestFocus() {}
 }

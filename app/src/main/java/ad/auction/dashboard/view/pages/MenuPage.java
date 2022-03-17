@@ -81,17 +81,7 @@ public class MenuPage extends BasePage {
         
         //Compose the left side with the side menu and the slide button next to it
         leftSide.getChildren().addAll(sideMenu,slideButton);
-		HBox.setMargin(slideButton, new Insets(sideMenu.getHeight()/2-26, 0, 0, 0)); //set slide btn in the mid
-        
-		//Update the slide button to be positioned in the middle of the side menu when it's resiszed
-        sideMenu.heightProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				HBox.setMargin(slideButton, new Insets(newValue.doubleValue()/2-26, 0, 0, 0));
-			}
-        	
-        });
+        leftSide.setAlignment(Pos.CENTER);
         
         // create an upload button on side menu
         var uploadButton = new Button("Upload a folder");
@@ -134,10 +124,10 @@ public class MenuPage extends BasePage {
 	    		});
         	}
         });
+        
         // click event of upload button
         uploadButton.setOnAction(event -> {
             window.openUploadPage();
-
         });
 
         // Scroll pane to hold the flow pane and enable scrolling
