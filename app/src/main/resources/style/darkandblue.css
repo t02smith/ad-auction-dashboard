@@ -81,6 +81,12 @@
 	-fx-cursor: hand;
 }
 
+.testStyle{
+	-fx-background-color:#272822;
+	-fx-border-color: white;
+	-fx-cursor: hand;
+}
+
 .topTitle {
 	-fx-fill: white;
 	-fx-font-family: 'Sen';
@@ -89,14 +95,14 @@
 	-fx-stroke-width: 0.5px;
 }
 
-.testStyle{
-	-fx-background-color:#272822;
-	-fx-border-color: white;
-	-fx-cursor: hand;
-}
-
 .topBackground {
 	-fx-background-color: #202020;
+}
+
+.titleImageButton {
+	-fx-background-color: #202020;
+	-fx-border-color: #202020;
+	-fx-cursor: hand;
 }
 
 .upload-list {

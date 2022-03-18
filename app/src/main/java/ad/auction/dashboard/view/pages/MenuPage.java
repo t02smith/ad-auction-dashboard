@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,11 +21,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,6 +42,9 @@ public class MenuPage extends BasePage {
     private FlowPane flowPane; // the flow pane contains the campaign buttons
     
     private double sideMenuWidth;
+    private double titlePaneHeight;
+    private boolean hoveredTitle = false;
+    private boolean pinSelected = true;
 
     public MenuPage(Window window) {
         super(window);
@@ -89,6 +93,7 @@ public class MenuPage extends BasePage {
         
         //Functionality of the slide button
         slideButton.setOnMouseClicked((e) -> {
+        	slideButton.setDisable(true);
         	//Create timeline for animating the sidemenu
         	var timeline = new Timeline();
         	timeline.setCycleCount(1);
@@ -102,6 +107,9 @@ public class MenuPage extends BasePage {
         		uploadButton.setMaxWidth(uploadButton.getWidth());
 	    		
         		//Animate max width of both properties to 0 to hide them
+        		timeline.stop();
+        		timeline.getKeyFrames().clear();
+
 	    		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
 	    				new KeyValue(sideMenu.maxWidthProperty(), 0, Interpolator.EASE_OUT),
 	    				new KeyValue(uploadButton.maxWidthProperty(), 0, Interpolator.EASE_OUT)));
@@ -109,15 +117,20 @@ public class MenuPage extends BasePage {
 	    		
 	    		//Change the text on the button to indicate that the menu can now be opened
 	    		timeline.setOnFinished((ee) -> {
+	    			slideButton.setDisable(false);
 	    			slideButton.setText(">");
 	    		});
         	} else {
+        		timeline.stop();
+        		timeline.getKeyFrames().clear();
+
         		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
 	    				new KeyValue(sideMenu.maxWidthProperty(), sideMenuWidth, Interpolator.EASE_OUT),
 	    				new KeyValue(uploadButton.maxWidthProperty(), sideMenuWidth, Interpolator.EASE_OUT)));
 	    		timeline.play();
 	    		
 	    		timeline.setOnFinished((ee) -> {
+	    			slideButton.setDisable(false);
 	    			slideButton.setText("<");
 	    		});
         	}
@@ -133,6 +146,9 @@ public class MenuPage extends BasePage {
         scrollPane.setContent(flowPane);
         scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
+        
+        scrollPane.setMinWidth(0);
+        scrollPane.setMinHeight(0);
         
         // menu pane layout
         menuPane.setTop(title());
@@ -152,25 +168,103 @@ public class MenuPage extends BasePage {
     /*
      * The title on the page
      */
-    private HBox title() {
+    private BorderPane title() {
+    	var titlePane = new BorderPane();
+    	titlePane.setMinHeight(0);
+    	titlePane.getStyleClass().add("topTitle");
+    	
         var mainMenuTextA = new Label("Ad Auction ");
         mainMenuTextA.getStyleClass().add("topTitle");
         mainMenuTextA.setTextFill(Color.WHITE);
-
-        Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
 
         var mainMenuTextB = new Label("Dashboard");
         mainMenuTextB.getStyleClass().add("topTitle");
         mainMenuTextB.setTextFill(Color.valueOf("#004CBE"));
 
-        var title = new HBox(region1, mainMenuTextA, mainMenuTextB, region2);
+        var title = new HBox(mainMenuTextA, mainMenuTextB);
+        title.setAlignment(Pos.CENTER);
         title.getStyleClass().add("topBackground");
 
-        return title;
+		InputStream pinSelectedStream = this.getClass().getResourceAsStream("/img/pinSelected.png");
+		InputStream pinUnselectedStream = this.getClass().getResourceAsStream("/img/pinUnselected.png");
+
+		ImageView pinSelectedIcon = new ImageView();
+		ImageView pinUnselectedIcon = new ImageView();
+		
+		pinSelectedIcon.setFitWidth(33);
+		pinSelectedIcon.setFitHeight(47);
+		pinUnselectedIcon.setFitWidth(33);
+		pinUnselectedIcon.setFitHeight(47);
+		
+
+		var pinButton = new Button();
+		pinButton.setGraphic(pinSelectedIcon);
+		pinButton.getStyleClass().add("titleImageButton");
+		
+		pinButton.setOnAction((e) -> {
+			if (pinSelected) {
+				pinSelected = false;
+				pinButton.setGraphic(pinUnselectedIcon);
+			} else {
+				pinSelected = true;
+				pinButton.setGraphic(pinSelectedIcon);
+			}
+		});
+		
+		pinSelectedIcon.setImage(new Image(pinSelectedStream));
+		pinUnselectedIcon.setImage(new Image(pinUnselectedStream));
+		
+        var timeline = new Timeline();
+    	timeline.setCycleCount(0);
+    	
+        titlePane.setOnMouseEntered((e) -> {
+        	
+        	if (!hoveredTitle) {
+        		hoveredTitle = true;
+        		titlePaneHeight = titlePane.getHeight();
+        		titlePane.setMaxHeight(titlePaneHeight);
+        	}
+        	
+        	if (!pinSelected) {
+        		
+        		logger.info("PLAYING ANIMATION " + titlePaneHeight);
+        		
+        		timeline.stop();
+        		timeline.getKeyFrames().clear();
+        		
+        		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+	    				new KeyValue(titlePane.maxHeightProperty(), 100, Interpolator.EASE_OUT)));
+	    		timeline.play();
+	    		
+	    		timeline.setOnFinished((ee) -> {
+	    			logger.info("STOPPED AFTER ENTER " + titlePane.getMaxHeight());
+//	    			titlePane.setMaxHeight(titlePaneHeight);
+	    		});
+        	}
+        });
+        
+        titlePane.setOnMouseExited((e) -> {
+        	if (!pinSelected) {
+        		logger.info("STOP THE ANIMATION");
+        		
+        		timeline.stop();
+        		timeline.getKeyFrames().clear();
+        		
+        		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+	    				new KeyValue(titlePane.maxHeightProperty(), 10, Interpolator.EASE_OUT)));
+	    		timeline.play();
+	    		
+	    		timeline.setOnFinished((ee) -> {
+	    			logger.info("STOPPED AFTER EXIT");
+//	    			titlePane.setMaxHeight(10);
+	    		});
+        	}
+        });
+        
+        titlePane.setRight(pinButton);
+        titlePane.setCenter(title);
+        
+        return titlePane;
     }
 
     /*
