@@ -8,4 +8,8 @@ bin
 .vscode
 .idea
 
+<<<<<<< HEAD
 app/data
+=======
+app/data
+>>>>>>> refs/remotes/origin/tx1g20-upload-page

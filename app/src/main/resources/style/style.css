@@ -76,3 +76,10 @@
 	-fx-font-size: 12px;
 	-fx-font-weight: bold;
 }
+
+.upload-list {
+	-fx-background-color: #272822;
+}
+.testStyle{
+	-fx-background-color:#272822;
+}

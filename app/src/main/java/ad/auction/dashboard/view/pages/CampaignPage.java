@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import ad.auction.dashboard.model.Utility;
 import ad.auction.dashboard.view.components.FilterMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
@@ -177,6 +174,4 @@ public class CampaignPage extends BasePage {
 
         return pane;
     }
-
-
 }

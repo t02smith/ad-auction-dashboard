@@ -48,10 +48,6 @@ public class App extends Application {
     	logger.info("Closing application");
     	System.exit(0);
     }
-
-    public Controller controller() {
-        return this.controller;
-    }
     
     /**
      * Return the application instance
@@ -60,4 +56,7 @@ public class App extends Application {
     public static App getInstance() { return instance; }
 
 
+    public Controller controller() {
+        return this.controller;
+    }
 }

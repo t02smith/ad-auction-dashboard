@@ -1,19 +1,14 @@
 package ad.auction.dashboard.view.ui;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.events.ScaleListener;
 import ad.auction.dashboard.view.pages.BasePage;
 import ad.auction.dashboard.view.pages.CampaignPage;
 import ad.auction.dashboard.view.pages.LoadPage;
 import ad.auction.dashboard.view.pages.MenuPage;
 import ad.auction.dashboard.view.pages.UploadPage;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -33,9 +28,6 @@ public class Window {
 
 	private final Stage stage;
 	private Scene scene;
-	
-	//External listeners
-	private ArrayList<ScaleListener> scaleListeners = new ArrayList<ScaleListener>();
 	
 	// initialize with stage height and width
 	public Window(Stage stage, int height, int width) {
@@ -79,24 +71,6 @@ public class Window {
 		
 		stage.setMaxWidth(1280);
 		stage.setMaxHeight(720);
-		
-		//Notify listeners for change in scaling
-		stage.widthProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
-			}
-			
-		});
-		stage.heightProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				for (ScaleListener sl : scaleListeners) { sl.rescaled(); }
-			}
-			
-		});
 	}
 
 	/**
@@ -148,6 +122,4 @@ public class Window {
 	public double getHeight() {
 		return stage.getHeight();
 	}
-
-	public void addScaleListener(ScaleListener scaleListener) { this.scaleListeners.add(scaleListener); }
 }
