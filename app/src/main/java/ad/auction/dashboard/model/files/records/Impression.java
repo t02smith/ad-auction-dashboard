@@ -19,36 +19,17 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
                 Float.parseFloat(line[6])); // Impression cost
     }
 
-    /**
-     * produce a new impression
-     * 
-     * @param line one line in the file
-     * @return constructed impression
-     */
-    public static Impression producer(String line) {
-        String[] parts = line.split(",");
-
-        return new Impression(
-                Utility.parseDate(parts[0]), // Date of impression
-                Long.parseLong(parts[1]), // ID
-                Gender.valueOf(parts[2].toUpperCase()), // Gender
-                AgeGroup.getAgeGroup(parts[3]), // Age Group
-                Income.valueOf(parts[4].toUpperCase()), // Income
-                Context.valueOf(parts[5].toUpperCase().replace(" ", "_")), // Context
-                Float.parseFloat(parts[6])); // Impression cost
-    }
-
     // ENUM
 
     public enum Gender {
         Male,
-        Female;
+        Female
     }
 
     public enum Income {
         Low,
         Medium,
-        High;
+        High
     }
 
     public enum AgeGroup {
@@ -61,7 +42,7 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
         public final String str;
         private final int hash;
 
-        private AgeGroup(String str) {
+        AgeGroup(String str) {
             this.str = str;
             this.hash = str.hashCode();
         }
@@ -84,9 +65,9 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
         Hobbies("Hobbies"),
         Travel("Travel");
 
-        private String display;
+        private final String display;
 
-        private Context(String display) {
+        Context(String display) {
             this.display = display;
         }
 

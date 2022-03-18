@@ -105,6 +105,9 @@ public class CampaignManager {
             currentCampaign.clicks = clicks.get().stream().map(c -> (Click)c).toList();
             currentCampaign.server = server.get().stream().map(c -> (Server)c).toList();
 
+            currentCampaign.start = currentCampaign.impressions.get(0).dateTime();
+            currentCampaign.end = currentCampaign.impressions.get(currentCampaign.impressions.size()-1).dateTime();
+
             currentCampaign.dataLoaded = true;
     
         } catch (IOException e) {

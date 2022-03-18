@@ -43,6 +43,8 @@ public class FilteredCampaign extends Campaign {
         if (filterActive.containsKey(filterHash))
             filterActive.replace(filterHash, !filterActive.get(filterHash));
 
+        this.cache = new HashMap<>();
+        logger.info("Cache cleared");
         logger.info("Toggling filter {} to {}", filterHash, filterActive.get(filterHash));
     }
 
@@ -50,8 +52,8 @@ public class FilteredCampaign extends Campaign {
      * Add a filter to all datasets
      * e.g. date
      * 
-     * @param filter
-     * @return
+     * @param filter the filter function
+     * @return the hash identifier
      */
     public int addFilter(Predicate<SharedFields> filter) {
         int hash = filter.hashCode();

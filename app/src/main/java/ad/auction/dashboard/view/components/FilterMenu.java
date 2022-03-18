@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,13 +51,14 @@ public class FilterMenu extends GridPane {
         var gender = new Text("Gender");
         gender.getStyleClass().add("filter-sub-heading");
 
-        List<CheckBox> genders = Arrays.asList(Gender.values()).stream().map(g -> {
+        List<CheckBox> genders = Arrays.stream(Gender.values()).map(g -> {
             int hash = controller.addImpFilter(i -> i.gender() != g);
 
             var box = new CheckBox(g.toString().charAt(0) + g.toString().substring(1).toLowerCase());
             box.setSelected(true);
             box.selectedProperty().addListener(e -> {
                 controller.toggleFilter(hash);
+                this.reloadMetric.run();
             });
 
             return box;
@@ -66,7 +68,7 @@ public class FilterMenu extends GridPane {
         // Income section
         var income = new Text("Income");
         income.getStyleClass().add("filter-sub-heading");
-        List<CheckBox> incomes = Arrays.asList(Income.values()).stream().map(i -> {
+        List<CheckBox> incomes = Arrays.stream(Income.values()).map(i -> {
             int hash = controller.addImpFilter(imp -> imp.income() != i);
 
             var box = new CheckBox(i.toString().charAt(0) + i.toString().substring(1).toLowerCase());
@@ -82,7 +84,7 @@ public class FilterMenu extends GridPane {
         // Age Group section
         var ageGroup = new Text("Age Group");
         ageGroup.getStyleClass().add("filter-sub-heading");
-        List<CheckBox> ageGroups = Arrays.asList(Impression.AgeGroup.values()).stream().map(ag -> {
+        List<CheckBox> ageGroups = Arrays.stream(Impression.AgeGroup.values()).map(ag -> {
             int hash = controller.addImpFilter(i -> i.ageGroup() != ag);
 
             var box = new CheckBox(ag.str);
@@ -98,7 +100,7 @@ public class FilterMenu extends GridPane {
         // Context section
         var context = new Text("Context");
         context.getStyleClass().add("filter-sub-heading");
-        List<CheckBox> contexts = Arrays.asList(Impression.Context.values()).stream().map(c -> {
+        List<CheckBox> contexts = Arrays.stream(Impression.Context.values()).map(c -> {
             int hash = controller.addImpFilter(i -> i.context() != c);
 
             var box = new CheckBox(c.toString().charAt(0) + c.toString().substring(1).toLowerCase());
@@ -147,13 +149,17 @@ public class FilterMenu extends GridPane {
         var betweenDateLowBound = new DatePicker();
         var betweenDateHighBound = new DatePicker();
 
+        int beforeHash = controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue())));
+
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
         beforeDate.setOnAction((event) -> {
+            logger.info("kasjdka");
             afterDate.getEditor().clear();
             betweenDateLowBound.getEditor().clear();
             betweenDateHighBound.getEditor().clear();
         });
+
 
         afterDate.setDayCellFactory((lam) -> getDisabledDate());
         afterDate.getEditor().setDisable(true);

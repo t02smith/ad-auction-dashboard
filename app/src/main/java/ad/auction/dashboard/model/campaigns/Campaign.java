@@ -1,5 +1,6 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -25,6 +26,9 @@ public class Campaign {
     String impPath;
     String svrPath;
 
+    LocalDateTime start;
+    LocalDateTime end;
+
     boolean dataLoaded = false;
 
     List<Impression> impressions;
@@ -32,7 +36,7 @@ public class Campaign {
     List<Server> server;
 
     //Stores calculations that have already been run
-    private HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
+    protected HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
 
     //Stores info to display in the UI
     public record CampaignData(String name, String clkPath, String impPath, String svrPath) {

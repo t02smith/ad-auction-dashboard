@@ -61,7 +61,7 @@ public class Calculator {
                     try {
                         campaign.cacheData(metric, (List<Point2D>)res.get());
                         logger.info("Caching {}", metric);
-                    } catch (ExecutionException | InterruptedException e) {logger.error("Error caching {}", metric);}
+                    } catch (ExecutionException | InterruptedException e) {logger.error("Error caching {}: {}", metric, e.getMessage());}
                 });
 
                 return res;

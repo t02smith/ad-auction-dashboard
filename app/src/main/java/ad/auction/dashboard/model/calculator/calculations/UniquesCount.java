@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.model.files.records.Click;
 import javafx.geometry.Point2D;
 
 public class UniquesCount extends Metric {
@@ -18,7 +19,7 @@ public class UniquesCount extends Metric {
     @Override
     public Function<Campaign, Number> overall() {
         return c -> c.clicks()
-                     .map(svr -> svr.ID())
+                     .map(Click::ID)
                      .distinct()
                      .count();
     }
@@ -27,13 +28,14 @@ public class UniquesCount extends Metric {
     public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
-            points.add(new Point2D(0,0));
+            if (c.clicks().findFirst().isEmpty()) return points;
 
-            LocalDateTime[] start = new LocalDateTime[] {c.impressions().findFirst().get().dateTime()};
+            LocalDateTime[] start = new LocalDateTime[] {c.clicks().findFirst().get().dateTime()};
             LocalDateTime[] end = new LocalDateTime[] {
-                Metric.incrementDate(resolution, c.impressions().findFirst().get().dateTime())};
+                Metric.incrementDate(resolution, start[0])};
             long[] counter = new long[] {0};
 
+            points.add(new Point2D(0,0));
             HashSet<Long> seenIDs = new HashSet<>();
             c.clicks().forEach(clk -> {
                 if (!clk.dateTime().isBefore(end[0])) {

@@ -13,9 +13,9 @@ import ad.auction.dashboard.model.files.records.SharedFields;
  * Lists all possible file types
  */
 public enum FileType {
-    IMPRESSION(line -> Impression.producer(line), "Date", "ID", "Gender", "Age", "Income", "Context", "Impression Cost"),
-    CLICK(line -> Click.producer(line), "Date", "ID", "Click Cost"),
-    SERVER(line -> Server.producer(line), "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion");
+    IMPRESSION(Impression::producer, "Date", "ID", "Gender", "Age", "Income", "Context", "Impression Cost"),
+    CLICK(Click::producer, "Date", "ID", "Click Cost"),
+    SERVER(Server::producer, "Entry Date", "ID", "Exit Date", "Pages Viewed", "Conversion");
 
     //Produces a record from a csv line
     private final Function<String[], SharedFields> producer;
@@ -25,22 +25,13 @@ public enum FileType {
 
     /**
      * Each file type
-     * @param producer
-     * @param headers
+     * @param producer The function to produce the type record
+     * @param headers The expected headings in the .csv
      */
-    private FileType(Function<String[], SharedFields> producer, String... headers) {
+    FileType(Function<String[], SharedFields> producer, String... headers) {
         this.producer = producer;
         this.headers = headers;
     }
-
-    // /**
-    //  * Apply producer function
-    //  * @param line
-    //  * @return
-    //  */
-    // public SharedFields produce(String line) {
-    //     return this.producer.apply(line);
-    // }
 
     public SharedFields produce(String[] line) {
         return this.producer.apply(line);
