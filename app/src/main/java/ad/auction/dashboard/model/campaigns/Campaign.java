@@ -1,11 +1,14 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
+import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
+import javafx.geometry.Point2D;
 
 /**
  * A campaign must consist of files for the impressions, clicks and server logs
@@ -28,6 +31,9 @@ public class Campaign {
     List<Click> clicks;
     List<Server> server;
 
+    //Stores calculations that have already been run
+    private HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
+
     //Stores info to display in the UI
     public record CampaignData(String name, String clkPath, String impPath, String svrPath) {
     }
@@ -44,15 +50,29 @@ public class Campaign {
      * to free up memory
      */
     public void flushData() {
-        System.out.println("jsajdask");
         this.impressions = null;
         this.clicks = null;
         this.server = null;
         this.dataLoaded = false;
-        System.out.println("jsajdask");
-    }  
+        this.cache = new HashMap<>();
+    }
+
+    /**
+     * Store a calculated result in memory
+     * @param m The metric calculated
+     * @param data The result of the calculation
+     */
+    public void cacheData(Metrics m, List<Point2D> data) {
+        this.cache.put(m, data);
+    }
 
     // GETTERS
+
+    public boolean isCached(Metrics m) {return this.cache.containsKey(m);}
+
+    public List<Point2D> getData(Metrics m) {
+        return this.cache.get(m);
+    }
 
     public CampaignData getData() {
         return new CampaignData(name, clkPath, impPath, svrPath);

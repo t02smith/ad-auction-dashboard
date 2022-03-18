@@ -19,15 +19,15 @@ public class RecordTest {
     @Tag("model/files")
     public void impressionProducerTest() {
         final String line = "2015-01-01 12:00:02,4620864431353617408,Male,25-34,High,Blog,0.001713";
-        final Impression actual = (Impression)FileType.IMPRESSION.produce(line);
+        final Impression actual = (Impression)FileType.IMPRESSION.produce(line.split(","));
 
         assertTrue(
             actual.dateTime().equals(Utility.parseDate("2015-01-01 12:00:02")) &&
             actual.ID() == 4620864431353617408L &&
-            actual.gender() == Gender.MALE &&
+            actual.gender() == Gender.Male &&
             actual.ageGroup() == AgeGroup.BETWEEN_25_34 &&
-            actual.income() == Income.HIGH &&
-            actual.context() == Context.BLOG &&
+            actual.income() == Income.High &&
+            actual.context() == Context.Blog &&
             actual.impressionCost() == (float)0.001713
         );
         
@@ -39,7 +39,7 @@ public class RecordTest {
     @Tag("model/files")
     public void serverProducerTest() {
         final String line = "2015-01-01 12:04:13,8370837523317244928,2015-01-01 12:09:50,10,No";
-        final Server actual = (Server)FileType.SERVER.produce(line);
+        final Server actual = (Server)FileType.SERVER.produce(line.split(","));
 
         assertTrue(
             actual.dateTime().equals(Utility.parseDate("2015-01-01 12:04:13")) &&
@@ -55,7 +55,7 @@ public class RecordTest {
     @Tag("model/files")
     public void clickProducerTest() {
         final String line = "2015-01-01 12:59:29,541711580562437120,8.762051";
-        final Click actual = (Click)FileType.CLICK.produce(line);
+        final Click actual = (Click)FileType.CLICK.produce(line.split(","));
 
         assertTrue(
             actual.dateTime().equals(Utility.parseDate("2015-01-01 12:59:29")) &&

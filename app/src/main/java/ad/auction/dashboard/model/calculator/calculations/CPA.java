@@ -33,7 +33,7 @@ public class CPA extends Metric {
             ArrayList<Point2D> totalCost = Metrics.TOTAL_COST.getMetric().overTime(resolution).apply(c);
             ArrayList<Point2D> conversionNo = Metrics.CONVERSIONS_COUNT.getMetric().overTime(resolution).apply(c);
             
-            for (int i=0; i<totalCost.size(); i++) {
+            for (int i=1; i<totalCost.size(); i++) {
                 var tcst = totalCost.get(i);
                 points.add(new Point2D(tcst.getX(), (double)tcst.getY()/conversionNo.get(i).getY()));
             }

@@ -18,7 +18,7 @@ import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 @Tag("model/calculator")
 public class CalculatorTest {
 
-    private static Model model = new Model();
+    private static final Model model = new Model();
 
 
     @BeforeAll

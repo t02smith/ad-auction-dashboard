@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.model.Model;
-import ad.auction.dashboard.model.calculator.calculations.UniquesCount;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
@@ -26,7 +25,7 @@ public class MetricTest {
     @BeforeAll
     public static void setup() {       
         model.campaigns().openCampaign("2 Week Campaign");
-        c = (Campaign)model.campaigns().getCurrentCampaign();
+        c = model.campaigns().getCurrentCampaign();
 
     }
 
@@ -34,9 +33,8 @@ public class MetricTest {
     public void overTimeTest() {
         ArrayList<Point2D> actual = Metrics.TOTAL_COST.getMetric().overTime(ChronoUnit.DAYS).apply(c);
 
-        var it = actual.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next().toString());
+        for (Point2D point2D : actual) {
+            System.out.println(point2D.toString());
         }
 
     }
@@ -59,10 +57,10 @@ public class MetricTest {
     }
 
     @Test
-    @DisplayName("Unqiues count")
+    @DisplayName("Uniques count")
     @Deprecated
     public void uniquesCountTest() {
-        long result = (long) ((UniquesCount) Metrics.UNIQUES_COUNT.getMetric()).overall().apply(c);
+        long result = (long) Metrics.UNIQUES_COUNT.getMetric().overall().apply(c);
         assertEquals(23806, result);
     }
 

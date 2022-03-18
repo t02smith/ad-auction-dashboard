@@ -46,7 +46,7 @@ public enum Metrics {
     //Produces a metric object to perform calculations
     private final Metric metric;
 
-    private Metrics(Metric metric) {
+    Metrics(Metric metric) {
         this.metric = metric;
     }
 

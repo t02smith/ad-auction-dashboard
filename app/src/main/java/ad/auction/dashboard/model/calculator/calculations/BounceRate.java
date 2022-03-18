@@ -33,7 +33,7 @@ public class BounceRate extends Metric {
             ArrayList<Point2D> bouncesCount = Metrics.BOUNCES_COUNT.getMetric().overTime(resolution).apply(c);
             ArrayList<Point2D> clickPts = Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c);
             
-            for (int i=0; i<bouncesCount.size(); i++) {
+            for (int i=1; i<bouncesCount.size(); i++) {
                 var bounceP = bouncesCount.get(i);
                 points.add(new Point2D(bounceP.getX(), bounceP.dotProduct(0, (double)1/clickPts.get(i).getY())));
             }

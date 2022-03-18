@@ -33,7 +33,7 @@ public class CTR extends Metric {
             ArrayList<Point2D> impressionPts = Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c);
             ArrayList<Point2D> clickPts = Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c);
             
-            for (int i=0; i<impressionPts.size(); i++) {
+            for (int i=1; i<impressionPts.size(); i++) {
                 var clk = clickPts.get(i);
                 points.add(new Point2D(clk.getX(), (double)clk.getY()/impressionPts.get(i).getY()));
             }

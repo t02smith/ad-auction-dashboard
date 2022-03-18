@@ -1,9 +1,10 @@
 package ad.auction.dashboard.model.calculator;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -28,14 +29,15 @@ public class Calculator {
     private static final int CALCULATOR_THREAD_COUNT = 10;
     private final ExecutorService executor = Executors.newFixedThreadPool(CALCULATOR_THREAD_COUNT);
 
+
     /**
      * Runs a calculation on a separate thread
-     * 
-     * @param campaign
-     * @param metric
-     * @param func
+     * @param campaign the data to use
+     * @param metric the type of calculation
+     * @param func overall/over time
      * @return The future result
      */
+    @SuppressWarnings("unchecked")
     public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func) {
         logger.info("Running calculation {}:{} on {}", metric, func, campaign.name());
 
@@ -44,30 +46,38 @@ public class Calculator {
 
         switch (func) {
             case OVERALL:
-                return executor.submit(new Calculation<Number>(metric.getMetric().overall(), campaign));
+                return executor.submit(new Calculation<>(metric.getMetric().overall(), campaign));
             case OVER_TIME:
-                return executor.submit(
-                        new Calculation<ArrayList<Point2D>>(metric.getMetric().overTime(ChronoUnit.DAYS), campaign));
+                if (campaign.isCached(metric)) {
+                    logger.info("{} collected from cache", metric);
+                    return executor.submit(() -> campaign.getData(metric));
+                }
+
+                var res = executor.submit(
+                        new Calculation<>(metric.getMetric().overTime(ChronoUnit.DAYS), campaign));
+
+                executor.submit(() -> {
+                    while (!res.isDone()) {}
+                    try {
+                        campaign.cacheData(metric, (List<Point2D>)res.get());
+                        logger.info("Caching {}", metric);
+                    } catch (ExecutionException | InterruptedException e) {logger.error("Error caching {}", metric);}
+                });
+
+                return res;
             default:
                 throw new IllegalArgumentException("//");
         }
     }
 
-    /**
-     * Stops all currently running calculations
-     */
-    public void close() {
-        logger.info("Shutting down Calculator");
-        this.executor.shutdown();
-    }
-
     public HashMap<Metrics, Number> dashboardValues(Campaign campaign) {
         HashMap<Metrics, Number> db = new HashMap<>();
 
-        var data = Arrays.asList(Metrics.values()).stream()
+
+        var data = Arrays.stream(Metrics.values())
                 .map(m -> runCalculation(campaign, m, MetricFunction.OVERALL));
 
-        while (!data.allMatch(f -> f.isDone())) {}
+        while (!data.allMatch(Future::isDone)) {}
 
         var ls = (Number[])data.toArray();
         for (int i = 0; i < ls.length; i++) {

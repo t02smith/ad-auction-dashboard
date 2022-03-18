@@ -26,20 +26,24 @@ public class TotalImpressionsCost extends Metric {
     public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
+            points.add(new Point2D(0,0));
+
+            LocalDateTime[] start = new LocalDateTime[] {c.impressions().findFirst().get().dateTime()};
             LocalDateTime[] end = new LocalDateTime[] {
                 Metric.incrementDate(resolution, c.clicks().findFirst().get().dateTime())};
             double[] counter = new double[] {0};
 
             c.impressions().forEach(imp -> {
                 if (!imp.dateTime().isBefore(end[0])) {
-                    points.add(new Point2D(Metric.getXCoordinate(resolution, imp.dateTime()),counter[0]));
+                    points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]),counter[0]));
+                    start[0] = end[0];
                     end[0] = Metric.incrementDate(resolution, end[0]);
                 }
 
                 counter[0] += imp.impressionCost();
             });
 
-            points.add(new Point2D(Metric.getXCoordinate(resolution, end[0]), counter[0]));
+            points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]), counter[0]));
             return points;
         };
     }

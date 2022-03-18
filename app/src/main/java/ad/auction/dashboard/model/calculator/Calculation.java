@@ -21,8 +21,8 @@ public class Calculation<T> implements Callable<Object> {
 
     /**
      * Create a new calculation to be called
-     * @param calculation
-     * @param c
+     * @param calculation the function to run
+     * @param c the campaign to run it on
      */
     public Calculation(Function<Campaign, T> calculation, Campaign c) {
         this.calculation = calculation;

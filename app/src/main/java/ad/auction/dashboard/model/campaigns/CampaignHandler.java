@@ -41,7 +41,7 @@ public class CampaignHandler extends DefaultHandler {
     private CampaignTemp current;
 
     // A temporary class to store the campaign currently being read
-    class CampaignTemp {
+    static class CampaignTemp {
         String name;
         String impPath;
         String clkPath;
@@ -50,7 +50,7 @@ public class CampaignHandler extends DefaultHandler {
 
     /**
      * Get the data from the .xml file
-     * @param filename
+     * @param filename .xml file location
      */
     public void parse(String filename) {
         logger.info("Parsing campaign file '{}'", filename);
@@ -67,10 +67,10 @@ public class CampaignHandler extends DefaultHandler {
 
     /**
      * Writes a list of campaigns to a file
-     * @param filename
-     * @param campaingnLs
+     * @param filename location to write to
+     * @param campaignLs List of campaigns
      */
-    public void writeToFile(String filename, List<CampaignData> campaingnLs) {
+    public void writeToFile(String filename, List<CampaignData> campaignLs) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -79,7 +79,7 @@ public class CampaignHandler extends DefaultHandler {
             Element campaigns = doc.createElement("campaigns");
             doc.appendChild(campaigns);
 
-            campaingnLs.forEach(c -> {
+            campaignLs.forEach(c -> {
                 Element camp = doc.createElement("campaign");
 
                 var name = doc.createElement("name");
@@ -120,7 +120,7 @@ public class CampaignHandler extends DefaultHandler {
     // PARSER FUNCTIONS
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length) {
         if (element == null)
             element = new StringBuilder();
         else
@@ -128,43 +128,26 @@ public class CampaignHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
+    public void startElement(String uri, String lName, String qName, Attributes attr) {
         switch (qName) {
-            case "campaigns":
-                this.campaigns = new ArrayList<>();
-                break;
-            case "campaign":
-                this.current = new CampaignTemp();
-                break;
-            case "name":
-            case "impPath":
-            case "svrPath":
-            case "clkPath":
-                element = new StringBuilder();
-                break;
+            case "campaigns" -> this.campaigns = new ArrayList<>();
+            case "campaign" -> this.current = new CampaignTemp();
+            case "name", "impPath", "svrPath", "clkPath" -> element = new StringBuilder();
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         switch (qName) {
-            case "name":
-                current.name = element.toString();
-                break;
-            case "impPath":
-                current.impPath = element.toString();
-                break;
-            case "svrPath":
-                current.svrPath = element.toString();
-                break;
-            case "clkPath":
-                current.clkPath = element.toString();
-                break;
-            case "campaign":
+            case "name" -> current.name = element.toString();
+            case "impPath" -> current.impPath = element.toString();
+            case "svrPath" -> current.svrPath = element.toString();
+            case "clkPath" -> current.clkPath = element.toString();
+            case "campaign" -> {
                 campaigns.add(new FilteredCampaign(
                         current.name, current.impPath, current.clkPath, current.svrPath));
                 logger.info("Campaign '{}' loaded", current.name);
-                break;
+            }
         }
     }
 
