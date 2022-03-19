@@ -1,10 +1,7 @@
 package ad.auction.dashboard.view.ui;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.pages.CampaignPage;
-import ad.auction.dashboard.view.pages.BasePage;
-import ad.auction.dashboard.view.pages.MenuPage;
-import ad.auction.dashboard.view.pages.UploadPage;
+import ad.auction.dashboard.view.pages.*;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -80,6 +77,10 @@ public class Window {
 
 	public void openUploadPage() {
 		loadPage(new UploadPage(this));
+	}
+
+	public void openEditPage(String campaign) {
+		loadPage(new EditPage(this, campaign));
 	}
 
 	/**

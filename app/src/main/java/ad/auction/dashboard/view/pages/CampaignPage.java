@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,10 +18,6 @@ import ad.auction.dashboard.view.components.MetricSelection;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 /**
@@ -77,10 +75,22 @@ public class CampaignPage extends BasePage {
 
 
 
+        //Edit options button
+        var editButton = new Button("Edit Graph Options");
+        editButton.getStyleClass().add("buttonStyle");
+        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName));
+        controller.query(ControllerQuery.OPEN_CAMPAIGN, campaignName);
+
         //Back button
-        var backButton = new Button("<");
+        var backButton = new Button("Main Menu");
         backButton.getStyleClass().add("buttonStyle");
         backButton.setOnMouseClicked((e) -> window.startMenu());
+
+        //Vbox to store buttons
+        var buttonBox = new VBox();
+        buttonBox.getChildren().addAll(editButton, backButton);
+        buttonBox.setSpacing(5);
+        buttonBox.setPadding(new Insets(5, 0, 0, 0));
 
         //Title text on top
         var mainMenuText = new Text(campaignName);
@@ -92,7 +102,7 @@ public class CampaignPage extends BasePage {
 
         screen.setTop(title);
         screen.setLeft(this.metricSelection());
-        screen.setRight(backButton);
+        screen.setRight(buttonBox);
         screen.setCenter(graphPane);
 
         //Style the buttons under the graph
