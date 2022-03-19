@@ -1,5 +1,6 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class Campaign {
     protected HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
 
     //Stores info to display in the UI
-    public record CampaignData(String name, String clkPath, String impPath, String svrPath) {
+    public record CampaignData(String name, String clkPath, String impPath, String svrPath, LocalDateTime start, LocalDateTime end) {
     }
 
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
@@ -79,7 +80,7 @@ public class Campaign {
     }
 
     public CampaignData getData() {
-        return new CampaignData(name, clkPath, impPath, svrPath);
+        return new CampaignData(name, clkPath, impPath, svrPath, start, end);
     }
 
     public Stream<Impression> impressions() {

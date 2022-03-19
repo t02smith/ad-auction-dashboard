@@ -3,6 +3,8 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
@@ -19,7 +21,8 @@ import javafx.geometry.Point2D;
  */
 public abstract class Metric {
     
-    private final String displayName;
+    protected final String displayName;
+    protected final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public Metric(String displayName) {
         this.displayName = displayName;

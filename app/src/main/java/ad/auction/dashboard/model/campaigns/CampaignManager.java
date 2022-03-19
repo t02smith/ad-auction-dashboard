@@ -48,6 +48,17 @@ public class CampaignManager {
     }
 
     /**
+     * Removes a given campaign
+     * @param name the name of a campaign
+     */
+    public void removeCampaign(String name) {
+        if (this.campaigns.containsKey(name)) {
+            this.campaigns.remove(name);
+            logger.info("Removing campaign {}", name);
+        }
+    }
+
+    /**
      * Generate a new campaign to track
      */
     public boolean[] newCampaign(String name, String clickPath, String impressionPath, String serverPath) {
@@ -152,7 +163,15 @@ public class CampaignManager {
         this.model.files().clean(files);
     }
 
-    // TODO finish edit campaign
+    /**
+     * Edit a campaigns details
+     * If properties are unchanged then null should be passed
+     * @param campaign name of the campaign
+     * @param name new name
+     * @param clkPath new clicks path
+     * @param impPath new impressions path
+     * @param svrPath new server path
+     */
     public void editCampaign(String campaign, String name, String clkPath, String impPath, String svrPath) {
 
         if (!campaigns.containsKey(campaign)) {
@@ -161,9 +180,12 @@ public class CampaignManager {
         }
 
         var c = campaigns.get(campaign);
+        if (name != null) c.name = name;
+        if (clkPath != null) c.clkPath = clkPath;
+        if (impPath != null) c.impPath = impPath;
+        if (svrPath != null) c.svrPath = svrPath;
 
-        if (name != null)
-            c.name = name;
+        logger.info("Successfully updated campaign {}", campaign);
     }
 
     /**
@@ -175,14 +197,28 @@ public class CampaignManager {
 
     // FILTERS
 
+    /**
+     * Toggles a filter on/off
+     * @param hash The filters identifier
+     */
     public void toggleFilter(int hash) {
         this.currentCampaign.toggleFilter(hash);
     }
 
+    /**
+     * Add a new filter on all data types
+     * @param filter the new filter
+     * @return the filter's hash id
+     */
     public int addFilter(Predicate<SharedFields> filter) {
         return this.currentCampaign.addFilter(filter);
     }
 
+    /**
+     * Add a new filter on the impressions data type
+     * @param impFilter the impressions filter
+     * @return the filter's hash
+     */
     public int addImpFilter(Predicate<Impression> impFilter) {
         return this.currentCampaign.addImpFilter(impFilter);
     }

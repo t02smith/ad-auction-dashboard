@@ -61,13 +61,7 @@ public class CampaignPage extends BasePage {
         
     };
 
-    /**
-     * Handles the new page according to the graph to be plotted
-     *
-     * @param window     - the window opened
-     * @param graphIndex - the graph to be inserted
-     *                   <p>
-     */
+
     public CampaignPage(Window window, String campaignName) {
         super(window);
         this.campaignName = campaignName;
@@ -80,7 +74,8 @@ public class CampaignPage extends BasePage {
      */
     @Override
     public void build() {
-        logger.info("Building Advert Page with graph: FromFile");
+        var cData = controller.getCampaignData();
+        logger.info("Building Campaign page for {}", campaignName);
 
         //The root is a stack pane
         root = new StackPane();
@@ -108,7 +103,7 @@ public class CampaignPage extends BasePage {
         var backButton = new Button("<");
         backButton.getStyleClass().add("buttonStyle");
         backButton.setOnMouseClicked((e) -> window.startMenu());
-        var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric));
+        var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric), cData.start().toLocalDate(), cData.end().toLocalDate());
         rightMenu.getChildren().addAll(backButton, filterTitle, filterMenu);
 
         //Title text on top

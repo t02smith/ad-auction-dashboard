@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +33,14 @@ public class FilterMenu extends GridPane {
 
     private final Runnable reloadMetric;
 
-    public FilterMenu(Runnable reloadMetric) {
+    //Start and end times
+    private LocalDate start;
+    private LocalDate end;
+
+    public FilterMenu(Runnable reloadMetric, LocalDate start, LocalDate end) {
         this.reloadMetric = reloadMetric;
+        this.start = start;
+        this.end = end;
         build();
     }
 
@@ -117,8 +124,6 @@ public class FilterMenu extends GridPane {
         add(date, 0, 0);
         addRow(1, dates.get(0).getKey(), dates.get(0).getValue());
         addRow(2, dates.get(1).getKey(), dates.get(1).getValue());
-        addRow(3, dates.get(2).getKey(), dates.get(2).getValue());
-        addRow(4, dates.get(3).getKey(), dates.get(3).getValue());
         add(gender,0, 5);
         addRow(6, genders.get(0), genders.get(1));
         add(income, 0, 7);
@@ -144,52 +149,27 @@ public class FilterMenu extends GridPane {
      * @return list of date parts for the UI
      */
     private ArrayList<Pair<Text, DatePicker>> buildDates() {
-        var beforeDate = new DatePicker();
-        var afterDate = new DatePicker();
-        var betweenDateLowBound = new DatePicker();
-        var betweenDateHighBound = new DatePicker();
+        var beforeDate = new DatePicker(end);
+        var afterDate = new DatePicker(start);
 
-        int beforeHash = controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue())));
+        controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue())));
 
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
         beforeDate.setOnAction((event) -> {
-            logger.info("kasjdka");
-            afterDate.getEditor().clear();
-            betweenDateLowBound.getEditor().clear();
-            betweenDateHighBound.getEditor().clear();
+            logger.info(beforeDate.getValue());
         });
 
 
         afterDate.setDayCellFactory((lam) -> getDisabledDate());
         afterDate.getEditor().setDisable(true);
         afterDate.setOnAction((event) -> {
-            beforeDate.getEditor().clear();
-            betweenDateLowBound.getEditor().clear();
-            betweenDateHighBound.getEditor().clear();
-        });
 
-        betweenDateLowBound.setDayCellFactory((lam) -> getDisabledDate());
-        betweenDateLowBound.getEditor().setDisable(true);
-        betweenDateLowBound.setOnAction((event) -> {
-            beforeDate.getEditor().clear();
-            afterDate.getEditor().clear();
-            betweenDateHighBound.setDayCellFactory((lam -> getDisabledDate(LocalDate.now(), betweenDateLowBound.getValue())));
-        });
-
-        betweenDateHighBound.setDayCellFactory((lam) -> getDisabledDate());
-        betweenDateHighBound.getEditor().setDisable(true);
-        betweenDateHighBound.setOnAction((event) -> {
-            beforeDate.getEditor().clear();
-            afterDate.getEditor().clear();
-            betweenDateLowBound.setDayCellFactory((lam -> getDisabledDate(betweenDateHighBound.getValue(), LocalDate.MIN)));
         });
 
         ArrayList<Pair<Text, DatePicker>> datesStuff = new ArrayList<Pair<Text, DatePicker>>();
         datesStuff.add(new Pair<Text, DatePicker>(new Text("Before"), beforeDate));
         datesStuff.add(new Pair<Text, DatePicker>(new Text("After"), afterDate));
-        datesStuff.add(new Pair<Text, DatePicker>(new Text("Between"), betweenDateLowBound));
-        datesStuff.add(new Pair<Text, DatePicker>(new Text("and"), betweenDateHighBound));
 
         return datesStuff;
     }

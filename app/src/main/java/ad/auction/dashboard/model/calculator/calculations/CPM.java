@@ -2,6 +2,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -30,13 +31,16 @@ public class CPM extends Metric {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
 
-            ArrayList<Point2D> totalCost = Metrics.TOTAL_COST.getMetric().overTime(resolution).apply(c);
-            ArrayList<Point2D> impressionCount = Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c);
-            
-            for (int i=1; i<totalCost.size(); i++) {
-                var tcst = totalCost.get(i);
-                points.add(new Point2D(tcst.getX(), (double)tcst.getY()/(impressionCount.get(i).getY()/1000)));
-            }
+            Future<ArrayList<Point2D>> totalCost = executor.submit(() -> Metrics.TOTAL_COST.getMetric().overTime(resolution).apply(c));
+            Future<ArrayList<Point2D>> impressionCount = executor.submit(() -> Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c));
+            while (!totalCost.isDone() || !impressionCount.isDone()) {}
+
+            try {
+                for (int i = 1; i < totalCost.get().size(); i++) {
+                    var tcst = totalCost.get().get(i);
+                    points.add(new Point2D(tcst.getX(), (double) tcst.getY() / (impressionCount.get().get(i).getY() / 1000)));
+                }
+            } catch (Exception ignored) {}
 
             return points;
         };

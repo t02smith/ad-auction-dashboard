@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -28,12 +29,15 @@ public class TotalCost extends Metric {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
             
-            ArrayList<Point2D> impCost = Metrics.TOTAL_COST_IMPRESSION.getMetric().overTime(resolution).apply(c);
-            ArrayList<Point2D> clkCost = Metrics.TOTAL_COST_CLICK.getMetric().overTime(resolution).apply(c);
-  
-            for (int i=0; i<impCost.size(); i++) {
-                points.add(impCost.get(i).add(0, clkCost.get(i).getY()));
-            }
+            Future<ArrayList<Point2D>> impCost = executor.submit(() -> Metrics.TOTAL_COST_IMPRESSION.getMetric().overTime(resolution).apply(c));
+            Future<ArrayList<Point2D>> clkCost = executor.submit(() -> Metrics.TOTAL_COST_CLICK.getMetric().overTime(resolution).apply(c));
+            while (!impCost.isDone() || !clkCost.isDone()) {}
+
+            try {
+                for (int i = 0; i < impCost.get().size(); i++) {
+                    points.add(impCost.get().get(i).add(0, clkCost.get().get(i).getY()));
+                }
+            } catch (Exception ignored) {}
 
             return points;
         };

@@ -2,6 +2,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -30,13 +31,16 @@ public class CTR extends Metric {
         return c -> {           
             ArrayList<Point2D> points = new ArrayList<>();
 
-            ArrayList<Point2D> impressionPts = Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c);
-            ArrayList<Point2D> clickPts = Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c);
-            
-            for (int i=1; i<impressionPts.size(); i++) {
-                var clk = clickPts.get(i);
-                points.add(new Point2D(clk.getX(), (double)clk.getY()/impressionPts.get(i).getY()));
-            }
+            Future<ArrayList<Point2D>> impressionPts = executor.submit(() -> Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution).apply(c));
+            Future<ArrayList<Point2D>> clickPts = executor.submit(() -> Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c));
+            while (!impressionPts.isDone() || !clickPts.isDone()) {}
+
+            try {
+                for (int i = 1; i < impressionPts.get().size(); i++) {
+                    var clk = clickPts.get().get(i);
+                    points.add(new Point2D(clk.getX(), (double) clk.getY() / impressionPts.get().get(i).getY()));
+                }
+            } catch (Exception ignored) {}
 
             return points;
         };
