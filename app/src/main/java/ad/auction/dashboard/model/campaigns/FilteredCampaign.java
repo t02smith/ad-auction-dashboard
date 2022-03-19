@@ -11,6 +11,7 @@ import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
 import ad.auction.dashboard.model.files.records.SharedFields;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A filtered campaign applies filters to the data before returning it
@@ -36,12 +37,12 @@ public class FilteredCampaign extends Campaign {
 
     /**
      * Turns a given filter on/off
-     * 
-     * @param filterHash
+     * @param filterHash The filter to toggle
      */
     public void toggleFilter(int filterHash) {
-        if (filterActive.containsKey(filterHash))
+        if (filterActive.containsKey(filterHash)) {
             filterActive.replace(filterHash, !filterActive.get(filterHash));
+        }
 
         this.cache = new HashMap<>();
         logger.info("Cache cleared");
@@ -55,11 +56,11 @@ public class FilteredCampaign extends Campaign {
      * @param filter the filter function
      * @return the hash identifier
      */
-    public int addFilter(Predicate<SharedFields> filter) {
+    public int addFilter(@NotNull Predicate<SharedFields> filter) {
         int hash = filter.hashCode();
         if (!allFilters.containsKey(hash)) {
             this.allFilters.put(hash, filter);
-            this.filterActive.put(hash, false);
+            this.filterActive.put(hash, true);
         }
 
         return hash;
@@ -68,7 +69,6 @@ public class FilteredCampaign extends Campaign {
     /**
      * Add a filter to just the impressions data
      * e.g. Gender,
-     * 
      * @param filter
      */
     public int addImpFilter(Predicate<Impression> filter) {

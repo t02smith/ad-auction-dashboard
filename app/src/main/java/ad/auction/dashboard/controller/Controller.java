@@ -50,6 +50,14 @@ public class Controller {
         return executor.submit(() -> model.campaigns().newCampaign(name, clkPath, impPath, svrPath));
     }
 
+    public void editCampaign(String campaign, String name, String clkPath, String impPath, String svrPath) {
+        this.model.campaigns().editCampaign(campaign, name, clkPath, impPath, svrPath);
+    }
+
+    public void removeCampaign(String campaign) {
+        this.model.campaigns().removeCampaign(campaign);
+    }
+
     /**
      * Run a calculation
      * @param m The metric being calculated

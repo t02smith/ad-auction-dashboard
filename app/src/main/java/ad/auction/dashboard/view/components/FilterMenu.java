@@ -152,19 +152,24 @@ public class FilterMenu extends GridPane {
         var beforeDate = new DatePicker(end);
         var afterDate = new DatePicker(start);
 
-        controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue())));
+        var beforeRes = controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue().atTime(23,59,59,0))));
 
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
         beforeDate.setOnAction((event) -> {
-            logger.info(beforeDate.getValue());
+            this.controller.toggleFilter(beforeRes);
+            this.controller.toggleFilter(beforeRes);
+            this.reloadMetric.run();
         });
 
+        var afterRes = controller.addFilter(r -> r.dateTime().isAfter(ChronoLocalDateTime.from(afterDate.getValue().atTime(0, 0, 0, 0))));
 
         afterDate.setDayCellFactory((lam) -> getDisabledDate());
         afterDate.getEditor().setDisable(true);
         afterDate.setOnAction((event) -> {
-
+            this.controller.toggleFilter(afterRes);
+            this.controller.toggleFilter(afterRes);
+            this.reloadMetric.run();
         });
 
         ArrayList<Pair<Text, DatePicker>> datesStuff = new ArrayList<Pair<Text, DatePicker>>();

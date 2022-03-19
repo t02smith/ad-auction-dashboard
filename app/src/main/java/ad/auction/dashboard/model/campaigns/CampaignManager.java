@@ -180,7 +180,14 @@ public class CampaignManager {
         }
 
         var c = campaigns.get(campaign);
-        if (name != null) c.name = name;
+        if (name != null) {
+            synchronized (this.campaigns) {
+                this.campaigns.put(name, c);
+                this.campaigns.remove(c.name);
+            }
+            c.name = name;
+
+        }
         if (clkPath != null) c.clkPath = clkPath;
         if (impPath != null) c.impPath = impPath;
         if (svrPath != null) c.svrPath = svrPath;
