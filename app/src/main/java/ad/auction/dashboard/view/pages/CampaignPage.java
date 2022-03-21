@@ -174,6 +174,4 @@ public class CampaignPage extends BasePage {
 
         return pane;
     }
-
-
 }

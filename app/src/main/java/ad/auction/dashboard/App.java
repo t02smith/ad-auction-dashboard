@@ -38,7 +38,7 @@ public class App extends Application {
     	new Window(stage,HEIGHT,WIDTH);
     	stage.show();
     }
-    
+
     /**
      * Shuts down the application
      */
@@ -48,10 +48,6 @@ public class App extends Application {
     	
     	System.exit(0);
     }
-
-    public Controller controller() {
-        return this.controller;
-    }
     
     /**
      * Return the application instance
@@ -60,4 +56,7 @@ public class App extends Application {
     public static App getInstance() { return instance; }
 
 
+    public Controller controller() {
+        return this.controller;
+    }
 }
