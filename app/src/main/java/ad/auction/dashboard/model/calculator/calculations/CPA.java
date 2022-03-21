@@ -38,7 +38,7 @@ public class CPA extends Metric {
             try {
                 for (int i=1; i<totalCost.get().size(); i++) {
                     var tcst = totalCost.get().get(i);
-                    points.add(new Point2D(tcst.getX(), (double)tcst.getY()/conversionNo.get().get(i).getY()));
+                    points.add(new Point2D(tcst.getX(), tcst.getY() /conversionNo.get().get(i).getY()));
                 }
             } catch (Exception ignored) { }
 

@@ -38,7 +38,7 @@ public class CPM extends Metric {
             try {
                 for (int i = 1; i < totalCost.get().size(); i++) {
                     var tcst = totalCost.get().get(i);
-                    points.add(new Point2D(tcst.getX(), (double) tcst.getY() / (impressionCount.get().get(i).getY() / 1000)));
+                    points.add(new Point2D(tcst.getX(), tcst.getY() / (impressionCount.get().get(i).getY() / 1000)));
                 }
             } catch (Exception ignored) {}
 

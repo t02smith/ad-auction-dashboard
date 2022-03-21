@@ -20,7 +20,7 @@ public class TotalImpressionsCost extends Metric {
                 .parallel()
                 .reduce(0.0, (acc, elem) -> acc + elem.impressionCost(), Double::sum)) / 1000;
 
-    };
+    }
 
     @Override
     public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {

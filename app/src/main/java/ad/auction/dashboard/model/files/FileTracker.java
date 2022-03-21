@@ -54,9 +54,8 @@ public class FileTracker {
      * its corresponding record type.
      * @param filename The file location/id
      * @return A stream of all the records
-     * @throws IOException file reading error
      */
-    public Future<List<SharedFields>> readFile(String filename) throws IOException  {
+    public Future<List<SharedFields>> readFile(String filename) {
         TrackedFile file;
 
         synchronized (this.trackedFiles) {

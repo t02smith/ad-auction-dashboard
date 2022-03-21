@@ -58,26 +58,12 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
     }
 
     public enum Context {
-        News("News"),
-        Shopping("Shopping"),
-        Social_Media("Social Media"),
-        Blog("Blog"),
-        Hobbies("Hobbies"),
-        Travel("Travel");
-
-        private final String display;
-
-        Context(String display) {
-            this.display = display;
-        }
-
-        public static Context getFromString(String s) {
-            for (Context c : Context.values()) {
-                if (c.display.equals(s))
-                    return c;
-            }
-            return null;
-        }
+        News,
+        Shopping,
+        Social_Media,
+        Blog,
+        Hobbies,
+        Travel
     }
 
 }

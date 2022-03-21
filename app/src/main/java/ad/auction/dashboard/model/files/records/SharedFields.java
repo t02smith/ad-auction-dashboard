@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
  */
 public interface SharedFields {
     
-    public LocalDateTime dateTime();
-    public long ID();
+    LocalDateTime dateTime();
+    long ID();
 }

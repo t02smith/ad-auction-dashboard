@@ -1,5 +1,6 @@
 package ad.auction.dashboard.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,7 +12,6 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.model.files.records.Impression;
-import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * The controller class acts as the interface for the 
@@ -81,8 +81,8 @@ public class Controller {
         this.model.campaigns().toggleFilter(hash);
     }
 
-    public int addFilter(Predicate<SharedFields> pred) {
-        return this.model.campaigns().addFilter(pred);
+    public void setDate(boolean start, LocalDateTime value) {
+        this.model.campaigns().setDate(start, value);
     }
 
     public int addImpFilter(Predicate<Impression> pred) {

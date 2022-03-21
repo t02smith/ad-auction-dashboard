@@ -16,8 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +32,8 @@ public class FilterMenu extends GridPane {
     private final Runnable reloadMetric;
 
     //Start and end times
-    private LocalDate start;
-    private LocalDate end;
+    private final LocalDate start;
+    private final LocalDate end;
 
     public FilterMenu(Runnable reloadMetric, LocalDate start, LocalDate end) {
         this.reloadMetric = reloadMetric;
@@ -152,23 +150,18 @@ public class FilterMenu extends GridPane {
         var beforeDate = new DatePicker(end);
         var afterDate = new DatePicker(start);
 
-        var beforeRes = controller.addFilter(r -> r.dateTime().isBefore(ChronoLocalDateTime.from(beforeDate.getValue().atTime(23,59,59,0))));
-
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
         beforeDate.setOnAction((event) -> {
-            this.controller.toggleFilter(beforeRes);
-            this.controller.toggleFilter(beforeRes);
+            this.controller.setDate(false, beforeDate.getValue().atTime(23,59,59,0));
             this.reloadMetric.run();
         });
 
-        var afterRes = controller.addFilter(r -> r.dateTime().isAfter(ChronoLocalDateTime.from(afterDate.getValue().atTime(0, 0, 0, 0))));
 
         afterDate.setDayCellFactory((lam) -> getDisabledDate());
         afterDate.getEditor().setDisable(true);
         afterDate.setOnAction((event) -> {
-            this.controller.toggleFilter(afterRes);
-            this.controller.toggleFilter(afterRes);
+            this.controller.setDate(true, afterDate.getValue().atTime(0,0,0,0));
             this.reloadMetric.run();
         });
 

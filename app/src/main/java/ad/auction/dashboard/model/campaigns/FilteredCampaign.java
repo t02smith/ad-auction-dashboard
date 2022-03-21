@@ -1,5 +1,6 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -10,8 +11,6 @@ import org.apache.logging.log4j.Logger;
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
-import ad.auction.dashboard.model.files.records.SharedFields;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A filtered campaign applies filters to the data before returning it
@@ -27,8 +26,6 @@ public class FilteredCampaign extends Campaign {
     //Currently active filters
     private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
 
-    //Filters to be applied to all datasets and just the impressions
-    private final HashMap<Integer, Predicate<SharedFields>> allFilters = new HashMap<>();
     private final HashMap<Integer, Predicate<Impression>> impFilters = new HashMap<>();
 
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
@@ -50,26 +47,9 @@ public class FilteredCampaign extends Campaign {
     }
 
     /**
-     * Add a filter to all datasets
-     * e.g. date
-     * 
-     * @param filter the filter function
-     * @return the hash identifier
-     */
-    public int addFilter(@NotNull Predicate<SharedFields> filter) {
-        int hash = filter.hashCode();
-        if (!allFilters.containsKey(hash)) {
-            this.allFilters.put(hash, filter);
-            this.filterActive.put(hash, true);
-        }
-
-        return hash;
-    }
-
-    /**
      * Add a filter to just the impressions data
      * e.g. Gender,
-     * @param filter
+     * @param filter Set the filter for impressions
      */
     public int addImpFilter(Predicate<Impression> filter) {
         int hash = filter.hashCode();
@@ -86,16 +66,16 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Click> clicks() {
         return this.clicks.stream()
-                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
-                        .allMatch(f -> allFilters.get(f).test(i)));
+                .dropWhile(r -> r.dateTime().isBefore(start))
+                .takeWhile(r -> r.dateTime().isBefore(end));
 
     }
 
     @Override
     public Stream<Impression> impressions() {
         return this.impressions.stream()
-                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
-                        .allMatch(f -> allFilters.get(f).test(i)))
+                .dropWhile(r -> r.dateTime().isBefore(start))
+                .takeWhile(r -> r.dateTime().isBefore(end))
                 .filter(i -> impFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> impFilters.get(f).test(i)));
     }
@@ -103,8 +83,8 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Server> server() {
         return this.server.stream()
-                .filter(i -> allFilters.keySet().stream().filter(filterActive::get)
-                        .allMatch(f -> allFilters.get(f).test(i)));
+                .dropWhile(r -> r.dateTime().isBefore(start))
+                .takeWhile(r -> r.dateTime().isBefore(end));
     }
 
 }

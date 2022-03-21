@@ -1,5 +1,6 @@
 package ad.auction.dashboard.model.campaigns;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,6 @@ public class CampaignHandlerTests {
     public void incorrectFileTest() {
         this.handler.parse("fake/address");
 
-        assertTrue(this.handler.getCampaigns().size() == 0);
+        assertEquals(0, this.handler.getCampaigns().size());
     }
 }

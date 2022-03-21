@@ -4,6 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Calculation
@@ -12,7 +14,9 @@ import ad.auction.dashboard.model.campaigns.Campaign;
  * @author tcs1g20
  */
 public class Calculation<T> implements Callable<Object> {
-    
+
+    private static final Logger logger = LogManager.getLogger(Calculator.class.getSimpleName());
+
     //The calculation to run
     private final Function<Campaign, T> calculation;
 
@@ -30,7 +34,10 @@ public class Calculation<T> implements Callable<Object> {
     }
 
     @Override
-    public T call() throws Exception {
-        return calculation.apply(campaign);
+    public T call() {
+        var t = System.currentTimeMillis();
+        var res = calculation.apply(campaign);
+        logger.info("Calculation ran in {}ms", System.currentTimeMillis()-t);
+        return res;
     }
 }

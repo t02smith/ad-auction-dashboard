@@ -37,7 +37,7 @@ public class CalculationTest {
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME);
         while (!actual.isDone()) {}
 
-        assertEquals(13, ((ArrayList<Point2D>)actual.get()).size());
+        assertEquals(14, ((ArrayList<Point2D>)actual.get()).size());
     }
 
     @Test
@@ -47,6 +47,6 @@ public class CalculationTest {
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME);
         while (!actual.isDone()) {}
 
-        assertEquals(50799.261228536605, ((ArrayList<Point2D>)actual.get()).get(5).getY());
+        assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());
     }
 }

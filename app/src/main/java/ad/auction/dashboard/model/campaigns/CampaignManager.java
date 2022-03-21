@@ -1,10 +1,9 @@
 package ad.auction.dashboard.model.campaigns;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +15,6 @@ import ad.auction.dashboard.model.files.FileType;
 import ad.auction.dashboard.model.files.records.Click;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Server;
-import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Used to perform operations concerning campaigns
@@ -104,28 +102,27 @@ public class CampaignManager {
 
         logger.info("Reading data for campaign '{}'", this.currentCampaign.name());
 
+        var impressions = this.model.files().readFile(currentCampaign.getData().impPath());
+        var clicks = this.model.files().readFile(currentCampaign.getData().clkPath());
+        var server = this.model.files().readFile(currentCampaign.getData().svrPath());
+
+        while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {
+        }
+
         try {
-            var impressions = this.model.files().readFile(currentCampaign.getData().impPath());
-            var clicks = this.model.files().readFile(currentCampaign.getData().clkPath());
-            var server = this.model.files().readFile(currentCampaign.getData().svrPath());
-
-            while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {
-            }
-
             currentCampaign.impressions = impressions.get().stream().map(i -> (Impression)i).toList();
             currentCampaign.clicks = clicks.get().stream().map(c -> (Click)c).toList();
             currentCampaign.server = server.get().stream().map(c -> (Server)c).toList();
+        } catch (Exception ignored) {}
 
-            currentCampaign.start = currentCampaign.impressions.get(0).dateTime();
-            currentCampaign.end = currentCampaign.impressions.get(currentCampaign.impressions.size()-1).dateTime();
+        try {
+            currentCampaign.setDate(true, currentCampaign.impressions.get(0).dateTime());
+            currentCampaign.setDate(false, currentCampaign.impressions.get(currentCampaign.impressions.size()-1).dateTime());
 
-            currentCampaign.dataLoaded = true;
-    
-        } catch (IOException e) {
-            logger.error("Error reading/processing data files: {}", e.getMessage());
-        } catch (InterruptedException | ExecutionException e) {
-            logger.error("Error fetching processed data: {}", e.getMessage());
-        }        
+        } catch (Exception e) {e.printStackTrace();}
+
+        currentCampaign.dataLoaded = true;
+
     }
 
     /**
@@ -212,13 +209,8 @@ public class CampaignManager {
         this.currentCampaign.toggleFilter(hash);
     }
 
-    /**
-     * Add a new filter on all data types
-     * @param filter the new filter
-     * @return the filter's hash id
-     */
-    public int addFilter(Predicate<SharedFields> filter) {
-        return this.currentCampaign.addFilter(filter);
+    public void setDate(boolean start, LocalDateTime value) {
+        this.currentCampaign.setDate(start,value);
     }
 
     /**

@@ -38,7 +38,7 @@ public class CTR extends Metric {
             try {
                 for (int i = 1; i < impressionPts.get().size(); i++) {
                     var clk = clickPts.get().get(i);
-                    points.add(new Point2D(clk.getX(), (double) clk.getY() / impressionPts.get().get(i).getY()));
+                    points.add(new Point2D(clk.getX(), clk.getY() / impressionPts.get().get(i).getY()));
                 }
             } catch (Exception ignored) {}
 

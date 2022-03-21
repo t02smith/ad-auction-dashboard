@@ -2,7 +2,6 @@ package ad.auction.dashboard.model.calculator.calculations;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 

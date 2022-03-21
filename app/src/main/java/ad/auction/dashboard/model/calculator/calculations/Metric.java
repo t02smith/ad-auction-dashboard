@@ -30,7 +30,7 @@ public abstract class Metric {
 
     public enum MetricFunction {
         OVERALL,
-        OVER_TIME;
+        OVER_TIME
     } 
 
     /**
@@ -47,27 +47,25 @@ public abstract class Metric {
     public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
 
     public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time) {
-        switch (resolution) {
-            case HOURS:
-                return time.getHour();
-            case WEEKS:
-                return Math.round(time.getDayOfYear()/52);
-            case DAYS:
-            default:
-                return time.getDayOfYear();
-        }
+        return switch (resolution) {
+            case HOURS -> time.getHour();
+            case WEEKS -> Math.round(time.getDayOfYear() / 52);
+            case DAYS -> time.getDayOfYear();
+            default -> throw new IllegalStateException("Unexpected value: " + resolution);
+        };
     }
 
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time) {
-        switch (resolution) {
-            case HOURS:
-                return time.plusHours(1);
-            case WEEKS:
-                return time.plusDays(7);
-            case DAYS:
-            default:
-                return time.plusDays(1);
-        }
+        return incrementDate(resolution, time, 1);
+    }
+
+    public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time, int factor) {
+        return switch (resolution) {
+            case HOURS -> time.plusHours(factor);
+            case WEEKS -> time.plusDays(7 * factor);
+            case DAYS -> time.plusDays(factor);
+            default -> throw new IllegalStateException("Unexpected value: " + resolution);
+        };
     }
 
     //GETTERS

@@ -1,6 +1,5 @@
 package ad.auction.dashboard.model.campaigns;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +26,8 @@ public class Campaign {
     String impPath;
     String svrPath;
 
-    LocalDateTime start;
-    LocalDateTime end;
+    protected LocalDateTime start;
+    protected LocalDateTime end;
 
     boolean dataLoaded = false;
 
@@ -69,6 +68,17 @@ public class Campaign {
      */
     public void cacheData(Metrics m, List<Point2D> data) {
         this.cache.put(m, data);
+    }
+
+    /**
+     * Set the start/end dates for the date
+     * @param start setting start/end date
+     * @param value the date to change it to
+     */
+    public void setDate(boolean start, LocalDateTime value) {
+        this.cache = new HashMap<>();
+        if (start) this.start = value;
+        else this.end = value;
     }
 
     // GETTERS
