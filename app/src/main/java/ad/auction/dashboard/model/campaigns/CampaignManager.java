@@ -179,8 +179,9 @@ public class CampaignManager {
         var c = campaigns.get(campaign);
         if (name != null) {
             synchronized (this.campaigns) {
+                this.campaigns.remove(campaign);
                 this.campaigns.put(name, c);
-                this.campaigns.remove(c.name);
+                logger.info(name);
             }
             c.name = name;
 

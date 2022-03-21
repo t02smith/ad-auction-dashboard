@@ -106,6 +106,11 @@ public class CampaignPage extends BasePage {
         var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric), cData.start().toLocalDate(), cData.end().toLocalDate());
         rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
+        //Edit options button
+        var editButton = new Button("Edit Graph Options");
+        editButton.getStyleClass().add("buttonStyle");
+        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName));
+
         //Title text on top
         var mainMenuText = new Text(campaignName);
         mainMenuText.getStyleClass().add("topTitle");
@@ -122,7 +127,7 @@ public class CampaignPage extends BasePage {
 
         screen.setTop(title);
         screen.setLeft(new MetricSelection(loadMetric));
-        screen.setRight(rightMenu);
+        screen.setRight(new VBox(editButton, filterMenu));
         screen.setCenter(graphPane);
 
         //Style the buttons under the graph

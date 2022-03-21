@@ -186,20 +186,4 @@ public class FilterMenu extends GridPane {
         };
     }
 
-    /**
-     * Returns DateCell that is disabled if before or after the given times
-     * @param after if date after this date then disable
-     * @param before if date before this date then disable
-     * @return DateCell
-     */
-    private DateCell getDisabledDate(LocalDate after, LocalDate before) {
-        return new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty || date.compareTo(LocalDate.now()) > 0 ||
-                        date.compareTo(after) > 0 || date.compareTo(before) < 0);
-            }
-        };
-    }
 }

@@ -1,7 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.LogManager;

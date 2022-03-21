@@ -4,11 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.pages.BasePage;
-import ad.auction.dashboard.view.pages.CampaignPage;
-import ad.auction.dashboard.view.pages.LoadPage;
-import ad.auction.dashboard.view.pages.MenuPage;
-import ad.auction.dashboard.view.pages.UploadPage;
+import ad.auction.dashboard.view.pages.*;
+
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -94,9 +91,13 @@ public class Window {
 	}
 
 	public void openLoadPage(String name) {
-		var window = this;
-		loadPage(new LoadPage(window,name));
+		loadPage(new LoadPage(this,name));
 	}
+
+	public void openEditPage(String campaign) {
+		loadPage(new EditPage(this, campaign));
+	}
+
 	/**
 	 * Load a given page
 	 * 

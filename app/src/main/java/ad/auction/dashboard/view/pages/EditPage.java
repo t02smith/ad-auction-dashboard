@@ -1,9 +1,12 @@
 package ad.auction.dashboard.view.pages;
 
 import ad.auction.dashboard.App;
+import ad.auction.dashboard.controller.Controller;
+import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -18,29 +21,15 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import ad.auction.dashboard.controller.Controller;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-
-/**
- * The upload file page view class
- */
-public class UploadPage extends BasePage {
-	
+public class EditPage extends BasePage{
     private static final Logger logger = LogManager.getLogger(UploadPage.class.getSimpleName());
     private String workFolderPath = null;
     private final Controller controller = App.getInstance().controller();
-    public String impressionString;
-    public String clickString;
-    public String serverString;
-    public String testString;
+    private String impressionString;
+    private String clickString;
+    private String serverString;
+    private String campaignName;
+    private CampaignData oldCampaign;
 
     private static final int LABEL_WIDTH = 120;
     private static final int BUTTON_WIDTH = 160;
@@ -48,13 +37,15 @@ public class UploadPage extends BasePage {
     private static final int V_GAP = 10;
 
 
-    public UploadPage(Window window) {
+    public EditPage(Window window, String name) {
         super(window);
+        campaignName = name;
+        oldCampaign = controller.getCampaignData();
     }
 
     @Override
     public void build() {
-        logger.info("Building Main Menu");
+        logger.info("Building edit page");
 
         //The root is a stack pane
         root = new StackPane();
@@ -62,15 +53,16 @@ public class UploadPage extends BasePage {
         root.setMaxHeight(window.getHeight());
 
         //Root holds Border Pane, Border Pane holds everything else
-        var mainPane = new BorderPane();
-        root.getChildren().add(mainPane);
+        var borderPane = new BorderPane();
+        root.getChildren().add(borderPane);
+
 
         //Title background on top
         var title = new BorderPane();
         title.getStyleClass().add("topBackground");
-        
+
         //Title text on top
-        var mainMenuText = new Text("Upload File");
+        var mainMenuText = new Text("Edit Graph Options");
         mainMenuText.getStyleClass().add("topTitle");
         title.setCenter(mainMenuText);
 
@@ -82,7 +74,7 @@ public class UploadPage extends BasePage {
         rowsBox.setMaxWidth(550);
         rowsBox.setMaxHeight(200);
         rowsBox.setSpacing(V_GAP);
-        
+
         // Test
         HBox colsBox = new HBox();
         colsBox.setMinWidth(550);
@@ -93,36 +85,25 @@ public class UploadPage extends BasePage {
 
         // campaign name input
         Label campaignsLabel = new Label("Campaign name:");
-        //Test
         campaignsLabel.setTextFill(Color.WHITE);
-        //Test finish
-        // TextField testField = new TextField();
-        // testField.setText("test");
-        // testField.setVisible(true); 
         TextField campaignsNameText = new TextField();
+        campaignsNameText.setText(campaignName);
         campaignsNameText.setPromptText("Campaign name:");
         campaignsNameText.setFocusTraversable(false);
-        if (campaignsNameText.isFocused() == false){
-             logger.info("The camPaignsNameText is focused");
-        }
-        //campaignsLabel.setPrefWidth(LABEL_WIDTH);
         campaignsNameText.setPrefWidth(200);
-        // add campaignsLabel and campaignsNameText to a hbox
-        //HBox hBox1 = new HBox(campaignsLabel, campaignsNameText);
         HBox hBox1 = new HBox(campaignsNameText);
         hBox1.setSpacing(H_GAP);
-        // vertical center alignment
         hBox1.setAlignment(Pos.CENTER_LEFT);
         rowsBox.getChildren().add(hBox1);
         VBox.setVgrow(hBox1, Priority.ALWAYS);
 
-
         // impression file selection
         Label impressionsLabel = new Label("Impression file:");
         impressionsLabel.setTextFill(Color.WHITE);
-        //TextField impressionsText = new TextField("");
         //added a String to remember file path
-        impressionString = new String();
+        impressionString = oldCampaign.impPath();
+        File impressionFile = new File(impressionString);
+        workFolderPath = impressionFile.getParentFile().getAbsolutePath();
         //added finish
 
         // create an input stream from resource
@@ -146,41 +127,35 @@ public class UploadPage extends BasePage {
         // create three icon, and set them invisible
         ImageView icon1 = new ImageView();
         icon1.setImage(csvIconImage);
-        icon1.setVisible(false);
+        icon1.setVisible(true);
 
         ImageView icon2 = new ImageView();
         icon2.setImage(csvIconImage);
-        icon2.setVisible(false);
+        icon2.setVisible(true);
 
         ImageView icon3 = new ImageView();
         icon3.setImage(csvIconImage);
-        icon3.setVisible(false);
-
+        icon3.setVisible(true);
 
         //Change to a label type
-        //Label impressionsText = new Label("impressions");
         Label impressionsText = new Label();
         impressionsText.setTextFill(Color.WHITE);
+        impressionsText.setText(impressionFile.getName());
         //Change finish
-        //Button impressionsButton = new Button("Select file");
         Button impressionsButton = new Button();
         impressionsButton.getStyleClass().add("testStyle");
         impressionsButton.setGraphic(iconButton1);
-        //HBox pane1 = new HBox(impressionsText, icon1);
         VBox pane1 = new VBox(impressionsText, icon1);
         pane1.setAlignment(Pos.CENTER_LEFT);
 
         impressionsLabel.setMinWidth(LABEL_WIDTH);
         impressionsButton.setMinWidth(BUTTON_WIDTH);
         // add impressionsLabel ,impressionsButton and status indicator controls to a hbox
-        //HBox hBox2 = new HBox(impressionsLabel, impressionsButton, pane1);
         VBox vBox2 = new VBox(impressionsLabel, impressionsButton, pane1);
         vBox2.setSpacing(H_GAP);
         // vertical center alignment
         vBox2.setAlignment(Pos.CENTER_LEFT);
-        //rowsBox.getChildren().add(vBox2);
         colsBox.getChildren().add(vBox2);
-
 
         impressionsButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
@@ -206,34 +181,27 @@ public class UploadPage extends BasePage {
         // clicks file selection
         Label clicksLabel = new Label("Clicks file:");
         clicksLabel.setTextFill(Color.WHITE);
-        //TextField clicksText = new TextField("");
         //added a String to remember file path
-        clickString = new String();
+        clickString = oldCampaign.clkPath();
+        File clickFile = new File(clickString);
         //added finish
         //Change to a label type
-        //Label clicksText = new Label("clicks");
         Label clicksText = new Label();
         clicksText.setTextFill(Color.WHITE);
+        clicksText.setText(clickFile.getName());
         //Change finish
-        //HBox pane2 = new HBox(clicksText, icon2);
         VBox pane2 = new VBox(clicksText, icon2);
         pane2.setAlignment(Pos.CENTER_LEFT);
-        //Button clicksButton = new Button("Select file");
         Button clicksButton = new Button();
         clicksButton.getStyleClass().add("testStyle");
         clicksButton.setGraphic(iconButton2);
         clicksLabel.setMinWidth(LABEL_WIDTH);
         clicksButton.setMinWidth(BUTTON_WIDTH);
         // add clicksLabel ,clicksButton and status indicator controls to a hbox
-        // HBox hBox3 = new HBox(clicksLabel, clicksButton, pane2);
         VBox vBox3 = new VBox(clicksLabel, clicksButton, pane2);
-        // hBox3.setSpacing(H_GAP);
         vBox3.setSpacing(H_GAP);
         // vertical center alignment
-        //hBox3.setAlignment(Pos.CENTER_LEFT);
         vBox3.setAlignment(Pos.CENTER_LEFT);
-        //rowsBox.getChildren().add(hBox3);
-        //rowsBox.getChildren().add(vBox3);
         colsBox.getChildren().add(vBox3);
 
         clicksButton.setOnAction(event -> {
@@ -252,7 +220,6 @@ public class UploadPage extends BasePage {
             if (file != null) {
                 workFolderPath = file.getParentFile().getAbsolutePath();
                 clicksText.setText(file.getName());
-                //clicksText.setText(file.getAbsolutePath());
                 clickString = file.getAbsolutePath();
                 icon2.setVisible(true);
             }
@@ -261,34 +228,28 @@ public class UploadPage extends BasePage {
         // server file selection
         Label serverLabel = new Label("Server file:");
         serverLabel.setTextFill(Color.WHITE);
-        //TextField serverText = new TextField("");
         //added a String to remember file path
-        serverString = new String();
+        serverString = oldCampaign.svrPath();
+        File serverFile = new File(serverString);
         //added finish
         //Change to a label type
-        //Label serverText = new Label("servers");
         Label serverText = new Label();
         serverText.setTextFill(Color.WHITE);
+        serverText.setText(serverFile.getName());
         //Change finish
-        //HBox pane3 = new HBox(serverText, icon3);
         VBox pane3 = new VBox(serverText, icon3);
         pane3.setAlignment(Pos.CENTER_LEFT);
-        //Button serverButton = new Button("Select file");
         Button serverButton = new Button();
         serverButton.getStyleClass().add("testStyle");
         serverButton.setGraphic(iconButton3);
         serverLabel.setMinWidth(LABEL_WIDTH);
         serverButton.setMinWidth(BUTTON_WIDTH);
         // add serverLabel ,serverButton and status indicator controls to a hbox
-        //HBox hBox4 = new HBox(serverLabel, serverButton, pane3);
         VBox vBox4 = new VBox(serverLabel, serverButton, pane3);
         //hBox4.setSpacing(H_GAP);
         vBox4.setSpacing(H_GAP);
         // vertical center alignment
-        //hBox4.setAlignment(Pos.CENTER_LEFT);
         vBox4.setAlignment(Pos.CENTER_LEFT);
-        //rowsBox.getChildren().add(hBox4);
-        //rowsBox.getChildren().add(vBox4);
         colsBox.getChildren().add(vBox4);
 
 
@@ -305,141 +266,57 @@ public class UploadPage extends BasePage {
             }
 
             File file = fileChooser.showOpenDialog(null);
-            //File file = fileChooser.showSaveDialog(ownerWindow)
             if (file != null) {
                 // update work folder path
                 workFolderPath = file.getParentFile().getAbsolutePath();
                 serverText.setText(file.getName());
-                //serverText.setText(file.getAbsolutePath());
                 serverString = file.getAbsolutePath();
                 icon3.setVisible(true);
             }
         });
 
-        // submit and cancel button
-        Button okButton = new Button("Submit");
-        okButton.getStyleClass().add("buttonStyle");
+        //Save, cancel and delete buttons
+        Button saveButton = new Button("Save");
+        saveButton.getStyleClass().add("buttonStyle");
         Button cancelButton = new Button("Cancel");
         cancelButton.getStyleClass().add("buttonStyle");
-        okButton.setOnAction(event -> {
-            // check if the input is ok
-            if (!campaignsNameText.getText().isEmpty() && !impressionString.isEmpty() 
-            		&& !clickString.isEmpty() && !serverString.isEmpty()) {
-                controller.newCampaign(campaignsNameText.getText(), 
-                		clickString, impressionString, serverString);
-                
-                window.startMenu();
-            } else { // If the input is faulty, display Alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Hint");
-                alert.setHeaderText("Warning");
-                alert.setContentText("Please fill all text field before submit!");
-                alert.showAndWait();
-            }
-        });
-        
-        cancelButton.setOnAction(event -> { window.startMenu(); });
+        Button deleteButton = new Button("Delete Campaign");
+        deleteButton.getStyleClass().add("buttonStyle");
+        deleteButton.setStyle("-fx-background-color: #ff0000");
 
-        cancelButton.setOnAction(event -> {
+        //button actions
+        saveButton.setOnAction(event -> {
+            controller.editCampaign(oldCampaign.name(), campaignsNameText.getText(), clickString, impressionString, serverString);
             window.startMenu();
         });
 
-        okButton.setMinWidth(BUTTON_WIDTH);
+        cancelButton.setOnAction(event -> {
+            window.openCampaignPage(campaignName);
+        });
+
+        deleteButton.setOnAction(event -> {
+            controller.removeCampaign(oldCampaign.name());
+            window.startMenu();
+        });
+
+        saveButton.setMinWidth(BUTTON_WIDTH);
         cancelButton.setMinWidth(BUTTON_WIDTH);
+        deleteButton.setMinWidth(2*BUTTON_WIDTH + 60 + LABEL_WIDTH);
         // add okButton and cancelButton to a hbox
-        HBox hBox5 = new HBox(okButton, cancelButton);
+        HBox hBox5 = new HBox(saveButton, cancelButton);
         hBox5.setPadding(new Insets(0, 0, 0, 0));
         hBox5.setSpacing(60 + LABEL_WIDTH);
+        //Add these to a vbox above the delete button
+        var buttonBox = new VBox(hBox5, deleteButton);
+        buttonBox.setSpacing(10);
         // vertical center alignment
-        hBox5.setAlignment(Pos.CENTER_LEFT);
+        buttonBox.setAlignment(Pos.CENTER_LEFT);
         //Test
         rowsBox.getChildren().add(colsBox);
-        rowsBox.getChildren().add(hBox5);
+        rowsBox.getChildren().add(buttonBox);
 
-        mainPane.setTop(title);
-        mainPane.setCenter(rowsBox);
-        mainPane.getStyleClass().add("upload-list");
-
-    }
-
-    /*
-     * Each upload-file field
-     */
-    class csvUploadBox extends VBox {
-    	
-    	private String filePath;
-    	private String labelName;
-    	
-    	public csvUploadBox(String labelName) {
-    		this.labelName = labelName;
-    		
-    		this.setAlignment(Pos.CENTER);
-    		this.setSpacing(5);
-    		
-    		build();
-    	}
-    	
-    	private void build() {
-
-    		//The label above each button that indicates the required file
-    		Label requiredFileLabel = new Label(labelName + " File");
-    		requiredFileLabel.setTextFill(Color.WHITE);
-    		
-    		//Create an input stream to fetch images
-    		InputStream uploadIconStream = this.getClass().getResourceAsStream("/img/download_48px.png");
-    		InputStream csvIconStream = this.getClass().getResourceAsStream("/img/csv_40px.png");
-    		
-            //Create images with ImageView for more flexibility
-            ImageView uploadIcon = new ImageView();
-            ImageView csvIcon = new ImageView();
-            
-            uploadIcon.setImage(new Image(uploadIconStream));
-            csvIcon.setImage(new Image(csvIconStream));
-            
-            uploadIcon.setVisible(true);
-            csvIcon.setVisible(false);
-            
-            //The button to upload a file
-            Button uploadButton = new Button();
-            uploadButton.getStyleClass().add("testStyle");
-            uploadButton.setGraphic(uploadIcon);
-            
-            //The name of the file selected, under the button
-            Label fileNameLabel = new Label();
-            fileNameLabel.setTextFill(Color.WHITE);
-
-            //The file name and the CSV icon in a separate VBox to tweak spacing
-            var fileSelected = new VBox();
-            fileSelected.setAlignment(Pos.CENTER);
-            fileSelected.setSpacing(0);
-            fileSelected.getChildren().addAll(fileNameLabel, csvIcon);
-
-            // add clicksLabel ,clicksButton and status indicator controls to a hbox
-            this.getChildren().addAll(requiredFileLabel, uploadButton, fileSelected);
-
-            uploadButton.setOnAction(event -> {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("*.csv", List.of("*.csv")));
-                
-                // if the work folder path exists
-                if (workFolderPath != null) {
-                    File dir = new File(workFolderPath);
-                    
-                    // use the folder as initial directory
-                    if (dir.exists()) {
-                        fileChooser.setInitialDirectory(dir);
-                    }
-                }
-                File file = fileChooser.showOpenDialog(null);
-                
-                if (file != null) {
-                    workFolderPath = file.getParentFile().getAbsolutePath();
-                    filePath = file.getAbsolutePath();
-                    
-                    fileNameLabel.setText(file.getName());
-                    csvIcon.setVisible(true);
-                }
-            });
-    	}
+        borderPane.setTop(title);
+        borderPane.setCenter(rowsBox);
+        borderPane.getStyleClass().add("upload-list");
     }
 }
