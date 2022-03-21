@@ -76,3 +76,32 @@
 	-fx-font-size: 12px;
 	-fx-font-weight: bold;
 }
+
+
+.chart {
+	-fx-padding: 10px;
+	-fx-font-size: 20;
+	/*-fx-legend-visible: false;*/
+}
+
+.chart-content {
+	-fx-padding: 30px;
+}
+  
+.axis-label {
+	-fx-text-fill: #000000;
+}
+  
+.chart-legend {
+	 -fx-background-color:  transparent;
+	 -fx-font-weight: 500;
+}
+  
+.chart-legend-item-symbol{
+	 -fx-background-radius: 0;
+}
+  
+  
+
+
+
