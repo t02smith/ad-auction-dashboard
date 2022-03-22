@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 import ad.auction.dashboard.view.components.FilterMenu;
+import ad.auction.dashboard.view.components.TabMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -38,7 +39,7 @@ public class CampaignPage extends BasePage {
     private final String campaignName;
 
     private LineChartModel graph;
-    private BorderPane screen = new BorderPane();
+    private final BorderPane screen = new BorderPane();
 
     private Metrics currentMetric = Metrics.IMPRESSION_COUNT;
 
@@ -46,6 +47,7 @@ public class CampaignPage extends BasePage {
     @SuppressWarnings("unchecked")
     private final Consumer<Metrics> loadMetric = m -> {
         this.currentMetric = m;
+        this.graph.setYName(m.getMetric().unit());
 
         Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
         while (!future.isDone()) {}
@@ -55,7 +57,6 @@ public class CampaignPage extends BasePage {
 
             this.graph.setData(data);
             this.graph.setTitleName(m.getMetric().displayName());
-            this.graph.setYName(m.getMetric().displayName());
             this.screen.setCenter(this.graph.getLineChart());
             
         } catch (InterruptedException | ExecutionException e) {
@@ -93,6 +94,7 @@ public class CampaignPage extends BasePage {
 
         //BorderPane to hold the graph and the buttons under it
         var graphPane = new BorderPane();
+        graphPane.getStyleClass().add("bg-primary");
 
         //HBox to hold the buttons below the graph
         var graphButtonPane = new HBox();
@@ -125,26 +127,17 @@ public class CampaignPage extends BasePage {
         graphPane.setBottom(graphButtonPane);
         graphPane.setCenter(graph.getLineChart());
 
+        //
+        var menu = new TabMenu("metrics");
+        menu.addPane("metrics", new MetricSelection(loadMetric));
+        menu.addPane("filters", filterMenu);
+        menu.build();
+
         screen.setTop(title);
-        screen.setLeft(new MetricSelection(loadMetric));
-        screen.setRight(new VBox(editButton, filterMenu));
+        screen.setLeft(menu);
+        //screen.setRight(new VBox(editButton, filterMenu));
         screen.setCenter(graphPane);
 
-        //Style the buttons under the graph
-        styleButtons(graphButtonPane);
-    }
-
-    /**
-     * Style the buttons in a pane
-     *
-     * @param pane - the pane that holds only buttons
-     */
-    private void styleButtons(Pane pane) {
-        var iter = pane.getChildren().iterator();
-
-        while (iter.hasNext()) {
-            iter.next().getStyleClass().add("buttonStyle");
-        }
     }
 
     /**

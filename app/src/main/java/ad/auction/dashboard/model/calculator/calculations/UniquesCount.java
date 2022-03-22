@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
 public class UniquesCount extends Metric {
 
     public UniquesCount() {
-        super("Number of Uniques");
+        super("Number of Uniques", "count");
     }
 
     @Override

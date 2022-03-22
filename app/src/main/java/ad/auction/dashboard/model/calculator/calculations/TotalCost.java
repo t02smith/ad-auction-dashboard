@@ -14,7 +14,7 @@ import javafx.geometry.Point2D;
 public class TotalCost extends Metric {
 
     public TotalCost() {
-        super("Total Cost");
+        super("Total Cost", "£");
     }
 
     @Override

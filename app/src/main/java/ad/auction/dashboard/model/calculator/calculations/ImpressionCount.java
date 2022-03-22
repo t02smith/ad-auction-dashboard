@@ -12,7 +12,7 @@ import javafx.geometry.Point2D;
 public class ImpressionCount extends Metric {
     
     public ImpressionCount() {
-        super("Number of Impressions");
+        super("Number of Impressions","count");
     }
     
     @Override

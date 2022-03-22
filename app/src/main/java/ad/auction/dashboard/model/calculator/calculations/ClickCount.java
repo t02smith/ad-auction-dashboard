@@ -12,7 +12,7 @@ import javafx.geometry.Point2D;
 public class ClickCount extends Metric {
 
     public ClickCount() {
-        super("Number of Clicks");
+        super("Number of Clicks", "count");
     }
 
     

@@ -28,8 +28,8 @@ public class EditPage extends BasePage{
     private String impressionString;
     private String clickString;
     private String serverString;
-    private String campaignName;
-    private CampaignData oldCampaign;
+    private final String campaignName;
+    private final CampaignData oldCampaign;
 
     private static final int LABEL_WIDTH = 120;
     private static final int BUTTON_WIDTH = 160;

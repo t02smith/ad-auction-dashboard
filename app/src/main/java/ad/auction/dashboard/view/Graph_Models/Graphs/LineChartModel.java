@@ -40,7 +40,6 @@ public class LineChartModel extends ChartModel {
         if (data == null)
             return;
 
-        
         data.forEach((p) -> {
             dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY()));
         });
@@ -52,7 +51,7 @@ public class LineChartModel extends ChartModel {
         xAxis.setLabel(getXName());
 
         var yAxis = new NumberAxis();
-        //yAxis.setLabel(getYName());
+        yAxis.setLabel(getYName());
 
         var dataSeries = new XYChart.Series<Number, Number>();
         dataSeries.setName(this.getTitleName());
@@ -61,6 +60,7 @@ public class LineChartModel extends ChartModel {
         var lChart = new LineChart<>(xAxis, yAxis);
         //lChart.setTitle(getTitleName());
         lChart.getData().add(dataSeries);
+        lChart.setCreateSymbols(false);
 
         createCursorMonitor(lChart, dataSeries);
         return lChart;

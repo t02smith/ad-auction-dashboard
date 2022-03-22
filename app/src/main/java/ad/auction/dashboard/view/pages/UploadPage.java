@@ -96,13 +96,10 @@ public class UploadPage extends BasePage {
         //Test
         campaignsLabel.setTextFill(Color.WHITE);
         //Test finish
-        // TextField testField = new TextField();
-        // testField.setText("test");
-        // testField.setVisible(true); 
         TextField campaignsNameText = new TextField();
         campaignsNameText.setPromptText("Campaign name:");
         campaignsNameText.setFocusTraversable(false);
-        if (campaignsNameText.isFocused() == false){
+        if (!campaignsNameText.isFocused()){
              logger.info("The camPaignsNameText is focused");
         }
         //campaignsLabel.setPrefWidth(LABEL_WIDTH);
@@ -232,8 +229,6 @@ public class UploadPage extends BasePage {
         // vertical center alignment
         //hBox3.setAlignment(Pos.CENTER_LEFT);
         vBox3.setAlignment(Pos.CENTER_LEFT);
-        //rowsBox.getChildren().add(hBox3);
-        //rowsBox.getChildren().add(vBox3);
         colsBox.getChildren().add(vBox3);
 
         clicksButton.setOnAction(event -> {
@@ -287,8 +282,6 @@ public class UploadPage extends BasePage {
         // vertical center alignment
         //hBox4.setAlignment(Pos.CENTER_LEFT);
         vBox4.setAlignment(Pos.CENTER_LEFT);
-        //rowsBox.getChildren().add(hBox4);
-        //rowsBox.getChildren().add(vBox4);
         colsBox.getChildren().add(vBox4);
 
 
@@ -368,7 +361,7 @@ public class UploadPage extends BasePage {
     class csvUploadBox extends VBox {
     	
     	private String filePath;
-    	private String labelName;
+    	private final String labelName;
     	
     	public csvUploadBox(String labelName) {
     		this.labelName = labelName;

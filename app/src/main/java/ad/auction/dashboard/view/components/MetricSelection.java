@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 public class MetricSelection extends ScrollPane {
     
     private final Consumer<Metrics> loadMetric;
+    private Label active;
 
     public MetricSelection(Consumer<Metrics> loadMetric) {
         this.loadMetric = loadMetric;
@@ -27,26 +28,25 @@ public class MetricSelection extends ScrollPane {
 
     private void build() {
         var elems = new VBox();
-        elems.getStyleClass().add("metric-panel");
+        this.getStyleClass().addAll("metric-panel","bg-primary");
 
+        this.setHbarPolicy(ScrollBarPolicy.NEVER);
         this.setContent(elems);
-
-
         Arrays.asList(Metrics.values()).forEach(m -> {
             var btn = new Label(m.getMetric().displayName());
             btn.setMaxWidth(Double.MAX_VALUE);
             btn.setOnMouseClicked(e -> {
                 loadMetric.accept(m);
+                if (this.active != null)
+                        this.active.getStyleClass().remove("btn-active");
+                this.active = btn;
+                this.active.getStyleClass().add("btn-active");
             });
 
-            VBox.setMargin(btn, new Insets(10, 10, 10, 10));
-        	btn.getStyleClass().add("buttonStyle");
+        	btn.getStyleClass().add("metric-btn");
 
             elems.getChildren().add(btn);
         });
     }
-    
-    //Override request focus so clicking on the scrollpane won't do anything
-    @Override
-    public void requestFocus() {}
+
 }

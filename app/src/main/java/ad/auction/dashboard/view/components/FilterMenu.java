@@ -152,6 +152,7 @@ public class FilterMenu extends GridPane {
 
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
+        beforeDate.getStyleClass().add("black-txt");
         beforeDate.setOnAction((event) -> {
             this.controller.setDate(false, beforeDate.getValue().atTime(23,59,59,0));
             this.reloadMetric.run();

@@ -13,7 +13,7 @@ public class BouncesCount extends Metric {
     public static final long BOUNCE_MAX_TIME_SEC = 60;
 
     public BouncesCount() {
-        super("Number of Bounces");
+        super("Number of Bounces", "count");
     }
 
     @Override

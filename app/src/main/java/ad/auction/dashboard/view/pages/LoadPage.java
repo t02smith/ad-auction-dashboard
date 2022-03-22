@@ -31,8 +31,6 @@ public class LoadPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(LoadPage.class.getSimpleName());
     private String campaignName;
-    private Label campaignNameLabel;
-    private HBox threeDots;
 
 	public LoadPage(Window window) {
 		super(window);
@@ -59,14 +57,14 @@ public class LoadPage extends BasePage {
 	    mainPane.getStyleClass().add("campaign-list");
 	    
 	    //Initialise the animation and the label
-	    threeDots = threeDotsAnim();
-	    campaignNameLabel = new Label(campaignName);
+		HBox threeDots = threeDotsAnim();
+		Label campaignNameLabel = new Label(campaignName);
 	    campaignNameLabel.setTextFill(Color.WHITE);
 	    
 	    //Attach nodes to each other
 	    mainPane.setCenter(vbox);
 	    root.getChildren().addAll(mainPane);
-	    vbox.getChildren().addAll(threeDots,campaignNameLabel);
+	    vbox.getChildren().addAll(threeDots, campaignNameLabel);
 
 	    //Position everything in the center
 	    threeDots.setAlignment(Pos.CENTER);

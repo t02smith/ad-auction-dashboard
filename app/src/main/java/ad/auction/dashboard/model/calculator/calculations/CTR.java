@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
 public class CTR extends Metric {
 
     public CTR() {
-        super("Click Through Rate");
+        super("Click Through Rate", "clicks/impression");
     }
     
     @Override

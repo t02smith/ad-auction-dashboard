@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
 public class CPM extends Metric {
 
     public CPM() {
-        super("Cost per 1000 Impressions");
+        super("Cost per 1000 Impressions", "£/(impression_count/1000)");
     }
     
     @Override

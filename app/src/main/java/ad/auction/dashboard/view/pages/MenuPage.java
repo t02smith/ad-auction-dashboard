@@ -84,7 +84,7 @@ public class MenuPage extends BasePage {
         leftSide.setAlignment(Pos.CENTER);
         
         // create an upload button on side menu
-        var uploadButton = new Button("Upload a folder");
+        var uploadButton = new Button("Create Campaign");
         uploadButton.setMinWidth(0);
         
         sideMenu.getChildren().addAll(uploadButton);

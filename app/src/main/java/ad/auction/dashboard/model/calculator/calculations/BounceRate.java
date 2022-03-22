@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
 public class BounceRate extends Metric {
 
     public BounceRate() {
-        super("Bounce Rate");
+        super("Bounce Rate", "bounces/click");
     }
     
     @Override

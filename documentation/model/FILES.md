@@ -17,13 +17,13 @@ public enum FileTrackerQuery {
     TRACK,
     UNTRACK,
     IS_TRACKED,
-    READ;
+    READ
 }
 
-//Query Function
-public Optional<Object> query(FileTrackerQuery, String filename) {
+    //Query Function
+    public Optional<Object> query(FileTrackerQuery, String filename) {
     ...
-}
+    }
 ```
 
 Doing it this way allows us to reduce coupling between this
