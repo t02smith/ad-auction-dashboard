@@ -65,9 +65,6 @@ public class Window {
 		stage.setScene(this.scene);
 		stage.setMinWidth(300);
 		stage.setMinHeight(300);
-		
-		stage.setMaxWidth(1280);
-		stage.setMaxHeight(720);
 	}
 
 	/**

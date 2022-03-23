@@ -24,7 +24,7 @@ public class FilteredCampaign extends Campaign {
 
     private static final Logger logger = LogManager.getLogger(FilteredCampaign.class.getSimpleName());
 
-    //Currently active filters
+    //active filters
     private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
     private final HashMap<Integer, Predicate<User>> userFilters = new HashMap<>();
 
