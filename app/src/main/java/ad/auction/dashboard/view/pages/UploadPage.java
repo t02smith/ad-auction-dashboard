@@ -3,11 +3,9 @@ package ad.auction.dashboard.view.pages;
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.model.files.FileType;
 import ad.auction.dashboard.view.ui.Window;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,15 +33,18 @@ public class UploadPage extends BasePage {
     private static final Logger logger = LogManager.getLogger(UploadPage.class.getSimpleName());
 
     //Directory of last selected file
-    private String workingDirectory;
+    protected String workingDirectory;
 
     //New campaign details
-    private String campaignName = "";
-    private String clkPath = "";
-    private String impPath = "";
-    private String svrPath = "";
+    protected String campaignName = "";
+    protected String clkPath = "";
+    protected String impPath = "";
+    protected String svrPath = "";
 
-    private final Controller controller = App.getInstance().controller();
+    protected final Controller controller = App.getInstance().controller();
+
+    protected HBox submitCancel;
+    protected VBox rows;
 
     public UploadPage(Window window) {
         super(window);
@@ -62,19 +63,10 @@ public class UploadPage extends BasePage {
         var mainPane = new BorderPane();
         root.getChildren().add(mainPane);
 
-        //Title background on top
-        var title = new BorderPane();
-        title.getStyleClass().add("topBackground");
-        
-        //Title text on top
-        var mainMenuText = new Text("Upload a Campaign");
-        mainMenuText.getStyleClass().add("topTitle");
-        title.setCenter(mainMenuText);
-
         // user vbox as the root layout
-        VBox rowsBox = new VBox();
-        rowsBox.setSpacing(25);
-        rowsBox.setAlignment(Pos.CENTER);
+        this.rows = new VBox();
+        rows.setSpacing(25);
+        rows.setAlignment(Pos.CENTER);
 
         //File Inputs
         HBox fileInputs = new HBox(
@@ -85,14 +77,13 @@ public class UploadPage extends BasePage {
         fileInputs.setSpacing(25);
 
         //submit/cancel buttons
-        var submitCancel = new HBox(submit(), cancel());
+        this.submitCancel = new HBox(submit(), cancel());
         submitCancel.setAlignment(Pos.CENTER);
         submitCancel.setSpacing(25);
 
-        rowsBox.getChildren().addAll(nameInput(), fileInputs, submitCancel);
+        rows.getChildren().addAll(nameInput(), fileInputs, submitCancel);
 
-        mainPane.setTop(title);
-        mainPane.setCenter(rowsBox);
+        mainPane.setCenter(rows);
         mainPane.getStyleClass().add("upload-list");
 
     }
@@ -193,11 +184,9 @@ public class UploadPage extends BasePage {
         Button cancel = new Button("Cancel");
         cancel.getStyleClass().add("buttonStyle");
 
-        cancel.setOnAction(event -> { window.startMenu(); });
+        cancel.setOnAction(event -> window.startMenu());
 
-        cancel.setOnAction(event -> {
-            window.startMenu();
-        });
+        cancel.setOnAction(event -> window.startMenu());
 
         return cancel;
     }

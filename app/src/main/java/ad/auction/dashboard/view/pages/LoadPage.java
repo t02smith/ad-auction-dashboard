@@ -54,7 +54,7 @@ public class LoadPage extends BasePage {
 	    var mainPane = new BorderPane();
 	    var vbox = new VBox();
 	    
-	    mainPane.getStyleClass().add("campaign-list");
+	    mainPane.getStyleClass().add("load-page");
 	    
 	    //Initialise the animation and the label
 		HBox threeDots = threeDotsAnim();
@@ -117,7 +117,7 @@ public class LoadPage extends BasePage {
     	new Thread(task).start();
     	
     	//Print exception if something goes wrong in the animation thread
-    	task.exceptionProperty().addListener((observable, oldValue, newValue) ->  { newValue.printStackTrace();	});
+    	task.exceptionProperty().addListener((observable, oldValue, newValue) -> newValue.printStackTrace());
     	
 		return hbox;
 	}

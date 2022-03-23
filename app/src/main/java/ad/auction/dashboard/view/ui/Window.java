@@ -91,8 +91,8 @@ public class Window {
 		loadPage(new LoadPage(this,name));
 	}
 
-	public void openEditPage(String campaign) {
-		loadPage(new EditPage(this, campaign));
+	public void openEditPage(String campaign, Runnable returnTo) {
+		loadPage(new EditPage(this, campaign, returnTo));
 	}
 
 	/**

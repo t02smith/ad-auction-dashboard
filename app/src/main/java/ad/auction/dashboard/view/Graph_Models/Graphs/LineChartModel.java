@@ -40,9 +40,7 @@ public class LineChartModel extends ChartModel {
         if (data == null)
             return;
 
-        data.forEach((p) -> {
-            dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY()));
-        });
+        data.forEach((p) -> dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
 
     }
 
@@ -88,7 +86,7 @@ public class LineChartModel extends ChartModel {
             var formatY = yVal.doubleValue() < 1 ? " %.3f)" : " %.2f)";
             series.setName(String.format(formatX + formatY, xVal, yVal));
         });
-        backgroundNodes.setOnMouseExited((ev) -> {series.setName(this.getTitleName());});
+        backgroundNodes.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
         
 
         //Coordinates in x axis
@@ -97,8 +95,7 @@ public class LineChartModel extends ChartModel {
             final var format = currentValue.doubleValue() < 1 ? "x = %.3f" : "x = %.2f";
             series.setName(String.format(format, currentValue));
         });
-        x.setOnMouseExited((ev) -> {series.setName(this.getTitleName());
-        });
+        x.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
 
         //Coordinates in y axis
         y.setOnMouseMoved((ev) -> {
@@ -106,8 +103,7 @@ public class LineChartModel extends ChartModel {
             final var format = currentValue.doubleValue() < 1 ? "y = %.3f" : "y = %.2f";
             series.setName(String.format(format, currentValue));
         });
-        y.setOnMouseExited((ev) -> {series.setName(this.getTitleName());
-        });
+        y.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
 
     }
 

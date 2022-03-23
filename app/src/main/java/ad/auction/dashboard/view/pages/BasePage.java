@@ -17,8 +17,6 @@ public abstract class BasePage {
     protected Scene scene;
     protected StackPane root = new StackPane();
 
-    private String styleClass; // The customisation style the user has chosen
-    
     public BasePage(Window window) {
         this.window = window;
     }
@@ -41,9 +39,4 @@ public abstract class BasePage {
         return scene;
     }
 
-    /**
-     * Get the JavaFX scene contained inside
-     * @return JavaFX scene
-     */
-    public Scene getScene() { return this.scene; }
 }

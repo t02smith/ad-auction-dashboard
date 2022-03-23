@@ -174,7 +174,7 @@ public class CampaignPage extends BasePage {
         var editButton = new Button("Settings");
         BorderPane.setAlignment(editButton, Pos.CENTER);
         editButton.getStyleClass().add("buttonStyle");
-        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName));
+        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName, window::startMenu));
         title.setRight(editButton);
 
         return title;

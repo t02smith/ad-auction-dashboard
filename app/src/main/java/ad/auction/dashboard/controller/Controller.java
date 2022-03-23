@@ -11,7 +11,6 @@ import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
-import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.User;
 
 /**
@@ -100,4 +99,5 @@ public class Controller {
         return this.model.campaigns().getCampaigns();
     }
 
+    public CampaignData getCampaignData(String name) {return this.model.campaigns().getCampaignData(name);}
 }

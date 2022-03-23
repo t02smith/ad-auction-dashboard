@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import ad.auction.dashboard.model.calculator.Metrics;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;

@@ -115,12 +115,10 @@ public class MainMenuPage extends BasePage {
                 }
             };
 
-            task.setOnSucceeded((ee) -> {
-                window.openCampaignPage(name);
-            });
+            task.setOnSucceeded((ee) -> window.openCampaignPage(name));
 
             new Thread(task).start();
-        }, () -> {
+        }, name -> window.openEditPage(name, window::startMenu), () -> {
             this.root.getChildren().remove(cl);
             this.campaignListOpen = false;
         });

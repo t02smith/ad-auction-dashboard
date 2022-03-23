@@ -25,8 +25,6 @@ import java.util.List;
  */
 public class FilterMenu extends GridPane {
 
-    public static final Logger logger = LogManager.getLogger(FilterMenu.class.getSimpleName());
-
     private final Controller controller = App.getInstance().controller();
 
     private final Runnable reloadMetric;

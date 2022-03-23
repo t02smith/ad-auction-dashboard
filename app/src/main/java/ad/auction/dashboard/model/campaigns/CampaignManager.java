@@ -189,9 +189,9 @@ public class CampaignManager {
             c.name = name;
 
         }
-        if (clkPath != null) c.clkPath = clkPath;
-        if (impPath != null) c.impPath = impPath;
-        if (svrPath != null) c.svrPath = svrPath;
+        if (!clkPath.isEmpty()) c.clkPath = clkPath;
+        if (!impPath.isEmpty()) c.impPath = impPath;
+        if (!svrPath.isEmpty()) c.svrPath = svrPath;
 
         logger.info("Successfully updated campaign {}", campaign);
     }
@@ -232,7 +232,12 @@ public class CampaignManager {
         return this.currentCampaign;
     }
 
+    public CampaignData getCampaignData(String name) {
+        return this.campaigns.get(name).getData();
+    }
+
     public List<CampaignData> getCampaigns() {
         return this.campaigns.values().stream().map(Campaign::getData).toList();
     }
+
 }

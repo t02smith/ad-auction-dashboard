@@ -135,9 +135,7 @@ public class MenuPage extends BasePage {
         });
         
         // click event of upload button
-        uploadButton.setOnAction(event -> {
-            window.openUploadPage();
-        });
+        uploadButton.setOnAction(event -> window.openUploadPage());
 
         // Scroll pane to hold the flow pane and enable scrolling
         var scrollPane = new ScrollPane();
@@ -153,11 +151,8 @@ public class MenuPage extends BasePage {
         menuPane.setLeft(leftSide);
         menuPane.setCenter(campaignList());
         BorderPane.setMargin(menuPane, new Insets(15, 0, 0, 15));
-        
-        var iter = sideMenu.getChildren().iterator();
 
-        while (iter.hasNext()) {
-            var currentButton = iter.next();
+        for (javafx.scene.Node currentButton : sideMenu.getChildren()) {
             VBox.setMargin(currentButton, new Insets(10, 10, 10, 10));
             currentButton.getStyleClass().add("buttonStyle");
         }
@@ -313,9 +308,7 @@ public class MenuPage extends BasePage {
             	    }
             	};
             	
-            	task.setOnSucceeded((ee) -> {
-            		window.openCampaignPage(c.name());
-            	});  
+            	task.setOnSucceeded((ee) -> window.openCampaignPage(c.name()));
 
                 new Thread(task).start();
             });
