@@ -12,6 +12,7 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.model.files.records.Impression;
+import ad.auction.dashboard.model.files.records.User;
 
 /**
  * The controller class acts as the interface for the 
@@ -62,7 +63,7 @@ public class Controller {
      * Run a calculation
      * @param m The metric being calculated
      * @param function The function of that metric
-     * @return
+     * @return the result of the calculation
      */
     public Future<Object> runCalculation(Metrics m, MetricFunction function) {
         return model.runCalculation(m, function);
@@ -85,8 +86,8 @@ public class Controller {
         this.model.campaigns().setDate(start, value);
     }
 
-    public int addImpFilter(Predicate<Impression> pred) {
-        return this.model.campaigns().addImpFilter(pred);
+    public int addUserFilter(Predicate<User> predicate) {
+        return this.model.campaigns().addUserFilter(predicate);
     }
 
     //GETTERS

@@ -63,7 +63,6 @@ public class TrackedFile implements Callable<List<SharedFields>> {
 
         CsvParserSettings settings = new CsvParserSettings();
         settings.setHeaders(type.getHeaders());
-        //settings.setProcessor(new ConcurrentRowProcessor());
         
         CsvParser parser = new CsvParser(settings);
 

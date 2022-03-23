@@ -1,9 +1,11 @@
 package ad.auction.dashboard.model.campaigns;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import ad.auction.dashboard.model.files.records.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,8 +26,10 @@ public class FilteredCampaign extends Campaign {
 
     //Currently active filters
     private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
+    private final HashMap<Integer, Predicate<User>> userFilters = new HashMap<>();
 
-    private final HashMap<Integer, Predicate<Impression>> impFilters = new HashMap<>();
+    //User data
+    private HashMap<Long, User> userData;
 
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
         super(name, impressionPath, clickPath, serverPath);
@@ -54,14 +58,35 @@ public class FilteredCampaign extends Campaign {
      * e.g. Gender,
      * @param filter Set the filter for impressions
      */
-    public int addImpFilter(Predicate<Impression> filter) {
+    public int addUserFilter(Predicate<User> filter) {
         int hash = filter.hashCode();
-        if (!impFilters.containsKey(hash)) {
-            this.impFilters.put(hash, filter);
+        if (!userFilters.containsKey(hash)) {
+            this.userFilters.put(hash, filter);
             this.filterActive.put(hash, false);
         }
 
         return hash;
+    }
+
+    private HashMap<Long, User> collectUserData(List<Impression> imps) {
+        logger.info("Collecting user data");
+        HashMap<Long, User> users = new HashMap<>();
+
+        imps.forEach(i -> {
+            if (users.containsKey(i.ID())) return;
+            users.put(i.ID(), new User(i.gender(),i.ageGroup(),i.income(),i.context()));
+        });
+
+        logger.info("User data collected");
+        return users;
+    }
+
+    /* SETTERS */
+
+    @Override
+    void setImpressions(List<Impression> imps) {
+        super.setImpressions(imps);
+        this.userData = this.collectUserData(imps);
     }
 
     // Getters
@@ -70,8 +95,9 @@ public class FilteredCampaign extends Campaign {
     public Stream<Click> clicks() {
         return this.clicks.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end));
-
+                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
+                .filter(c -> userFilters.keySet().stream().filter(filterActive::get)
+                                .allMatch(f -> userFilters.get(f).test(userData.get(c.ID()))));
     }
 
     @Override
@@ -79,15 +105,21 @@ public class FilteredCampaign extends Campaign {
         return this.impressions.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
                 .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
-                .filter(i -> impFilters.keySet().stream().filter(filterActive::get)
-                        .allMatch(f -> impFilters.get(f).test(i)));
+                .filter(i -> userFilters.keySet().stream().filter(filterActive::get)
+                        .allMatch(f -> userFilters.get(f).test(userData.get(i.ID()))));
+    }
+
+    List<Impression> impressionsLs() {
+        return this.impressions;
     }
 
     @Override
     public Stream<Server> server() {
         return this.server.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end));
+                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
+                .filter(s -> userFilters.keySet().stream().filter(filterActive::get)
+                        .allMatch(f -> userFilters.get(f).test(userData.get(s.ID()))));
     }
 
 }

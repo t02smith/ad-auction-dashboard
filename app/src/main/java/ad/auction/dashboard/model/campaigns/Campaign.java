@@ -31,9 +31,9 @@ public class Campaign {
 
     boolean dataLoaded = false;
 
-    List<Impression> impressions;
-    List<Click> clicks;
-    List<Server> server;
+    protected List<Impression> impressions;
+    protected List<Click> clicks;
+    protected List<Server> server;
 
     //Stores calculations that have already been run
     protected HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
@@ -79,6 +79,20 @@ public class Campaign {
         this.cache = new HashMap<>();
         if (start) this.start = value;
         else this.end = value;
+    }
+
+    /* SETTERS */
+
+    void setImpressions(List<Impression> imps) {
+        this.impressions = imps;
+    }
+
+    void setServer(List<Server> svrs) {
+        this.server = svrs;
+    }
+
+    void setClicks(List<Click> clks) {
+        this.clicks = clks;
     }
 
     // GETTERS

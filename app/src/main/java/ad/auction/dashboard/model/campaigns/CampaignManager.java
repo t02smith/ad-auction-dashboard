@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
+import ad.auction.dashboard.model.files.records.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,14 +111,16 @@ public class CampaignManager {
         }
 
         try {
-            currentCampaign.impressions = impressions.get().stream().map(i -> (Impression)i).toList();
-            currentCampaign.clicks = clicks.get().stream().map(c -> (Click)c).toList();
-            currentCampaign.server = server.get().stream().map(c -> (Server)c).toList();
+            currentCampaign.setImpressions(impressions.get().stream().map(i -> (Impression)i).toList());
+            currentCampaign.setClicks(clicks.get().stream().map(c -> (Click)c).toList());
+            currentCampaign.setServer(server.get().stream().map(c -> (Server)c).toList());
         } catch (Exception ignored) {}
 
         try {
-            currentCampaign.setDate(true, currentCampaign.impressions.get(0).dateTime());
-            currentCampaign.setDate(false, currentCampaign.impressions.get(currentCampaign.impressions.size()-1).dateTime());
+            var ls = currentCampaign.impressionsLs();
+
+            currentCampaign.setDate(true, ls.get(0).dateTime());
+            currentCampaign.setDate(false, ls.get(ls.size()-1).dateTime());
 
         } catch (Exception e) {e.printStackTrace();}
 
@@ -216,11 +219,11 @@ public class CampaignManager {
 
     /**
      * Add a new filter on the impressions data type
-     * @param impFilter the impressions filter
+     * @param usrFilter the impressions filter
      * @return the filter's hash
      */
-    public int addImpFilter(Predicate<Impression> impFilter) {
-        return this.currentCampaign.addImpFilter(impFilter);
+    public int addUserFilter(Predicate<User> usrFilter) {
+        return this.currentCampaign.addUserFilter(usrFilter);
     }
 
     // GETTERS

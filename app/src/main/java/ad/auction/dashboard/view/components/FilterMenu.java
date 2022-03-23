@@ -57,7 +57,7 @@ public class FilterMenu extends GridPane {
         gender.getStyleClass().add("filter-sub-heading");
 
         List<CheckBox> genders = Arrays.stream(Gender.values()).map(g -> {
-            int hash = controller.addImpFilter(i -> i.gender() != g);
+            int hash = controller.addUserFilter(u -> u.gender() != g);
 
             var box = new CheckBox(g.toString().charAt(0) + g.toString().substring(1).toLowerCase());
             box.setSelected(true);
@@ -74,7 +74,7 @@ public class FilterMenu extends GridPane {
         var income = new Text("Income");
         income.getStyleClass().add("filter-sub-heading");
         List<CheckBox> incomes = Arrays.stream(Income.values()).map(i -> {
-            int hash = controller.addImpFilter(imp -> imp.income() != i);
+            int hash = controller.addUserFilter(u -> u.income() != i);
 
             var box = new CheckBox(i.toString().charAt(0) + i.toString().substring(1).toLowerCase());
             box.setSelected(true);
@@ -90,7 +90,7 @@ public class FilterMenu extends GridPane {
         var ageGroup = new Text("Age Group");
         ageGroup.getStyleClass().add("filter-sub-heading");
         List<CheckBox> ageGroups = Arrays.stream(Impression.AgeGroup.values()).map(ag -> {
-            int hash = controller.addImpFilter(i -> i.ageGroup() != ag);
+            int hash = controller.addUserFilter(u -> u.ageGroup() != ag);
 
             var box = new CheckBox(ag.str);
             box.setSelected(true);
@@ -106,7 +106,7 @@ public class FilterMenu extends GridPane {
         var context = new Text("Context");
         context.getStyleClass().add("filter-sub-heading");
         List<CheckBox> contexts = Arrays.stream(Impression.Context.values()).map(c -> {
-            int hash = controller.addImpFilter(i -> i.context() != c);
+            int hash = controller.addUserFilter(u -> u.context() != c);
 
             var box = new CheckBox(c.toString().charAt(0) + c.toString().substring(1).toLowerCase());
             box.setSelected(true);
