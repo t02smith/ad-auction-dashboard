@@ -23,6 +23,8 @@ public class LineChartModel extends ChartModel {
     // Set of data points
     private List<Point2D> data;
 
+    private Boolean clicked = false;
+
     public LineChartModel(String titleName, String xAxisName, String yAxisName) {
         super(titleName, xAxisName, yAxisName);
     }
@@ -81,30 +83,72 @@ public class LineChartModel extends ChartModel {
         aChart.getData().add(series);
         aChart.setCreateSymbols(false);
 
-        createCursorMonitor(aChart, series);
         return aChart;
     }
+    
+    private String getFormat(Number num) {
+        return num.doubleValue() < 1 ? "%.3f" : "%.2f";
+    }
 
-    private void createCursorMonitor(XYChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
+    private void createCursorMonitor(LineChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
 
         final var x = chart.getXAxis();
         final var y = chart.getYAxis();
 
+        var xDash = new XYChart.Series<Number, Number>();
+        var yDash = new XYChart.Series<Number, Number>();
+
+
         final Node backgroundNodes = chart.lookup(".chart-plot-background");
 
+        
         for (Node node : backgroundNodes.getParent().getChildrenUnmodifiable()) {
             if (node != backgroundNodes && node != x && node != y ) {
                 node.setMouseTransparent(true);
+
             }
         }
+
+        backgroundNodes.setOnMouseClicked((ev) -> {
+            if (clicked) {
+                chart.getData().removeAll(xDash, yDash);
+                xDash.getData().clear();
+                yDash.getData().clear();
+            } else {
+                var xVal = x.getValueForDisplay(ev.getX());
+                var yVal = y.getValueForDisplay(ev.getY());
+
+                xDash.getData().add(new XYChart.Data<Number,Number>(xVal, 0.0));
+                xDash.getData().add(new XYChart.Data<Number,Number>(xVal, yVal));
+                xDash.setName(String.format("x = " + getFormat(xVal), xVal));
+                
+
+                yDash.getData().add(new XYChart.Data<Number,Number>(0.0, yVal));
+                yDash.getData().add(new XYChart.Data<Number,Number>(xVal, yVal));
+                yDash.setName(String.format("y = " + getFormat(yVal), yVal));
+                
+
+                chart.getData().addAll(xDash, yDash);
+                xDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
+                yDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
+                 
+            }
+
+            clicked = !clicked;
+        });
 
         //Coordinates of Nodes
         backgroundNodes.setOnMouseMoved((ev) -> {
             var xVal = x.getValueForDisplay(ev.getX());
             var yVal = y.getValueForDisplay(ev.getY());
-            var formatX = xVal.doubleValue() < 1 ? "(%.3f," : "(%.2f,";
-            var formatY = yVal.doubleValue() < 1 ? " %.3f)" : " %.2f)";
+            var formatX = "(" + getFormat(xVal) + ",";
+            var formatY = getFormat(yVal) + ")";
             series.setName(String.format(formatX + formatY, xVal, yVal));
+
+
+        });
+        backgroundNodes.setOnMouseExited((ev) -> {
+            series.setName(this.getTitleName());
         });
         backgroundNodes.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
         
@@ -112,15 +156,16 @@ public class LineChartModel extends ChartModel {
         //Coordinates in x axis
         x.setOnMouseMoved((ev) -> {
             var currentValue = x.getValueForDisplay(ev.getX());
-            final var format = currentValue.doubleValue() < 1 ? "x = %.3f" : "x = %.2f";
+            final var format = "x = " + getFormat(currentValue);
             series.setName(String.format(format, currentValue));
+
         });
         x.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
 
         //Coordinates in y axis
         y.setOnMouseMoved((ev) -> {
             var currentValue = y.getValueForDisplay(ev.getY());
-            final var format = currentValue.doubleValue() < 1 ? "y = %.3f" : "y = %.2f";
+            final var format = "y = " + getFormat(currentValue);
             series.setName(String.format(format, currentValue));
         });
         y.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
