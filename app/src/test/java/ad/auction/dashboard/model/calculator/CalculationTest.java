@@ -35,7 +35,7 @@ public class CalculationTest {
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVERALL);
         while (!actual.isDone()) {}
 
-        assertEquals(118097.919, (double)actual.get());
+        assertEquals(118097.921, (double)actual.get());
     }
 
     @Test

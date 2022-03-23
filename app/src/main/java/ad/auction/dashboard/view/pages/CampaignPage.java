@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+import ad.auction.dashboard.model.calculator.Histogram;
+import ad.auction.dashboard.model.calculator.calculations.Metric;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
 import javafx.geometry.Insets;
@@ -43,10 +45,13 @@ public class CampaignPage extends BasePage {
 
     private Metrics currentMetric = Metrics.IMPRESSION_COUNT;
 
+    private final Button histogramToggle = new Button("Histogram");
+    private boolean histogramActive = false;
+
     //Function to load a given metric
     @SuppressWarnings("unchecked")
     private final Consumer<Metrics> loadMetric = m -> {
-        this.currentMetric = m;
+        this.setMetric(m);
         this.graph.setYName(m.getMetric().unit());
 
         Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
@@ -64,7 +69,6 @@ public class CampaignPage extends BasePage {
         }
         
     };
-
 
     public CampaignPage(Window window, String campaignName) {
         super(window);
@@ -175,8 +179,50 @@ public class CampaignPage extends BasePage {
         BorderPane.setAlignment(editButton, Pos.CENTER);
         editButton.getStyleClass().add("buttonStyle");
         editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName, window::startMenu));
-        title.setRight(editButton);
+
+        var right = new HBox(histogramToggle, editButton);
+        right.setSpacing(25);
+        right.setAlignment(Pos.CENTER);
+
+        histogramToggle.setVisible(false);
+        histogramToggle.getStyleClass().add("buttonStyle");
+        title.setRight(right);
 
         return title;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setMetric(Metrics m) {
+        this.currentMetric = m;
+        if (this.currentMetric.getMetric() instanceof Histogram) {
+            histogramToggle.setOnAction(e -> {
+                if (histogramActive) {
+                    this.loadMetric.accept(this.currentMetric);
+                    histogramActive = false;
+                    return;
+                }
+
+                logger.info("Loading histogram");
+                histogramActive = true;
+                Future<Object> future = controller.runCalculation(m, MetricFunction.HISTOGRAM);
+                while (!future.isDone()) {}
+
+                try {
+                    var data = (List<Point2D>)future.get();
+                    this.graph.setData(data);
+                    this.graph.setTitleName(m.getMetric().displayName());
+                    this.screen.setCenter(this.graph.histogram(this.currentMetric.getMetric().unit()));
+
+                } catch (Exception ignored) {}
+
+
+            });
+
+            histogramToggle.setVisible(true);
+
+
+        } else {
+            histogramToggle.setVisible(false);
+        }
     }
 }

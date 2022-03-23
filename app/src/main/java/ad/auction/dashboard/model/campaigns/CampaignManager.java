@@ -233,6 +233,8 @@ public class CampaignManager {
     }
 
     public CampaignData getCampaignData(String name) {
+        if (!this.campaigns.containsKey(name)) return null;
+
         return this.campaigns.get(name).getData();
     }
 

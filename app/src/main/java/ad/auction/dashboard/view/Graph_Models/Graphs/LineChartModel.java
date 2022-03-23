@@ -1,6 +1,7 @@
 package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 
+import javafx.scene.chart.AreaChart;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,7 +66,26 @@ public class LineChartModel extends ChartModel {
 
     }
 
-    private void createCursorMonitor(LineChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
+    public AreaChart<Number, Number> histogram(String xAxisLabel) {
+        var xAxis = new NumberAxis();
+        xAxis.setLabel(xAxisLabel);
+
+        var yAxis = new NumberAxis();
+        yAxis.setLabel("frequency");
+
+        var series = new XYChart.Series<Number, Number>();
+        series.setName(this.getTitleName());
+        setSeries(series);
+
+        var aChart = new AreaChart<>(xAxis, yAxis);
+        aChart.getData().add(series);
+        aChart.setCreateSymbols(false);
+
+        createCursorMonitor(aChart, series);
+        return aChart;
+    }
+
+    private void createCursorMonitor(XYChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
 
         final var x = chart.getXAxis();
         final var y = chart.getYAxis();

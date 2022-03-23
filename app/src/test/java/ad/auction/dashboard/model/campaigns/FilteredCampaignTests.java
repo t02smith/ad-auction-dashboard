@@ -36,7 +36,7 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("filter all")
     public void FilterAllTest() {
-        int hash = model.campaigns().addImpFilter(r -> false);
+        int hash = model.campaigns().addUserFilter(r -> false);
         model.campaigns().toggleFilter(hash);
 
         assertEquals(0, model.campaigns().getCurrentCampaign().impressions().count());
@@ -47,7 +47,7 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("Gender filter - male")
     public void genderFilterTestMale() {
-        int hash = model.campaigns().addImpFilter(r -> r.gender() != Impression.Gender.Male);
+        int hash = model.campaigns().addUserFilter(u -> u.gender() != Impression.Gender.Male);
         model.campaigns().toggleFilter(hash);
 
         long res = model.campaigns().getCurrentCampaign().impressions().count();
@@ -57,7 +57,7 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("Gender filter - female")
     public void genderFilterTestFemale() {
-        int hash = model.campaigns().addImpFilter(r -> r.gender() != Impression.Gender.Female);
+        int hash = model.campaigns().addUserFilter(u -> u.gender() != Impression.Gender.Female);
         model.campaigns().toggleFilter(hash);
 
         long res = model.campaigns().getCurrentCampaign().impressions().count();
@@ -69,7 +69,7 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("income filter - low")
     public void incomeFilterTestLow() {
-        int hash = model.campaigns().addImpFilter(r -> r.income() != Impression.Income.Low);
+        int hash = model.campaigns().addUserFilter(u -> u.income() != Impression.Income.Low);
         model.campaigns().toggleFilter(hash);
 
         long res = model.campaigns().getCurrentCampaign().impressions().count();
@@ -79,7 +79,7 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("income filter - medium")
     public void incomeFilterTestMedium() {
-        int hash = model.campaigns().addImpFilter(r -> r.income() != Impression.Income.Medium);
+        int hash = model.campaigns().addUserFilter(u -> u.income() != Impression.Income.Medium);
         model.campaigns().toggleFilter(hash);
 
         long res = model.campaigns().getCurrentCampaign().impressions().count();
@@ -89,10 +89,18 @@ public class FilteredCampaignTests {
     @Test
     @DisplayName("income filter - high+low")
     public void incomeFilterTestHigh() {
-        int hash = model.campaigns().addImpFilter(r -> r.income() != Impression.Income.Low && r.income() != Impression.Income.High);
+        int hash = model.campaigns().addUserFilter(u -> u.income() != Impression.Income.Low && u.income() != Impression.Income.High);
         model.campaigns().toggleFilter(hash);
 
         long res = model.campaigns().getCurrentCampaign().impressions().count();
         assertEquals(243050, res);
+    }
+
+    /*Date filters*/
+
+    @Test
+    @DisplayName("date filter - Week 2")
+    public void dateFilterWeek2Test() {
+
     }
 }

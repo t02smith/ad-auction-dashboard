@@ -3,6 +3,9 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
@@ -47,12 +50,46 @@ public class TotalClicksCost extends Metric implements Histogram {
             });
 
             points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]), counter[0]));
+
             return points;
         };
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> histogram() {
-        return null;
+    public Function<Campaign, List<Point2D>> histogram() {
+        return c -> {
+            HashMap<Double, Long> points = new HashMap<>();
+
+            //Find max value
+            double[] max = new double[] {Double.MIN_VALUE};
+            c.clicks().forEach(clk -> {
+                if (clk.clickCost() > max[0]) max[0] = clk.clickCost();
+            });
+
+            double step = max[0]/5;
+            for (double i=0; i<=max[0]+step; i+=step) {
+                points.put(i, 0L);
+            }
+
+            var steps = points.keySet().stream().sorted(Comparator.reverseOrder()).toList();
+
+            c.clicks().forEach(clk -> {
+                steps.forEach(s -> {
+                    if (clk.clickCost() >= s) points.put(s, points.get(s)+1);
+                });
+            });
+
+            List<Point2D> pointsLs = new ArrayList<>();
+
+            for (int i=0; i<5; i++) {
+                pointsLs.add(new Point2D(i*step, 0));
+                pointsLs.add(new Point2D(i*step, points.get(i*step)));
+                pointsLs.add(new Point2D((i+1)*step, points.get(i*step)));
+                pointsLs.add(new Point2D((i+1)*step, points.get((i+1)*step)));
+                pointsLs.add(new Point2D((i+1)*step, 0));
+            }
+
+            return pointsLs;
+        };
     }
 }

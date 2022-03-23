@@ -65,6 +65,9 @@ public class Calculator {
                 });
 
                 return res;
+            case HISTOGRAM:
+                return executor.submit(
+                        new Calculation<>(((Histogram)metric.getMetric()).histogram(), campaign));
             default:
                 throw new IllegalArgumentException("//");
         }

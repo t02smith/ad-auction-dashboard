@@ -19,17 +19,17 @@ public class CampaignHandlerTests {
     }
     
     @Test
-    @DisplayName("read file")
+    @DisplayName("read campaigns.xml file")
     public void readFileTest() {
         this.handler.parse(
-            this.getClass().getResource("/data/campaigns.xml").toExternalForm()
+            this.getClass().getResource("/data/campaigns_test.xml").toExternalForm()
         );
 
         var actual = this.handler.getCampaigns();
         var campaign = actual.get(0);
 
         assertTrue(
-            campaign.name().equals("Campaign 1") &&
+            campaign.name().equals("2 Month Campaign") &&
             campaign.getData().impPath().equals("./data/impression_log.csv") &&
             campaign.getData().svrPath().equals("./data/server_log.csv") &&
             campaign.getData().clkPath().equals("./data/click_log.csv")

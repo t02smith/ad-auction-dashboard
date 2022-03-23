@@ -33,7 +33,8 @@ public abstract class Metric {
 
     public enum MetricFunction {
         OVERALL,
-        OVER_TIME
+        OVER_TIME,
+        HISTOGRAM
     } 
 
     /**

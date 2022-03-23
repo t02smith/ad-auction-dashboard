@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><campaigns><campaign><name>2 Month Campaign</name><impPath>./data/impression_log.csv</impPath><svrPath>./data/server_log.csv</svrPath><clkPath>./data/click_log.csv</clkPath></campaign></campaigns>
