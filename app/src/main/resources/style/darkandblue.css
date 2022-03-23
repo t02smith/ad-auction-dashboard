@@ -13,6 +13,10 @@
     -fx-background-color: #232323;
 }
 
+.text-secondary {
+    -fx-text-fill: #004CBE;
+}
+
 .transparent {
     -fx-background-color: transparent;
 }
@@ -22,6 +26,62 @@
     -fx-padding: 6px;
     -fx-border-radius: 5;
     -fx-font-size: 16px;
+}
+
+/*Main Menu*/
+
+.title-text {
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+}
+
+.menu-btn {
+    -fx-background-color: #004CBE;
+    -fx-background-radius: 50%;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
+}
+
+.menu-btn:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #004CBE;
+}
+
+.menu-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/*Campaign List*/
+
+.campaign-list {
+    -fx-padding: 5px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3,0,0,2 );
+    -fx-background-radius: 10;
+}
+
+.cl-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #004CBE;
+}
+
+.cl-campaign {
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+}
+
+.cl-campaign:hover {
+    -fx-text-fill: #004CBE;
+}
+
+.cl-close {
+    -fx-background-color: red;
+    -fx-border-width: 0;
+    -fx-text-fill: black;
+    -fx-cursor: hand;
 }
 
 /**/

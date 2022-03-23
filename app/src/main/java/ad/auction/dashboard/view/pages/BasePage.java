@@ -15,7 +15,7 @@ public abstract class BasePage {
 	protected final Window window;
 
     protected Scene scene;
-    protected StackPane root;
+    protected StackPane root = new StackPane();
 
     private String styleClass; // The customisation style the user has chosen
     

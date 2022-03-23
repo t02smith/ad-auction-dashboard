@@ -71,7 +71,7 @@ public class Window {
 	 * Loads the main menu
 	 */
 	public void startMenu() {
-		loadPage(new MenuPage(this));
+		loadPage(new MainMenuPage(this));
 	}
 
 	/**
