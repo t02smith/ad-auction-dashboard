@@ -45,6 +45,10 @@ public class FilteredCampaign extends Campaign {
         logger.info("Toggling filter {} to {}", filterHash, filterActive.get(filterHash));
     }
 
+    public void toggleAllFilters(boolean state) {
+        this.filterActive.keySet().forEach(k -> filterActive.put(k, state));
+    }
+
     /**
      * Add a filter to just the impressions data
      * e.g. Gender,
@@ -66,7 +70,7 @@ public class FilteredCampaign extends Campaign {
     public Stream<Click> clicks() {
         return this.clicks.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end));
+                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end));
 
     }
 
@@ -74,7 +78,7 @@ public class FilteredCampaign extends Campaign {
     public Stream<Impression> impressions() {
         return this.impressions.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end))
+                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
                 .filter(i -> impFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> impFilters.get(f).test(i)));
     }
@@ -83,7 +87,7 @@ public class FilteredCampaign extends Campaign {
     public Stream<Server> server() {
         return this.server.stream()
                 .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end));
+                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end));
     }
 
 }

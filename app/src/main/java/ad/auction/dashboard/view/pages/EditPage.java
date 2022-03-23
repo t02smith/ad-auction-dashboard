@@ -86,14 +86,12 @@ public class EditPage extends BasePage{
         // campaign name input
         Label campaignsLabel = new Label("Campaign name:");
         campaignsLabel.setTextFill(Color.WHITE);
-        TextField campaignsNameText = new TextField();
-        campaignsNameText.setText(campaignName);
-        campaignsNameText.setPromptText("Campaign name:");
-        campaignsNameText.setFocusTraversable(false);
-        campaignsNameText.setPrefWidth(200);
-        HBox hBox1 = new HBox(campaignsNameText);
+
+        var nameInput = nameInput();
+
+        HBox hBox1 = new HBox(nameInput);
         hBox1.setSpacing(H_GAP);
-        hBox1.setAlignment(Pos.CENTER_LEFT);
+        hBox1.setAlignment(Pos.CENTER);
         rowsBox.getChildren().add(hBox1);
         VBox.setVgrow(hBox1, Priority.ALWAYS);
 
@@ -286,7 +284,7 @@ public class EditPage extends BasePage{
 
         //button actions
         saveButton.setOnAction(event -> {
-            controller.editCampaign(oldCampaign.name(), campaignsNameText.getText(), clickString, impressionString, serverString);
+            controller.editCampaign(oldCampaign.name(), nameInput.getText(), clickString, impressionString, serverString);
             window.startMenu();
         });
 
@@ -318,5 +316,16 @@ public class EditPage extends BasePage{
         borderPane.setTop(title);
         borderPane.setCenter(rowsBox);
         borderPane.getStyleClass().add("upload-list");
+    }
+
+    private TextField nameInput() {
+        TextField nameInput = new TextField();
+        nameInput.setText(campaignName);
+        nameInput.setPromptText("Campaign name:");
+        nameInput.setFocusTraversable(false);
+        nameInput.setPrefWidth(200);
+        nameInput.getStyleClass().add("text-input");
+
+        return nameInput;
     }
 }

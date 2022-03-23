@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,16 @@ public class CalculatorTest {
 
     private static final Model model = new Model();
 
-
     @BeforeAll
     public static void setUp() {
-        model.campaigns().openCampaign("2 Week Campaign");
+        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().openCampaign("2 week - test");
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        model.campaigns().removeCampaign("2 week - test");
+        model.close();
     }
     
     @Test

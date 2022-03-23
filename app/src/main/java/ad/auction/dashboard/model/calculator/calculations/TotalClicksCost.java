@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
 
-public class TotalClicksCost extends Metric {
+public class TotalClicksCost extends Metric implements Histogram {
 
     public TotalClicksCost() {
         super("Clicks Cost", "£");
@@ -48,5 +49,10 @@ public class TotalClicksCost extends Metric {
             points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]), counter[0]));
             return points;
         };
+    }
+
+    @Override
+    public Function<Campaign, ArrayList<Point2D>> histogram() {
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,14 @@ public class CalculationTest {
 
     @BeforeAll
     public static void setUp() {
-        model.campaigns().openCampaign("2 Week Campaign");
+        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().openCampaign("2 week - test");
+    }
+
+    @AfterAll
+    public static void tearDown() {
+        model.campaigns().removeCampaign("2 week - test");
+        model.close();
     }
     
     @Test
@@ -27,7 +35,7 @@ public class CalculationTest {
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVERALL);
         while (!actual.isDone()) {}
 
-        assertEquals(118097.921, (double)actual.get());
+        assertEquals(118097.919, (double)actual.get());
     }
 
     @Test

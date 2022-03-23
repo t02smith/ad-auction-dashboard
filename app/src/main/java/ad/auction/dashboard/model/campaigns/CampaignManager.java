@@ -225,7 +225,7 @@ public class CampaignManager {
 
     // GETTERS
 
-    public Campaign getCurrentCampaign() {
+    public FilteredCampaign getCurrentCampaign() {
         return this.currentCampaign;
     }
 

@@ -88,9 +88,7 @@ public class CampaignPage extends BasePage {
 
         root.getChildren().add(screen);
 
-        //Title background on top
-        var title = new BorderPane();
-        title.getStyleClass().add("topBackground");
+
 
         //BorderPane to hold the graph and the buttons under it
         var graphPane = new BorderPane();
@@ -108,34 +106,17 @@ public class CampaignPage extends BasePage {
         var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric), cData.start().toLocalDate(), cData.end().toLocalDate());
         rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
-        //Edit options button
-        var editButton = new Button("Edit Graph Options");
-        editButton.getStyleClass().add("buttonStyle");
-        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName));
-
-        //Title text on top
-        var mainMenuText = new Text(campaignName);
-        mainMenuText.getStyleClass().add("topTitle");
-        title.setCenter(mainMenuText);
-
-        // Add back button
-        var backButton = buildBackButton();
-        BorderPane.setAlignment(backButton, Pos.CENTER);
-        BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
-        title.setLeft(backButton);
-
         graphPane.setBottom(graphButtonPane);
         graphPane.setCenter(graph.getLineChart());
 
-        //
+        // Tab menu for metrics + filters
         var menu = new TabMenu("metrics");
         menu.addPane("metrics", new MetricSelection(loadMetric));
         menu.addPane("filters", filterMenu);
         menu.build();
 
-        screen.setTop(title);
+        screen.setTop(title());
         screen.setLeft(menu);
-        //screen.setRight(new VBox(editButton, filterMenu));
         screen.setCenter(graphPane);
 
     }
@@ -171,5 +152,31 @@ public class CampaignPage extends BasePage {
         pane.getChildren().addAll(backButton, canvas);
 
         return pane;
+    }
+
+    private BorderPane title() {
+        //Title background on top
+        var title = new BorderPane();
+        title.getStyleClass().add("topBackground");
+
+        //Title text on top
+        var mainMenuText = new Text(campaignName);
+        mainMenuText.getStyleClass().add("topTitle");
+        title.setCenter(mainMenuText);
+
+        //Add back button
+        var backButton = buildBackButton();
+        BorderPane.setAlignment(backButton, Pos.CENTER);
+        BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
+        title.setLeft(backButton);
+
+        //Settings page button
+        var editButton = new Button("Settings");
+        BorderPane.setAlignment(editButton, Pos.CENTER);
+        editButton.getStyleClass().add("buttonStyle");
+        editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName));
+        title.setRight(editButton);
+
+        return title;
     }
 }

@@ -92,7 +92,7 @@ public class CampaignHandler extends DefaultHandler {
 
                 var svrPath = doc.createElement("svrPath");
                 svrPath.appendChild(doc.createTextNode(c.svrPath()));
-                camp.appendChild(svrPath);
+                  camp.appendChild(svrPath);
 
                 var clkPath = doc.createElement("clkPath");
                 clkPath.appendChild(doc.createTextNode(c.clkPath()));

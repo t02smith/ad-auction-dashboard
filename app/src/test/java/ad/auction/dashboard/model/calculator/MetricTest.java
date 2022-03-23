@@ -5,10 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.campaigns.Campaign;
@@ -23,10 +20,16 @@ public class MetricTest {
     private static Campaign c;
 
     @BeforeAll
-    public static void setup() {       
-        model.campaigns().openCampaign("2 Week Campaign");
+    public static void setUp() {
+        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().openCampaign("2 week - test");
         c = model.campaigns().getCurrentCampaign();
+    }
 
+    @AfterAll
+    public static void tearDown() {
+        model.campaigns().removeCampaign("2 week - test");
+        model.close();
     }
 
     @Test
