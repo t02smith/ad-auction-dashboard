@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import ad.auction.dashboard.model.calculator.Metrics;
+import ad.auction.dashboard.view.pages.CampaignPage;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
@@ -42,8 +43,12 @@ public class MetricSelection extends ScrollPane {
                 this.active.getStyleClass().add("btn-active");
             });
 
-        	btn.getStyleClass().add("metric-btn");
+            if (m == CampaignPage.DEFAULT_METRIC) {
+                this.active = btn;
+                this.active.getStyleClass().add("btn-active");
+            }
 
+        	btn.getStyleClass().add("metric-btn");
             elems.getChildren().add(btn);
         });
     }

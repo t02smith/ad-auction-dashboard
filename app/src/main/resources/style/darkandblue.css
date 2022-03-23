@@ -28,6 +28,10 @@
     -fx-font-size: 16px;
 }
 
+.black-txt > * {
+    -fx-text-fill: black;
+}
+
 /*Main Menu*/
 
 .title-text {
@@ -90,6 +94,38 @@
     -fx-cursor: hand;
 }
 
+/*date-picker*/
+
+.date-picker .cell {
+    -fx-text-fill: black;
+}
+
+.date-picker .cell:hover {
+	-fx-background-color: #004CBE;
+}
+.date-picker .cell:focused {
+	-fx-background-color: #004CBE;
+}
+.date-picker .selected {
+	-fx-background-color: #004CBE;
+	-fx-text-fill: white;
+}
+
+.date-picker-popup .month-year-pane {
+	-fx-background-color: #004CBE;
+}
+.date-picker-popup .month-year-pane .label {
+	-fx-text-fill: black;
+}
+
+.date-picker .arrow-button .arrow {
+	-fx-text-fill: black;
+	-fx-cursor: hand;
+}
+
+.date-picker .arrow-button .arrow:hover {
+	-fx-background-color: #004CBE;
+}
 
 /**/
 
@@ -166,8 +202,9 @@
 }
 
 .filter-sub-heading {
-	-fx-font-size: 12px;
+	-fx-font-size: 18px;
 	-fx-font-weight: bold;
+	-fx-text-fill: #059fff;
 }
 
 .sideBackground {

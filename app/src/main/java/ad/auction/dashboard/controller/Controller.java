@@ -17,9 +17,6 @@ import ad.auction.dashboard.model.files.records.User;
  * The controller class acts as the interface for the 
  * view to interact with the model
  * 
- * It works by the user passing a query and a set of 
- * arguments
- * 
  * @author tcs1g20
  */
 public class Controller {
@@ -32,7 +29,7 @@ public class Controller {
 
     /**
      * Opens a new campaign
-     * @param name 
+     * @param name name of the campaign
      * @return The process that must finish before opening campaign screen
      */
     public Future<Void> openCampaign(String name) {
@@ -41,19 +38,32 @@ public class Controller {
 
     /**
      * Create a new campaign
-     * @param name
-     * @param clkPath
-     * @param impPath
-     * @param svrPath
+     * @param name name of campaign
+     * @param clkPath click log location
+     * @param impPath impression log location
+     * @param svrPath server log location
      */
     public Future<boolean[]> newCampaign(String name, String clkPath, String impPath, String svrPath) {
         return executor.submit(() -> model.campaigns().newCampaign(name, clkPath, impPath, svrPath));
     }
 
+    /**
+     * Edit the details of a campaign
+     * If something isn't being changed leave the empty string ""
+     * @param campaign the name of the campaign being edited
+     * @param name new campaign name
+     * @param clkPath new click log location
+     * @param impPath new impression log location
+     * @param svrPath new server log location
+     */
     public void editCampaign(String campaign, String name, String clkPath, String impPath, String svrPath) {
         this.model.campaigns().editCampaign(campaign, name, clkPath, impPath, svrPath);
     }
 
+    /**
+     * Remove a campaign
+     * @param campaign the name of the campaign
+     */
     public void removeCampaign(String campaign) {
         this.model.campaigns().removeCampaign(campaign);
     }
@@ -77,14 +87,28 @@ public class Controller {
 
     //Filters
 
+    /**
+     * Toggle a filter on/off
+     * @param hash The hash of the filter returned when adding it initially
+     */
     public void toggleFilter(int hash) {
         this.model.campaigns().toggleFilter(hash);
     }
 
+    /**
+     * Set the start/end date of the data to be shown
+     * @param start changing start(true) or end(false)
+     * @param value The new date
+     */
     public void setDate(boolean start, LocalDateTime value) {
         this.model.campaigns().setDate(start, value);
     }
 
+    /**
+     * Add another user filter
+     * @param predicate the filter
+     * @return the hash of the filter
+     */
     public int addUserFilter(Predicate<User> predicate) {
         return this.model.campaigns().addUserFilter(predicate);
     }

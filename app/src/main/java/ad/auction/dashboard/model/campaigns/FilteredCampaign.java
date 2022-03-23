@@ -19,6 +19,8 @@ import ad.auction.dashboard.model.files.records.Server;
  * 
  * The view will specify what the filter is initially and then reference
  * it using the hashcode
+ *
+ * @author tcs1g20
  */
 public class FilteredCampaign extends Campaign {
 
@@ -49,6 +51,10 @@ public class FilteredCampaign extends Campaign {
         logger.info("Toggling filter {} to {}", filterHash, filterActive.get(filterHash));
     }
 
+    /**
+     * Set all filters on/off
+     * @param state on/off
+     */
     public void toggleAllFilters(boolean state) {
         this.filterActive.keySet().forEach(k -> filterActive.put(k, state));
     }
@@ -68,6 +74,11 @@ public class FilteredCampaign extends Campaign {
         return hash;
     }
 
+    /**
+     * Take user data from impression dataset to be used in filters
+     * @param imps the impression dataset
+     * @return the <id, User> data
+     */
     private HashMap<Long, User> collectUserData(List<Impression> imps) {
         logger.info("Collecting user data");
         HashMap<Long, User> users = new HashMap<>();

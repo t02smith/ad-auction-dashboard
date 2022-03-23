@@ -6,9 +6,11 @@ import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Impression.Gender;
 import ad.auction.dashboard.model.files.records.Impression.Income;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
@@ -46,18 +48,19 @@ public class FilterMenu extends GridPane {
     private void build() {
 
         // Date section
-        var date = new Text("Date");
+        var date = new Label("Date");
         date.getStyleClass().add("filter-sub-heading");
-        ArrayList<Pair<Text, DatePicker>> dates = buildDates();
+        ArrayList<Pair<Label, DatePicker>> dates = buildDates();
 
         // Gender section
-        var gender = new Text("Gender");
+        var gender = new Label("Gender");
         gender.getStyleClass().add("filter-sub-heading");
 
         List<CheckBox> genders = Arrays.stream(Gender.values()).map(g -> {
             int hash = controller.addUserFilter(u -> u.gender() != g);
 
             var box = new CheckBox(g.toString().charAt(0) + g.toString().substring(1).toLowerCase());
+            box.setCursor(Cursor.HAND);
             box.setSelected(true);
             box.selectedProperty().addListener(e -> {
                 controller.toggleFilter(hash);
@@ -69,12 +72,13 @@ public class FilterMenu extends GridPane {
 
 
         // Income section
-        var income = new Text("Income");
+        var income = new Label("Income");
         income.getStyleClass().add("filter-sub-heading");
         List<CheckBox> incomes = Arrays.stream(Income.values()).map(i -> {
             int hash = controller.addUserFilter(u -> u.income() != i);
 
             var box = new CheckBox(i.toString().charAt(0) + i.toString().substring(1).toLowerCase());
+            box.setCursor(Cursor.HAND);
             box.setSelected(true);
             box.selectedProperty().addListener(e -> {
                 controller.toggleFilter(hash);
@@ -85,12 +89,13 @@ public class FilterMenu extends GridPane {
         }).toList();
 
         // Age Group section
-        var ageGroup = new Text("Age Group");
+        var ageGroup = new Label("Age Group");
         ageGroup.getStyleClass().add("filter-sub-heading");
         List<CheckBox> ageGroups = Arrays.stream(Impression.AgeGroup.values()).map(ag -> {
             int hash = controller.addUserFilter(u -> u.ageGroup() != ag);
 
             var box = new CheckBox(ag.str);
+            box.setCursor(Cursor.HAND);
             box.setSelected(true);
             box.selectedProperty().addListener(e -> {
                 controller.toggleFilter(hash);
@@ -101,12 +106,13 @@ public class FilterMenu extends GridPane {
         }).toList();
 
         // Context section
-        var context = new Text("Context");
+        var context = new Label("Context");
         context.getStyleClass().add("filter-sub-heading");
         List<CheckBox> contexts = Arrays.stream(Impression.Context.values()).map(c -> {
             int hash = controller.addUserFilter(u -> u.context() != c);
 
             var box = new CheckBox(c.toString().charAt(0) + c.toString().substring(1).toLowerCase());
+            box.setCursor(Cursor.HAND);
             box.setSelected(true);
             box.selectedProperty().addListener(e -> {
                 controller.toggleFilter(hash);
@@ -144,13 +150,12 @@ public class FilterMenu extends GridPane {
      * Builds list of date parts for the UI
      * @return list of date parts for the UI
      */
-    private ArrayList<Pair<Text, DatePicker>> buildDates() {
+    private ArrayList<Pair<Label, DatePicker>> buildDates() {
         var beforeDate = new DatePicker(end);
         var afterDate = new DatePicker(start);
 
         beforeDate.setDayCellFactory((lam) -> getDisabledDate());
         beforeDate.getEditor().setDisable(true);
-        beforeDate.getStyleClass().add("black-txt");
         beforeDate.setOnAction((event) -> {
             this.controller.setDate(false, beforeDate.getValue().atTime(23,59,59,0));
             this.reloadMetric.run();
@@ -164,9 +169,10 @@ public class FilterMenu extends GridPane {
             this.reloadMetric.run();
         });
 
-        ArrayList<Pair<Text, DatePicker>> datesStuff = new ArrayList<Pair<Text, DatePicker>>();
-        datesStuff.add(new Pair<Text, DatePicker>(new Text("Before"), beforeDate));
-        datesStuff.add(new Pair<Text, DatePicker>(new Text("After"), afterDate));
+        ArrayList<Pair<Label, DatePicker>> datesStuff = new ArrayList<>();
+
+        datesStuff.add(new Pair<Label, DatePicker>(new Label("Start"), afterDate));
+        datesStuff.add(new Pair<Label, DatePicker>(new Label("End"), beforeDate));
 
         return datesStuff;
     }

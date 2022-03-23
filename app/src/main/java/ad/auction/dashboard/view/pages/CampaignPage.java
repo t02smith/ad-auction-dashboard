@@ -35,6 +35,8 @@ import javafx.scene.text.Text;
  */
 public class CampaignPage extends BasePage {
 
+    public static final Metrics DEFAULT_METRIC = Metrics.IMPRESSION_COUNT;
+
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
     private final Controller controller = App.getInstance().controller();
 
@@ -43,7 +45,7 @@ public class CampaignPage extends BasePage {
     private LineChartModel graph;
     private final BorderPane screen = new BorderPane();
 
-    private Metrics currentMetric = Metrics.IMPRESSION_COUNT;
+    private Metrics currentMetric = DEFAULT_METRIC;
 
     private final Button histogramToggle = new Button("Histogram");
     private boolean histogramActive = false;
@@ -92,8 +94,6 @@ public class CampaignPage extends BasePage {
 
         root.getChildren().add(screen);
 
-
-
         //BorderPane to hold the graph and the buttons under it
         var graphPane = new BorderPane();
         graphPane.getStyleClass().add("bg-primary");
@@ -122,7 +122,7 @@ public class CampaignPage extends BasePage {
         screen.setTop(title());
         screen.setLeft(menu);
         screen.setCenter(graphPane);
-
+        this.loadMetric.accept(this.currentMetric);
     }
 
     /**
@@ -198,12 +198,14 @@ public class CampaignPage extends BasePage {
             histogramToggle.setOnAction(e -> {
                 if (histogramActive) {
                     this.loadMetric.accept(this.currentMetric);
+                    this.histogramToggle.setText("Histogram");
                     histogramActive = false;
                     return;
                 }
 
                 logger.info("Loading histogram");
                 histogramActive = true;
+                this.histogramToggle.setText("Line");
                 Future<Object> future = controller.runCalculation(m, MetricFunction.HISTOGRAM);
                 while (!future.isDone()) {}
 

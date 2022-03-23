@@ -20,7 +20,7 @@ import javafx.geometry.Point2D;
  * @author tcs1g20
  */
 public abstract class Metric {
-    
+
     protected final String displayName;
     protected final String unit;
 
@@ -50,6 +50,12 @@ public abstract class Metric {
      */
     public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
 
+    /**
+     * Get the x coordinate of a corresponding date
+     * @param resolution the timescale being used
+     * @param time the time to find the x coordinate of
+     * @return the x coordinate of the date
+     */
     public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time) {
         return switch (resolution) {
             case HOURS -> time.getHour();
@@ -59,6 +65,20 @@ public abstract class Metric {
         };
     }
 
+    public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time, LocalDateTime offset) {
+        var offsetX = getXCoordinate(resolution, offset);
+        return switch (resolution) {
+            case DAYS -> time.getDayOfYear() - offsetX;
+            default -> throw new IllegalStateException("Unexpected value: " + resolution);
+        };
+    }
+
+    /**
+     *
+     * @param resolution
+     * @param time
+     * @return
+     */
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time) {
         return incrementDate(resolution, time, 1);
     }

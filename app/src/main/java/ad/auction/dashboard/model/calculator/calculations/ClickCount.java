@@ -14,7 +14,6 @@ public class ClickCount extends Metric {
     public ClickCount() {
         super("Number of Clicks", "count");
     }
-
     
     @Override
     public Function<Campaign, Number> overall() {

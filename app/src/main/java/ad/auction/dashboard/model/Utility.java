@@ -14,8 +14,8 @@ public final class Utility {
 
     /**
      * Parse a date in the specified format
-     * @param date
-     * @return
+     * @param date The date to be parsed
+     * @return The parsed date
      */
     public static LocalDateTime parseDate(String date) {
         return LocalDateTime.parse(date, Utility.formatter);
@@ -23,9 +23,9 @@ public final class Utility {
 
     /**
      * Rounds a number to n decimal places
-     * @param number
-     * @param n
-     * @return
+     * @param number the number being rounded
+     * @param n n decimal places
+     * @return the rounded number
      */
     public static double roundNDp(double number, int n) {
         final double factor = Math.pow(10, n);

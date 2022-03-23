@@ -213,12 +213,17 @@ public class CampaignManager {
         this.currentCampaign.toggleFilter(hash);
     }
 
+    /**
+     * Set the start/end date of the data to be shown
+     * @param start changing start(true) or end(false)
+     * @param value The new date
+     */
     public void setDate(boolean start, LocalDateTime value) {
         this.currentCampaign.setDate(start,value);
     }
 
     /**
-     * Add a new filter on the impressions data type
+     * Add a new filter on the impression data type
      * @param usrFilter the impressions filter
      * @return the filter's hash
      */

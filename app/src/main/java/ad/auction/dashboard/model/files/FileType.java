@@ -11,6 +11,8 @@ import ad.auction.dashboard.model.files.records.SharedFields;
 
 /**
  * Lists all possible file types
+ *
+ * @author tcs1g20
  */
 public enum FileType {
     IMPRESSION(Impression::producer, "Date", "ID", "Gender", "Age", "Income", "Context", "Impression Cost"),
