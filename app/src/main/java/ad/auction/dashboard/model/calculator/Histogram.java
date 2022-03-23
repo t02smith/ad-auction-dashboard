@@ -11,5 +11,7 @@ import java.util.function.Function;
  */
 public interface Histogram {
 
+    int DISTRIBUTION_GROUPS = 15;
+
     public Function<Campaign, List<Point2D>> histogram();
 }

@@ -12,6 +12,7 @@ import ad.auction.dashboard.model.Utility;
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
+import jdk.jshell.execution.Util;
 
 public class TotalClicksCost extends Metric implements Histogram {
 
@@ -66,27 +67,31 @@ public class TotalClicksCost extends Metric implements Histogram {
                 if (clk.clickCost() > max[0]) max[0] = clk.clickCost();
             });
 
-            double step = max[0]/5;
-            for (double i=0; i<=max[0]+step; i+=step) {
-                points.put(i, 0L);
+            double step = Utility.roundNDp(max[0]/Histogram.DISTRIBUTION_GROUPS, 5);
+            for (double i=0; i<=step*(DISTRIBUTION_GROUPS+1); i+=step) {
+                points.put(Utility.roundNDp(i,5), 0L);
             }
 
             var steps = points.keySet().stream().sorted(Comparator.reverseOrder()).toList();
 
             c.clicks().forEach(clk -> {
-                steps.forEach(s -> {
-                    if (clk.clickCost() >= s) points.put(s, points.get(s)+1);
-                });
+                for (double s: steps) {
+                    if (clk.clickCost() >= s) {
+                        points.put(s, points.get(s)+1);
+                        break;
+                    }
+                }
             });
 
             List<Point2D> pointsLs = new ArrayList<>();
-
-            for (int i=0; i<5; i++) {
-                pointsLs.add(new Point2D(i*step, 0));
-                pointsLs.add(new Point2D(i*step, points.get(i*step)));
-                pointsLs.add(new Point2D((i+1)*step, points.get(i*step)));
-                pointsLs.add(new Point2D((i+1)*step, points.get((i+1)*step)));
-                pointsLs.add(new Point2D((i+1)*step, 0));
+            for (int i=0; i<Histogram.DISTRIBUTION_GROUPS; i++) {
+                var curr = Utility.roundNDp(i*step, 5);
+                var next = Utility.roundNDp(i*step+step, 5);
+                pointsLs.add(new Point2D(curr, 0));
+                pointsLs.add(new Point2D(curr, points.get(curr)));
+                pointsLs.add(new Point2D(next, points.get(curr)));
+                pointsLs.add(new Point2D(next, points.get(next)));
+                pointsLs.add(new Point2D(next, 0));
             }
 
             return pointsLs;
