@@ -59,17 +59,19 @@ public class TrackedFile implements Callable<List<SharedFields>> {
     @Override
     public List<SharedFields> call() {
         long time = System.currentTimeMillis();
-        logger.info("Attempting to read file '{}'", filename);
+        logger.info("Attempting to read file '{}:{}'", type, filename);
 
         CsvParserSettings settings = new CsvParserSettings();
         settings.setHeaders(type.getHeaders());
+        settings.setMaxColumns(type.getHeaders().length);
+        settings.setHeaderExtractionEnabled(true);
+        settings.setLineSeparatorDetectionEnabled(true);
         
         CsvParser parser = new CsvParser(settings);
-
         List<SharedFields> records = new ArrayList<>();
 
         parser.beginParsing(new File(filename));
-        parser.parseNext();
+
 
         String[] ln;
         while ((ln = parser.parseNext()) != null) {

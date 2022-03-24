@@ -114,15 +114,14 @@ public class CampaignManager {
             currentCampaign.setImpressions(impressions.get().stream().map(i -> (Impression)i).toList());
             currentCampaign.setClicks(clicks.get().stream().map(c -> (Click)c).toList());
             currentCampaign.setServer(server.get().stream().map(c -> (Server)c).toList());
-        } catch (Exception ignored) {}
 
-        try {
             var ls = currentCampaign.impressionsLs();
 
             currentCampaign.setDate(true, ls.get(0).dateTime());
             currentCampaign.setDate(false, ls.get(ls.size()-1).dateTime());
-
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
 
         currentCampaign.dataLoaded = true;
 
