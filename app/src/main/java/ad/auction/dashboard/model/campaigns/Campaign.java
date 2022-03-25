@@ -75,10 +75,18 @@ public class Campaign {
      * @param start setting start/end date
      * @param value the date to change it to
      */
-    public void setDate(boolean start, LocalDateTime value) {
+    public void setDate(boolean start, LocalDateTime value) throws IllegalArgumentException {
         this.cache = new HashMap<>();
-        if (start) this.start = value;
-        else this.end = value;
+        if (start) {
+            if (this.end != null)
+                if (value.isAfter(this.end)) throw new IllegalArgumentException("Start date cannot be after end date");
+            this.start = value;
+        }
+        else {
+            if (this.start != null)
+                if (value.isBefore(this.start)) throw new IllegalArgumentException("End date cannot be before start date");
+            this.end = value;
+        }
     }
 
     /* SETTERS */

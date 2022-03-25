@@ -1,9 +1,11 @@
 package ad.auction.dashboard.model.calculator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 
+import ad.auction.dashboard.model.campaigns.Campaign;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +21,10 @@ public class CalculationTest {
 
     @BeforeAll
     public static void setUp() {
-        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
     }
 
@@ -57,4 +62,20 @@ public class CalculationTest {
 
         assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());
     }
+
+    @Test
+    @DisplayName("Null campaign")
+    public void nullCampaignTest() {
+        var nullCalc = new Calculation<Number>(c -> 5, null);
+        assertThrows(NullPointerException.class, nullCalc::call);
+    }
+
+    @Test
+    @DisplayName("Non loaded campaign")
+    public void nonLoadedCampaign() {
+        var camp = new Campaign("non-loaded", "imp", "clk", "svr");
+        var calc = new Calculation<Number>(c -> 5, camp);
+        assertThrows(IllegalStateException.class, calc::call);
+    }
+
 }

@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import ad.auction.dashboard.model.Utility;
 
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income,
-        Context context,
-        float impressionCost) implements SharedFields {
+        Context context, float impressionCost) implements SharedFields {
 
     public static Impression producer(String[] line) {
+        float ic = Float.parseFloat(line[6]);
+        if (ic < 0) throw new IllegalArgumentException("Impression cost must be above 0");
+
         return new Impression(
                 Utility.parseDate(line[0]), // Date of impression
                 Long.parseLong(line[1]), // ID
@@ -16,7 +18,7 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
                 AgeGroup.getAgeGroup(line[3]), // Age Group
                 Income.valueOf(line[4]), // Income
                 Context.valueOf(line[5].replace(" ", "_")), // Context
-                Float.parseFloat(line[6])); // Impression cost
+                ic); // Impression cost
     }
 
     // ENUM

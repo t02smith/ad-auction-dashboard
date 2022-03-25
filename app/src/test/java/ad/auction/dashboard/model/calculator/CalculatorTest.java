@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.Future;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
@@ -23,7 +20,10 @@ public class CalculatorTest {
 
     @BeforeAll
     public static void setUp() {
-        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
     }
 
@@ -62,4 +62,5 @@ public class CalculatorTest {
             }
         }
     }
+
 }

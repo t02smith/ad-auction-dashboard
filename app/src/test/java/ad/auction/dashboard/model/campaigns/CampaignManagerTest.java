@@ -12,7 +12,10 @@ public class CampaignManagerTest {
 
     @BeforeEach
     public void setUp() {
-        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
     }
 
     @AfterEach
@@ -25,9 +28,9 @@ public class CampaignManagerTest {
     public void createCampaignTest() {
         var c = model.campaigns().getCampaignData("2 week - test");
         assertEquals("2 week - test", c.name());
-        assertEquals("./data/click_log.csv", c.clkPath());
-        assertEquals("./data/impression_log.csv", c.impPath());
-        assertEquals("./data/server_log.csv", c.svrPath());
+        assertEquals("./data/2-week/click_log.csv", c.clkPath());
+        assertEquals("./data/2-week/impression_log.csv", c.impPath());
+        assertEquals("./data/2-week/server_log.csv", c.svrPath());
     }
 
     @Test
@@ -45,5 +48,6 @@ public class CampaignManagerTest {
     public void removeCampaignTest() {
         model.campaigns().removeCampaign("2 week - test");
         assertNull(model.campaigns().getCampaignData("2 week - test"));
+
     }
 }

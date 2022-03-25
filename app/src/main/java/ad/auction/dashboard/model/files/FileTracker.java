@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.files;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -102,11 +103,14 @@ public class FileTracker {
      */
     public void clean(Set<String> files) {
         logger.info("Cleaning files");
+        Set<String> toRemove = new HashSet<>();
         trackedFiles.keySet().forEach(f -> {
             if (!files.contains(f)) {
-                this.untrackFile(f);
+                toRemove.add(f);
             }
         });
+
+        toRemove.forEach(this::untrackFile);
         logger.info("Files cleaned");
     }
 

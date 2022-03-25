@@ -45,12 +45,9 @@ application {
 
 test {
 
-    // useJUnitPlatform{
-    //     includeTags  '...' 
-    //     excludeTags  '...'
-    // }
-
-    useJUnitPlatform();
+     useJUnitPlatform{
+         includeTags  'model/files'
+     }
 
 }
 

@@ -123,7 +123,9 @@ public class CampaignManager {
             logger.error(e.getMessage());
         }
 
-        currentCampaign.dataLoaded = true;
+        currentCampaign.dataLoaded = currentCampaign.impressions != null
+            && currentCampaign.clicks != null
+            && currentCampaign.server != null;
 
     }
 
@@ -217,7 +219,7 @@ public class CampaignManager {
      * @param start changing start(true) or end(false)
      * @param value The new date
      */
-    public void setDate(boolean start, LocalDateTime value) {
+    public void setDate(boolean start, LocalDateTime value) throws IllegalArgumentException {
         this.currentCampaign.setDate(start,value);
     }
 

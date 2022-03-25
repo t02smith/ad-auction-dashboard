@@ -9,11 +9,18 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
         implements SharedFields {
 
     public static Server producer(String[] line) {
+        int pv = Integer.parseInt(line[3]);
+        if (pv < 0) throw new IllegalArgumentException("Pages viewed must be at least 0");
+
+        var start = Utility.parseDate(line[0]);
+        var end = line[2].equals("n/a") ? LocalDateTime.MAX : Utility.parseDate(line[2]);
+        if (start.isAfter(end)) throw new IllegalArgumentException("Start date must be before end date");
+
         return new Server(
-                Utility.parseDate(line[0]), // Date
+                start, // Date
                 Long.parseLong(line[1]), // ID
-                line[2].equals("n/a") ? LocalDateTime.MAX : Utility.parseDate(line[2]), // Exit date
-                Integer.parseInt(line[3]), // Pages viewed
+                end, // Exit date
+                pv, // Pages viewed
                 line[4].equals("Yes") // Conversion
         );
     }

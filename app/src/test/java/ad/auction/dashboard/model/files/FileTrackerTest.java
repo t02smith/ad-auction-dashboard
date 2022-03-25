@@ -1,9 +1,5 @@
 package ad.auction.dashboard.model.files;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +8,12 @@ import org.junit.jupiter.api.Test;
 
 import ad.auction.dashboard.TestUtility;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+@Tag("model/files")
 public class FileTrackerTest {
 
     private FileTracker fileTracker;
-
 
     @BeforeEach
     public void setup() {
@@ -29,7 +27,6 @@ public class FileTrackerTest {
     
     @Test
     @DisplayName("File tracked successfully")
-    @Tag("model/files")
     public void isFileTrackedTest() {
 
         var filename = TestUtility.getResourceFile("/data/test-1.txt");
@@ -47,7 +44,6 @@ public class FileTrackerTest {
 
     @Test
     @DisplayName("File track and untrack successfully")
-    @Tag("model/files")
     public void fileTrackUntrackTest() {
         var filename = TestUtility.getResourceFile("/data/test-1.txt");
         if (filename == null) fail();
@@ -64,6 +60,19 @@ public class FileTrackerTest {
             fileTracker.isFileTracked(filename),
             "File wasn't untracked"
         );
+    }
+
+    @Test
+    @DisplayName("Empty file test")
+    public void emptyFileTest() throws Exception {
+        var filename = "./data/empty_impression.csv";
+
+        fileTracker.trackFile(filename);
+        var res = fileTracker.readFile(filename);
+
+        while (!res.isDone()) {}
+
+        assertEquals(0, res.get().size());
     }
 
 }

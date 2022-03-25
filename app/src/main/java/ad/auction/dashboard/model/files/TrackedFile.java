@@ -45,9 +45,9 @@ public class TrackedFile implements Callable<List<SharedFields>> {
             String[] headers = reader.readLine().split(",");
             reader.close();
 
-            return FileType.determineType(headers);
-
-            
+            var type = FileType.determineType(headers);
+            logger.info("File {} is type {}", filename, type);
+            return type;
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -74,11 +74,17 @@ public class TrackedFile implements Callable<List<SharedFields>> {
 
 
         String[] ln;
+        long invalidRecords = 0;
         while ((ln = parser.parseNext()) != null) {
-            records.add(type.produce(ln));
+            try {
+                records.add(type.produce(ln));
+            } catch (IllegalArgumentException e) {
+                invalidRecords++;
+            }
         }
 
         logger.info("{} parsed in {}ms", filename, System.currentTimeMillis()-time);
+        if (invalidRecords > 0) logger.warn("{} records were invalid in {}", invalidRecords, filename);
         
         return records;
 

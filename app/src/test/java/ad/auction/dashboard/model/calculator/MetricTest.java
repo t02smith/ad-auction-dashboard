@@ -21,7 +21,10 @@ public class MetricTest {
 
     @BeforeAll
     public static void setUp() {
-        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
         c = model.campaigns().getCurrentCampaign();
     }

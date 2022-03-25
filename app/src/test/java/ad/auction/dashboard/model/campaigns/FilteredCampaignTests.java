@@ -4,8 +4,11 @@ import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.files.records.Impression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.*;
+
+import java.time.LocalDateTime;
 
 @Tag("model/campaigns")
 public class FilteredCampaignTests {
@@ -16,7 +19,10 @@ public class FilteredCampaignTests {
 
     @BeforeAll
     public static void setUp() {
-        model.campaigns().newCampaign("2 week - test", "./data/click_log.csv", "./data/impression_log.csv", "./data/server_log.csv");
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
     }
 
@@ -99,8 +105,16 @@ public class FilteredCampaignTests {
     /*Date filters*/
 
     @Test
-    @DisplayName("date filter - Week 2")
-    public void dateFilterWeek2Test() {
+    @DisplayName("Set start date after end date")
+    public void invalidStartDateTest() {
+        assertThrows(IllegalArgumentException.class,
+                () -> model.campaigns().setDate(true, LocalDateTime.MAX));
+    }
 
+    @Test
+    @DisplayName("Set end date before start date")
+    public void invalidEndDateTest() {
+        assertThrows(IllegalArgumentException.class,
+                () -> model.campaigns().setDate(false, LocalDateTime.MIN));
     }
 }
