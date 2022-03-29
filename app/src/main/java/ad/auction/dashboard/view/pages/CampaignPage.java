@@ -63,16 +63,13 @@ public class CampaignPage extends BasePage {
         HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
         while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
-        try {
-            var data = (List<Point2D>)future.get(campaignName).get();
+        future.forEach((name, data) -> {
+            try {this.graph.addDataset(name, (List<Point2D>) data.get());}
+            catch (Exception ignored) {}
+        });
 
-            this.graph.setData(data);
-            this.graph.setTitleName(m.getMetric().displayName());
-            this.screen.setCenter(this.graph.getLineChart());
-            
-        } catch (InterruptedException | ExecutionException e) {
-            //
-        }
+        this.screen.setCenter(this.graph.getLineChart());
+
         
     };
 
@@ -211,14 +208,13 @@ public class CampaignPage extends BasePage {
                 logger.info("Loading histogram");
                 histogramActive = true;
                 this.histogramToggle.setText("Line");
-                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
+                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.HISTOGRAM);
                 while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
                 try {
                     var data = (List<Point2D>)future.get(campaignName).get();
-                    this.graph.setData(data);
                     this.graph.setTitleName(m.getMetric().displayName());
-                    this.screen.setCenter(this.graph.histogram(this.currentMetric.getMetric().unit()));
+                    this.screen.setCenter(this.graph.histogram(this.currentMetric.getMetric().unit(), data));
 
                 } catch (Exception ignored) {}
 
@@ -239,6 +235,8 @@ public class CampaignPage extends BasePage {
 
         return new ButtonList<>(cList, null, true, c -> {
             var res = controller.toggleCampaign(c);
+            while (!res.isDone()) {}
+            loadMetric.accept(currentMetric);
         });
     }
 }

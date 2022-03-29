@@ -37,6 +37,12 @@ public class Model {
         var campaigns = this.campaignManager.getActiveCampaigns();
         var res = new HashMap<String, Future<Object>>();
 
+        //Only one histogram is visible at any one time
+        if (func == MetricFunction.HISTOGRAM) {
+            res.put(campaignManager.getCurrentCampaign().name(), this.calculator.runCalculation(campaignManager.getCurrentCampaign(), metric, func));
+            return res;
+        }
+
         campaigns.forEach((key, value) -> res.put(key, this.calculator.runCalculation(value, metric, func)));
         return res;
     }

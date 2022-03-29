@@ -5,6 +5,8 @@ import javafx.scene.chart.AreaChart;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -21,6 +23,8 @@ public class LineChartModel extends ChartModel {
     private static final Logger logger = LogManager.getLogger(LineChartModel.class.getSimpleName());
 
     // Set of data points
+    private final HashMap<String, List<Point2D>> datasets = new HashMap<>();
+
     private List<Point2D> data;
 
     private Boolean clicked = false;
@@ -29,23 +33,32 @@ public class LineChartModel extends ChartModel {
         super(titleName, xAxisName, yAxisName);
     }
 
+    public void addDataset(String name, List<Point2D> data) {
+        this.datasets.put(name, data);
+    }
+
     public List<Point2D> getData() {
         logger.info("Retrieving Data for current graph");
         return data;
     }
 
-    public void setData(List<Point2D> newData) {
-        logger.info("New data is set");
-        this.data = newData;
-    }
 
-    private void setSeries(XYChart.Series<Number, Number> dataSeries) {
-        if (data == null)
-            return;
+    private void setAllSeries(ArrayList<XYChart.Series<Number, Number>> seriesList) {
+        datasets.forEach((name, data) -> {
+            var dataSeries = new XYChart.Series<Number, Number>();
+            if (data == null) {
+                return;
+            }
 
-        data.forEach((p) -> dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
+            data.forEach((p) -> {
+                dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY()));
+            });
+            seriesList.add(dataSeries);
+            dataSeries.setName(name);
+            
+        });
 
-    }
+    } 
 
     public LineChart<Number, Number> getLineChart() {
         var xAxis = new NumberAxis();
@@ -54,21 +67,28 @@ public class LineChartModel extends ChartModel {
         var yAxis = new NumberAxis();
         yAxis.setLabel(getYName());
 
+        
+        var allData = new ArrayList<XYChart.Series<Number, Number>>();
+        //setAllSeries(allData);
+        
         var dataSeries = new XYChart.Series<Number, Number>();
         dataSeries.setName(this.getTitleName());
-        setSeries(dataSeries);
 
         var lChart = new LineChart<>(xAxis, yAxis);
         //lChart.setTitle(getTitleName());
-        lChart.getData().add(dataSeries);
+
+        setAllSeries(allData);
+        lChart.getData().addAll(allData);
+
+        //lChart.getData().addAll(allData);
         lChart.setCreateSymbols(false);
 
-        createCursorMonitor(lChart, dataSeries);
+        //createCursorMonitor(lChart, dataSeries);
         return lChart;
 
     }
 
-    public AreaChart<Number, Number> histogram(String xAxisLabel) {
+    public AreaChart<Number, Number> histogram(String xAxisLabel, List<Point2D> data) {
         var xAxis = new NumberAxis();
         xAxis.setLabel(xAxisLabel);
 
@@ -77,7 +97,7 @@ public class LineChartModel extends ChartModel {
 
         var series = new XYChart.Series<Number, Number>();
         series.setName(this.getTitleName());
-        setSeries(series);
+        data.forEach((p) -> series.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
 
         var aChart = new AreaChart<>(xAxis, yAxis);
         aChart.getData().add(series);
