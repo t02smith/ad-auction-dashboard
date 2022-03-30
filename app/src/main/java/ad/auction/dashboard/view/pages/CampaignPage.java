@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -8,11 +9,14 @@ import java.util.function.Consumer;
 
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.calculator.calculations.Metric;
+import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +27,6 @@ import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
-import ad.auction.dashboard.view.components.MetricSelection;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -116,8 +119,9 @@ public class CampaignPage extends BasePage {
 
         // Tab menu for metrics + filters
         var menu = new TabMenu("metrics");
-        menu.addPane("metrics", new MetricSelection(loadMetric));
+        menu.addPane("metrics", new ButtonList<Metrics>(Arrays.asList(Metrics.values()),DEFAULT_METRIC,false,loadMetric));
         menu.addPane("filters", filterMenu);
+        menu.addPane("compare", campaignList());
         menu.build();
 
         screen.setTop(title());
@@ -220,12 +224,21 @@ public class CampaignPage extends BasePage {
 
 
             });
-
             histogramToggle.setVisible(true);
-
 
         } else {
             histogramToggle.setVisible(false);
         }
+    }
+
+    private ButtonList<String> campaignList() {
+        var cList = controller.getCampaigns().stream()
+                .map(Campaign.CampaignData::name)
+                .filter(c -> !c.equals(campaignName))
+                .toList();
+
+        return new ButtonList<>(cList, null, true, c -> {
+            var res = controller.toggleCampaign(c);
+        });
     }
 }

@@ -37,8 +37,12 @@ public class Controller {
         return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
     }
 
-    public Future<Void> includeCampaign(String name) {
-        return executor.submit(() -> {model.campaigns().includeCampaign(name); return null;});
+    public Future<Void> toggleCampaign(String name) {
+        return executor.submit(() -> {
+            if (!model.campaigns().isIncluded(name)) model.campaigns().includeCampaign(name);
+            else model.campaigns().unincludeCampaing(name);
+            return null;
+        });
     }
 
     /**

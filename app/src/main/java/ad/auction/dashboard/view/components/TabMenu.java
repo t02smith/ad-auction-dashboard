@@ -25,6 +25,7 @@ public class TabMenu extends StackPane  {
         this.getStyleClass().add("bg-primary");
 
         Region empty = new Region();
+        empty.getStyleClass().add("bg-secondary");
         VBox.setVgrow(empty, Priority.ALWAYS);
         VBox sidebar = new VBox();
 

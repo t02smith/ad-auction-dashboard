@@ -39,6 +39,8 @@ public class FilterMenu extends GridPane {
         this.reloadMetric = reloadMetric;
         this.start = start;
         this.end = end;
+
+        this.getStyleClass().add("bg-secondary");
         build();
     }
 
