@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,7 +41,7 @@ public class CampaignPage extends BasePage {
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
     private final Controller controller = App.getInstance().controller();
 
-    private final String campaignName;
+    private String campaignName;
 
     private LineChartModel graph;
     private final BorderPane screen = new BorderPane();
@@ -56,11 +57,11 @@ public class CampaignPage extends BasePage {
         this.setMetric(m);
         this.graph.setYName(m.getMetric().unit());
 
-        Future<Object> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
-        while (!future.isDone()) {}
+        HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
+        while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
         try {
-            var data = (List<Point2D>)future.get();
+            var data = (List<Point2D>)future.get(campaignName).get();
 
             this.graph.setData(data);
             this.graph.setTitleName(m.getMetric().displayName());
@@ -206,11 +207,11 @@ public class CampaignPage extends BasePage {
                 logger.info("Loading histogram");
                 histogramActive = true;
                 this.histogramToggle.setText("Line");
-                Future<Object> future = controller.runCalculation(m, MetricFunction.HISTOGRAM);
-                while (!future.isDone()) {}
+                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
+                while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
                 try {
-                    var data = (List<Point2D>)future.get();
+                    var data = (List<Point2D>)future.get(campaignName).get();
                     this.graph.setData(data);
                     this.graph.setTitleName(m.getMetric().displayName());
                     this.screen.setCenter(this.graph.histogram(this.currentMetric.getMetric().unit()));

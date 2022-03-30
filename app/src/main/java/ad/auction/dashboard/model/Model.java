@@ -1,11 +1,13 @@
 package ad.auction.dashboard.model;
 
+import java.util.HashMap;
 import java.util.concurrent.Future;
 
 import ad.auction.dashboard.model.calculator.Calculator;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.CampaignManager;
+import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.files.FileTracker;
 
 /**
@@ -23,7 +25,7 @@ public class Model {
     private final Calculator calculator = new Calculator();
 
     //Manages different user campaigns
-    private final CampaignManager campaignManager = new CampaignManager(this);
+    private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
 
     /**
      * Run a calculation for the current open campaign
@@ -31,12 +33,15 @@ public class Model {
      * @param func The function to calculate for the metric
      * @return The result of the calculation
      */
-    public Future<Object> runCalculation(Metrics metric, MetricFunction func) {
-        var campaign = this.campaignManager.getCurrentCampaign();
-        return this.calculator.runCalculation(campaign, metric, func);
+    public HashMap<String, Future<Object>> runCalculation(Metrics metric, MetricFunction func) {
+        var campaigns = this.campaignManager.getActiveCampaigns();
+        var res = new HashMap<String, Future<Object>>();
+
+        campaigns.forEach((key, value) -> res.put(key, this.calculator.runCalculation(value, metric, func)));
+        return res;
     }
 
-    public CampaignManager campaigns() {
+    public ManyCampaignManager campaigns() {
         return this.campaignManager;
     }
 

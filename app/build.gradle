@@ -45,9 +45,7 @@ application {
 
 test {
 
-     useJUnitPlatform{
-         includeTags  'model/files'
-     }
+     useJUnitPlatform()
 
 }
 

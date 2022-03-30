@@ -26,12 +26,12 @@ public class CampaignManager {
     private static final String CAMPAIGNS_LOCATION = "./campaigns.xml";
 
     private static final Logger logger = LogManager.getLogger(CampaignManager.class.getSimpleName());
-    private final Model model;
+    protected final Model model;
 
     // Set of loaded campaigns
-    private final HashMap<String, FilteredCampaign> campaigns = new HashMap<>();
+    protected final HashMap<String, FilteredCampaign> campaigns = new HashMap<>();
 
-    private FilteredCampaign currentCampaign;
+    protected FilteredCampaign currentCampaign;
     private final CampaignHandler handler = new CampaignHandler();
 
     public CampaignManager(Model model) {
@@ -89,43 +89,49 @@ public class CampaignManager {
 
     }
 
+    protected void loadCampaignData() {
+        this.loadCampaignData(this.currentCampaign.name());
+    }
+
     /**
      * Load the data into the campaign class for the calculations
      */
-    private void loadCampaignData() {
-        if (this.currentCampaign == null)
+    protected void loadCampaignData(String campaign) {
+        var c = this.campaigns.get(campaign);
+
+        if (c == null)
             return;
 
-        if (this.currentCampaign.dataLoaded()) {
-            logger.error("Data already loaded for '{}'", this.currentCampaign.name());
+        if (c.dataLoaded()) {
+            logger.error("Data already loaded for '{}'", c.name());
             return;
         }
 
-        logger.info("Reading data for campaign '{}'", this.currentCampaign.name());
+        logger.info("Reading data for campaign '{}'", c.name());
 
-        var impressions = this.model.files().readFile(currentCampaign.getData().impPath());
-        var clicks = this.model.files().readFile(currentCampaign.getData().clkPath());
-        var server = this.model.files().readFile(currentCampaign.getData().svrPath());
+        var impressions = this.model.files().readFile(c.getData().impPath());
+        var clicks = this.model.files().readFile(c.getData().clkPath());
+        var server = this.model.files().readFile(c.getData().svrPath());
 
         while (!impressions.isDone() || !clicks.isDone() || !server.isDone()) {
         }
 
         try {
-            currentCampaign.setImpressions(impressions.get().stream().map(i -> (Impression)i).toList());
-            currentCampaign.setClicks(clicks.get().stream().map(c -> (Click)c).toList());
-            currentCampaign.setServer(server.get().stream().map(c -> (Server)c).toList());
+            c.setImpressions(impressions.get().stream().map(i -> (Impression)i).toList());
+            c.setClicks(clicks.get().stream().map(clk -> (Click)clk).toList());
+            c.setServer(server.get().stream().map(svr -> (Server)svr).toList());
 
-            var ls = currentCampaign.impressionsLs();
+            var ls = c.impressionsLs();
 
-            currentCampaign.setDate(true, ls.get(0).dateTime());
-            currentCampaign.setDate(false, ls.get(ls.size()-1).dateTime());
+            c.setDate(true, ls.get(0).dateTime());
+            c.setDate(false, ls.get(ls.size()-1).dateTime());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
 
-        currentCampaign.dataLoaded = currentCampaign.impressions != null
-            && currentCampaign.clicks != null
-            && currentCampaign.server != null;
+        c.dataLoaded = c.impressions != null
+            && c.clicks != null
+            && c.server != null;
 
     }
 
@@ -152,7 +158,7 @@ public class CampaignManager {
     /**
      * Will untrack any files not currently needed for any campaign
      */
-    private void cleanFiles() {
+    protected void cleanFiles() {
         HashSet<String> files = new HashSet<>();
 
         campaigns.values().forEach(c -> {

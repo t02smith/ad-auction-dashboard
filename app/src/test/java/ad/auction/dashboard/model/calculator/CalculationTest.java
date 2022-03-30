@@ -37,7 +37,7 @@ public class CalculationTest {
     @Test
     @DisplayName("Run an overall calculation")
     public void runOverallTest() throws Exception {
-        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVERALL);
+        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVERALL).get("2 week - test");
         while (!actual.isDone()) {}
 
         assertEquals(118097.921, (double)actual.get());
@@ -47,7 +47,7 @@ public class CalculationTest {
     @DisplayName("Run an over time calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeCorrectSizeTest() throws Exception {
-        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME);
+        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
         while (!actual.isDone()) {}
 
         assertEquals(14, ((ArrayList<Point2D>)actual.get()).size());
@@ -57,7 +57,7 @@ public class CalculationTest {
     @DisplayName("Run an over time calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeRandomValueTest() throws Exception {
-        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME);
+        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
         while (!actual.isDone()) {}
 
         assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());

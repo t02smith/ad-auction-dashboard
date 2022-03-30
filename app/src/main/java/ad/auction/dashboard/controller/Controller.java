@@ -1,6 +1,7 @@
 package ad.auction.dashboard.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,7 +24,7 @@ public class Controller {
 
     private final Model model = new Model();
 
-    //Max calculations to be ran at once
+    //Max calculations to be run at once
     private static final int CONTROLLER_THREAD_COUNT = 10;
     private final ExecutorService executor = Executors.newFixedThreadPool(CONTROLLER_THREAD_COUNT);
 
@@ -34,6 +35,10 @@ public class Controller {
      */
     public Future<Void> openCampaign(String name) {
         return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
+    }
+
+    public Future<Void> includeCampaign(String name) {
+        return executor.submit(() -> {model.campaigns().includeCampaign(name); return null;});
     }
 
     /**
@@ -74,7 +79,7 @@ public class Controller {
      * @param function The function of that metric
      * @return the result of the calculation
      */
-    public Future<Object> runCalculation(Metrics m, MetricFunction function) {
+    public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
         return model.runCalculation(m, function);
     }
 

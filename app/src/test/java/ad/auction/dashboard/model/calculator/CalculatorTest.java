@@ -35,7 +35,7 @@ public class CalculatorTest {
     
     @Test
     public void singleCalculationTest() throws Exception {
-        Future<Object> res = model.runCalculation(Metrics.CPA, MetricFunction.OVERALL);
+        Future<Object> res = model.runCalculation(Metrics.CPA, MetricFunction.OVERALL).get("2 week - test");
 
         while (!res.isDone()) {}
 
@@ -48,7 +48,7 @@ public class CalculatorTest {
         HashSet<Future<Object>> correct = new HashSet<>();
 
         for (int i = 0; i < 10; i++) {
-            calcs.add(model.runCalculation(Metrics.CPA, MetricFunction.OVERALL));
+            calcs.add(model.runCalculation(Metrics.CPA, MetricFunction.OVERALL).get("2 week - test"));
         }
 
         while (correct.size() > 0) {
