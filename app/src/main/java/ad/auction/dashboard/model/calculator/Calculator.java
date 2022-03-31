@@ -24,7 +24,6 @@ public class Calculator {
 
     // Max calculations to be ran at once
     private static final int CALCULATOR_THREAD_COUNT = 10;
-    private static long TIMEOUT_MS = Long.MAX_VALUE;
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(CALCULATOR_THREAD_COUNT);
 
@@ -87,10 +86,6 @@ public class Calculator {
         }
 
         return db;
-    }
-
-    public static void setTimeout(int timeout) {
-        Calculator.TIMEOUT_MS = timeout;
     }
 
 }

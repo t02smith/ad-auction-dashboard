@@ -6,7 +6,6 @@ import java.util.concurrent.Future;
 import ad.auction.dashboard.model.calculator.Calculator;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
-import ad.auction.dashboard.model.campaigns.CampaignManager;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.files.FileTracker;
 

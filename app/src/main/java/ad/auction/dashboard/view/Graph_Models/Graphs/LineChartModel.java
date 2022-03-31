@@ -131,6 +131,7 @@ public class LineChartModel extends ChartModel {
 
         backgroundNodes.setOnMouseClicked((ev) -> {
             if (clicked) {
+                //noinspection unchecked
                 chart.getData().removeAll(xDash, yDash);
                 xDash.getData().clear();
                 yDash.getData().clear();

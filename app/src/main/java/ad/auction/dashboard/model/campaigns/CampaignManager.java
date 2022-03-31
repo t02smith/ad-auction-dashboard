@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 import ad.auction.dashboard.model.files.records.User;
@@ -54,7 +55,7 @@ public class CampaignManager {
         if (this.campaigns.containsKey(name)) {
             this.campaigns.remove(name);
             logger.info("Removing campaign {}", name);
-        }
+        } else throw new NoSuchElementException("No campaign " + name + " found");
     }
 
     /**
@@ -89,6 +90,9 @@ public class CampaignManager {
 
     }
 
+    /**
+     * Load the data for the currently opened campaign
+     */
     protected void loadCampaignData() {
         this.loadCampaignData(this.currentCampaign.name());
     }
@@ -100,11 +104,11 @@ public class CampaignManager {
         var c = this.campaigns.get(campaign);
 
         if (c == null)
-            return;
+            throw new NoSuchElementException("No campaign " + campaign + " found");
 
         if (c.dataLoaded()) {
             logger.error("Data already loaded for '{}'", c.name());
-            return;
+            throw new RuntimeException("Data already loaded for " + campaign);
         }
 
         logger.info("Reading data for campaign '{}'", c.name());
@@ -141,18 +145,27 @@ public class CampaignManager {
      */
     public void openCampaign(String name) {
         if (!this.campaigns.containsKey(name))
-            return;
+            throw new NoSuchElementException(name + " not found");
         if (this.currentCampaign != null) {
             if (this.currentCampaign.name().equals(name))
-                return;
+                throw new IllegalArgumentException(name + " already open");
             logger.info("Flushing data from campaign '{}'", currentCampaign.name());
-            this.currentCampaign.flushData();
+            this.closeCurrentCampaign();
             logger.info("testing");
         }
 
         logger.info("Opening campaign '{}'", name);
         this.currentCampaign = campaigns.get(name);
         this.loadCampaignData();
+    }
+
+    /**
+     * Closes the current campaign
+     */
+    public void closeCurrentCampaign() {
+        logger.info("Closing campaign {}", currentCampaign.name());
+        this.currentCampaign.flushData();
+        this.currentCampaign = null;
     }
 
     /**
@@ -183,8 +196,11 @@ public class CampaignManager {
 
         if (!campaigns.containsKey(campaign)) {
             logger.error("Campaign '{}' not found", campaign);
-            return;
+            throw new NoSuchElementException("Campaign " + campaign + " not found");
         }
+
+        if (campaigns.containsKey(name))
+            throw new IllegalArgumentException("Campaign already exists");
 
         var c = campaigns.get(campaign);
         if (name != null) {

@@ -36,11 +36,12 @@ public class Calculation<T> implements Callable<Object> {
     @Override
     public T call() throws NullPointerException, IllegalStateException {
         if (campaign == null) throw new NullPointerException("Null campaign given");
+        if (calculation == null) throw new NullPointerException("Null calculation function given");
         if (!campaign.dataLoaded()) throw new IllegalStateException("Campaign data not loaded");
 
         var t = System.currentTimeMillis();
         var res = calculation.apply(campaign);
-        logger.info("Calculation ran in {}ms", System.currentTimeMillis()-t);
+        logger.info("{}: Calculation ran in {}ms", campaign.name(), System.currentTimeMillis()-t);
         return res;
     }
 }

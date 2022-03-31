@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.campaigns;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import ad.auction.dashboard.model.calculator.Metrics;
@@ -19,27 +20,41 @@ import javafx.geometry.Point2D;
  */
 public class Campaign {
 
-    //Campaign data is package protected so the CampaignManager can
-    // access it but nothing else can unless there is getter/setter    
-    String name;
-    String clkPath;
-    String impPath;
-    String svrPath;
+    //Campaign info
+    protected String name;
+    protected String clkPath;
+    protected String impPath;
+    protected String svrPath;
 
     protected LocalDateTime start;
     protected LocalDateTime end;
 
+    //File data
     boolean dataLoaded = false;
-
     protected List<Impression> impressions;
     protected List<Click> clicks;
     protected List<Server> server;
 
     //Stores calculations that have already been run
     protected HashMap<Metrics, List<Point2D>> cache = new HashMap<>();
+    protected boolean cacheValues = true;
 
     //Stores info to display in the UI
     public record CampaignData(String name, String clkPath, String impPath, String svrPath, LocalDateTime start, LocalDateTime end) {
+        //Start/end dates are only calculated when loaded so are excluded from the comparison
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CampaignData that = (CampaignData) o;
+            return name.equals(that.name) && clkPath.equals(that.clkPath) && impPath.equals(that.impPath) && svrPath.equals(that.svrPath);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, clkPath, impPath, svrPath);
+        }
     }
 
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
@@ -67,7 +82,8 @@ public class Campaign {
      * @param data The result of the calculation
      */
     public void cacheData(Metrics m, List<Point2D> data) {
-        this.cache.put(m, data);
+        if (this.cacheValues)
+            this.cache.put(m, data);
     }
 
     /**
@@ -103,6 +119,10 @@ public class Campaign {
         this.clicks = clks;
     }
 
+    public void setCacheValues(boolean state) {
+        this.cacheValues = state;
+    }
+
     // GETTERS
 
     public boolean isCached(Metrics m) {return this.cache.containsKey(m);}
@@ -134,4 +154,6 @@ public class Campaign {
     public boolean dataLoaded() {
         return this.dataLoaded;
     }
+
+
 }

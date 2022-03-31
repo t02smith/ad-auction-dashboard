@@ -54,7 +54,7 @@ public class CalculationTest {
     }
 
     @Test
-    @DisplayName("Run an over time calculation")
+    @DisplayName("Run a random value calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeRandomValueTest() throws Exception {
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
@@ -63,11 +63,20 @@ public class CalculationTest {
         assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());
     }
 
+    /*ERRORS*/
+
     @Test
     @DisplayName("Null campaign")
     public void nullCampaignTest() {
         var nullCalc = new Calculation<Number>(c -> 5, null);
         assertThrows(NullPointerException.class, nullCalc::call);
+    }
+
+    @Test
+    @DisplayName("Null function")
+    public void nullFunctionTest() {
+        var nullFunc = new Calculation<Number>(null, model.campaigns().getCurrentCampaign());
+        assertThrows(NullPointerException.class, nullFunc::call);
     }
 
     @Test

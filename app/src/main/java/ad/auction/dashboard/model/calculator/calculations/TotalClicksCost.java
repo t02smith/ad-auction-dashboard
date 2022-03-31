@@ -12,7 +12,6 @@ import ad.auction.dashboard.model.Utility;
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
-import jdk.jshell.execution.Util;
 
 public class TotalClicksCost extends Metric implements Histogram {
 

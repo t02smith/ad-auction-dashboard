@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.*;
@@ -32,8 +33,11 @@ public class CalculatorTest {
         model.campaigns().removeCampaign("2 week - test");
         model.close();
     }
+
+    /*CALCULATIONS*/
     
     @Test
+    @DisplayName("Run a single calculation")
     public void singleCalculationTest() throws Exception {
         Future<Object> res = model.runCalculation(Metrics.CPA, MetricFunction.OVERALL).get("2 week - test");
 
@@ -43,23 +47,25 @@ public class CalculatorTest {
     }
 
     @Test
-    public void manyCalculationTest() throws Exception {
-        ArrayList<Future<Object>> calcs = new ArrayList<>();
-        HashSet<Future<Object>> correct = new HashSet<>();
+    @DisplayName("Run a calculation many times")
+    public void manyCalculationTest() {
+        final HashSet<Future<Object>> calc = new HashSet<>();
+        model.campaigns().getCurrentCampaign().setCacheValues(false);
 
-        for (int i = 0; i < 10; i++) {
-            calcs.add(model.runCalculation(Metrics.CPA, MetricFunction.OVERALL).get("2 week - test"));
+        for (int i=0; i<10; i++) {
+            calc.add(model.runCalculation(Metrics.CPA, MetricFunction.OVERALL).get("2 week - test"));
         }
 
-        while (correct.size() > 0) {
-            for (Future<Object> f: calcs) {
-                if (!f.isDone()) continue;
-
-                if ((double)f.get() == 58.291) {
-                    if (!correct.contains(f)) correct.add(f);
-                } else fail();
-                
-            }
+        final HashSet<Future<Object>> correct = new HashSet<>();
+        while (correct.size() != calc.size()) {
+            calc.forEach(c -> {
+                if (c.isDone() && !correct.contains(c)) {
+                    try {
+                        if ((double)c.get() == 58.291) correct.add(c);
+                        else fail("Incorrect value");
+                    } catch (Exception e) {fail("Error retrieving calculation result");}
+                }
+            });
         }
     }
 
