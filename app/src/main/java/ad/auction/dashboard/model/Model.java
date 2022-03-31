@@ -46,6 +46,11 @@ public class Model {
         return res;
     }
 
+    public void setCumulative(boolean state) {
+        this.campaignManager.getCurrentCampaign().clearCache();
+        this.calculator.setCumulative(state);
+    }
+
     public ManyCampaignManager campaigns() {
         return this.campaignManager;
     }

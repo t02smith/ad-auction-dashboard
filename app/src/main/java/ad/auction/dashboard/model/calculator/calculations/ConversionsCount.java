@@ -23,7 +23,7 @@ public class ConversionsCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+    public Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit resolution, boolean isCumulative) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
             if (c.server().findAny().isEmpty()) return points;
@@ -39,6 +39,7 @@ public class ConversionsCount extends Metric {
                     points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]),counter[0]));
                     start[0] = end[0];
                     end[0] = Metric.incrementDate(resolution, end[0]);
+                    if (isCumulative) counter[0] = 0;
                 }
 
                 if (svr.conversion()) counter[0] += 1;

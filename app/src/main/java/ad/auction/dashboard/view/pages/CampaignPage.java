@@ -50,6 +50,7 @@ public class CampaignPage extends BasePage {
 
     private final Button histogramToggle = new Button("Histogram");
     private boolean histogramActive = false;
+    private boolean cumulative = false;
 
     //Function to load a given metric
     @SuppressWarnings("unchecked")
@@ -179,7 +180,17 @@ public class CampaignPage extends BasePage {
         editButton.getStyleClass().add("buttonStyle");
         editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName, window::startMenu));
 
-        var right = new HBox(histogramToggle, editButton);
+        //cumulative toggle
+        var cumToggle = new Button("Cumulative");
+        cumToggle.getStyleClass().add("buttonStyle");
+        cumToggle.setOnAction(e -> {
+            cumulative = !cumulative;
+            controller.setCumulative(cumulative);
+            cumToggle.setText(cumulative ? "Per Day": "Cumulative");
+            loadMetric.accept(currentMetric);
+        });
+
+        var right = new HBox(histogramToggle, cumToggle, editButton);
         right.setSpacing(25);
         right.setAlignment(Pos.CENTER);
 

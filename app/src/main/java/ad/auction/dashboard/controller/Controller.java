@@ -113,6 +113,10 @@ public class Controller {
         this.model.campaigns().setDate(start, value);
     }
 
+    public void setCumulative(boolean state) {
+        this.model.setCumulative(state);
+    }
+
     /**
      * Add another user filter
      * @param predicate the filter

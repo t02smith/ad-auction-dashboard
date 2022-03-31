@@ -1,8 +1,10 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -48,7 +50,8 @@ public abstract class Metric {
      * (time, metric)
      * @return function for graph points
      */
-    public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution);
+    public abstract Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit timeResolution, boolean cumulative);
+
 
     /**
      * Get the x coordinate of a corresponding date

@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
@@ -21,7 +22,7 @@ public class ImpressionCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+    public Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit resolution, boolean isCumulative) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
             if (c.impressions().findAny().isEmpty()) return points;
@@ -37,6 +38,7 @@ public class ImpressionCount extends Metric {
                     points.add(new Point2D(Metric.getXCoordinate(resolution, start[0]),counter[0]));
                     start[0] = end[0];
                     end[0] = Metric.incrementDate(resolution, end[0]);
+                    if (isCumulative) counter[0] = 0;
                 }
 
                 counter[0] += 1;
@@ -47,6 +49,4 @@ public class ImpressionCount extends Metric {
             return points;
         };
     }
-
-    
 }

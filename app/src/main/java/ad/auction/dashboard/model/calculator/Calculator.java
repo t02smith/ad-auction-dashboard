@@ -27,6 +27,7 @@ public class Calculator {
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(CALCULATOR_THREAD_COUNT);
 
+    private boolean cumulative = false;
 
     /**
      * Runs a calculation on a separate thread
@@ -52,7 +53,7 @@ public class Calculator {
                 }
 
                 var res = executor.submit(
-                        new Calculation<>(metric.getMetric().overTime(ChronoUnit.DAYS), campaign));
+                        new Calculation<>(metric.getMetric().cumulative(ChronoUnit.DAYS, cumulative), campaign));
 
                 executor.submit(() -> {
                     while (!res.isDone()) {}
@@ -86,6 +87,10 @@ public class Calculator {
         }
 
         return db;
+    }
+
+    public void setCumulative(boolean state) {
+        this.cumulative = state;
     }
 
 }

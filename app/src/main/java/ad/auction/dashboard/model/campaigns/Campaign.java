@@ -64,6 +64,10 @@ public class Campaign {
         this.svrPath = serverPath;
     }
 
+    public void clearCache() {
+        this.cache = new HashMap<>();
+    }
+
     /**
      * Clear out the data currently stored data
      * to free up memory

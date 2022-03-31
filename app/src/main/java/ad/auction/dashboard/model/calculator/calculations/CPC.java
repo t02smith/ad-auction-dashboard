@@ -26,12 +26,12 @@ public class CPC extends Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution) {
+    public Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit resolution, boolean isCumulative) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
 
-            Future<ArrayList<Point2D>> totalCost = executor.submit(() -> Metrics.TOTAL_COST.getMetric().overTime(resolution).apply(c));
-            Future<ArrayList<Point2D>> clickCount = executor.submit(() -> Metrics.CLICK_COUNT.getMetric().overTime(resolution).apply(c));
+            Future<ArrayList<Point2D>> totalCost = executor.submit(() -> Metrics.TOTAL_COST.getMetric().cumulative(resolution, isCumulative).apply(c));
+            Future<ArrayList<Point2D>> clickCount = executor.submit(() -> Metrics.CLICK_COUNT.getMetric().cumulative(resolution, isCumulative).apply(c));
             while (!totalCost.isDone() || !clickCount.isDone()) {}
 
             try {
