@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 
 
 
@@ -58,9 +61,9 @@ public class LineChartModel extends ChartModel {
             
         });
 
-    } 
+    }
 
-    public LineChart<Number, Number> getLineChart() {
+    public StackPane getLineChart() {
         var xAxis = new NumberAxis();
         xAxis.setLabel(getXName());
 
@@ -71,8 +74,6 @@ public class LineChartModel extends ChartModel {
         var allData = new ArrayList<XYChart.Series<Number, Number>>();
         //setAllSeries(allData);
         
-        var dataSeries = new XYChart.Series<Number, Number>();
-        dataSeries.setName(this.getTitleName());
 
         var lChart = new LineChart<>(xAxis, yAxis);
         //lChart.setTitle(getTitleName());
@@ -83,12 +84,22 @@ public class LineChartModel extends ChartModel {
         //lChart.getData().addAll(allData);
         lChart.setCreateSymbols(false);
 
-        //createCursorMonitor(lChart, dataSeries);
-        return lChart;
+
+        var label = new Label();
+        label.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+
+        var pane = new StackPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.getChildren().addAll(lChart, label);
+        pane.setAlignment(label, Pos.BOTTOM_LEFT);
+        pane.setMargin(label, new Insets(25));
+
+        createCursorMonitor(lChart, label);
+        return pane;
 
     }
 
-    public AreaChart<Number, Number> histogram(String xAxisLabel, List<Point2D> data) {
+    public StackPane histogram(String xAxisLabel, List<Point2D> data) {
         var xAxis = new NumberAxis();
         xAxis.setLabel(xAxisLabel);
 
@@ -103,14 +114,24 @@ public class LineChartModel extends ChartModel {
         aChart.getData().add(series);
         aChart.setCreateSymbols(false);
 
-        return aChart;
+        var label = new Label();
+        label.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+
+        var pane = new StackPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.getChildren().addAll(aChart, label);
+        pane.setAlignment(label, Pos.BOTTOM_LEFT);
+        pane.setMargin(label, new Insets(25));
+
+        createCursorMonitor(aChart, label);
+        return pane;
     }
     
     private String getFormat(Number num) {
         return num.doubleValue() < 1 ? "%.3f" : "%.2f";
     }
 
-    private void createCursorMonitor(LineChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
+    private void createCursorMonitor(XYChart<Number, Number> chart, Label label) {
 
         final var x = chart.getXAxis();
         final var y = chart.getYAxis();
@@ -130,6 +151,7 @@ public class LineChartModel extends ChartModel {
         }
 
         backgroundNodes.setOnMouseClicked((ev) -> {
+            label.setVisible(true);
             if (clicked) {
                 //noinspection unchecked
                 chart.getData().removeAll(xDash, yDash);
@@ -160,36 +182,36 @@ public class LineChartModel extends ChartModel {
 
         //Coordinates of Nodes
         backgroundNodes.setOnMouseMoved((ev) -> {
+            label.setVisible(true);
             var xVal = x.getValueForDisplay(ev.getX());
             var yVal = y.getValueForDisplay(ev.getY());
             var formatX = "(" + getFormat(xVal) + ",";
             var formatY = getFormat(yVal) + ")";
-            series.setName(String.format(formatX + formatY, xVal, yVal));
+            label.setText(String.format(formatX + formatY, xVal, yVal));
 
 
         });
-        backgroundNodes.setOnMouseExited((ev) -> {
-            series.setName(this.getTitleName());
-        });
-        backgroundNodes.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
+        backgroundNodes.setOnMouseExited((ev) -> label.setVisible(false));
         
 
         //Coordinates in x axis
         x.setOnMouseMoved((ev) -> {
+            label.setVisible(true);
             var currentValue = x.getValueForDisplay(ev.getX());
             final var format = "x = " + getFormat(currentValue);
-            series.setName(String.format(format, currentValue));
+            label.setText(String.format(format, currentValue));
 
         });
-        x.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
+        x.setOnMouseExited((ev) -> label.setVisible(false));
 
         //Coordinates in y axis
         y.setOnMouseMoved((ev) -> {
+            label.setVisible(true);
             var currentValue = y.getValueForDisplay(ev.getY());
             final var format = "y = " + getFormat(currentValue);
-            series.setName(String.format(format, currentValue));
+            label.setText(String.format(format, currentValue));
         });
-        y.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
+        y.setOnMouseExited((ev) -> label.setVisible(false));
 
     }
 
