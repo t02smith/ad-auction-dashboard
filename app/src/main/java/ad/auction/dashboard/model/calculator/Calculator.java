@@ -28,6 +28,11 @@ public class Calculator {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(CALCULATOR_THREAD_COUNT);
 
     private boolean cumulative = false;
+    private ChronoUnit timeResolution = ChronoUnit.DAYS;
+
+    public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func) {
+        return runCalculation(campaign,metric,func,1);
+    }
 
     /**
      * Runs a calculation on a separate thread
@@ -37,7 +42,7 @@ public class Calculator {
      * @return The future result
      */
     @SuppressWarnings("unchecked")
-    public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func) {
+    public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func, int factor) {
         logger.info("Running calculation {}:{} on {}", metric, func, campaign.name());
 
         if (!campaign.dataLoaded())
@@ -53,7 +58,7 @@ public class Calculator {
                 }
 
                 var res = executor.submit(
-                        new Calculation<>(metric.getMetric().cumulative(ChronoUnit.DAYS, cumulative), campaign));
+                        new Calculation<>(metric.getMetric().overTime(timeResolution, cumulative, factor), campaign));
 
                 executor.submit(() -> {
                     while (!res.isDone()) {}
@@ -93,4 +98,9 @@ public class Calculator {
         this.cumulative = state;
     }
 
+    public void setTimeResolution(ChronoUnit res) {
+        switch (res) {
+            case DAYS, HOURS, WEEKS -> this.timeResolution = res;
+        }
+    }
 }

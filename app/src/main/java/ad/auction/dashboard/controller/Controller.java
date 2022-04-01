@@ -1,6 +1,7 @@
 package ad.auction.dashboard.controller;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -77,14 +78,9 @@ public class Controller {
         this.model.campaigns().removeCampaign(campaign);
     }
 
-    /**
-     * Run a calculation
-     * @param m The metric being calculated
-     * @param function The function of that metric
-     * @return the result of the calculation
-     */
-    public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
-        return model.runCalculation(m, function);
+
+    public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function, int factor) {
+        return model.runCalculation(m, function, factor);
     }
 
     /**
@@ -115,6 +111,10 @@ public class Controller {
 
     public void setCumulative(boolean state) {
         this.model.setCumulative(state);
+    }
+
+    public void setTimeResolution(ChronoUnit res) {
+        this.model.setTimeResolution(res);
     }
 
     /**

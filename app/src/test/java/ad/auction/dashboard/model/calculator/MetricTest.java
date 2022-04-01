@@ -37,7 +37,7 @@ public class MetricTest {
 
     @Test
     public void overTimeTest() {
-        ArrayList<Point2D> actual = Metrics.TOTAL_COST.getMetric().overTime(ChronoUnit.DAYS).apply(c);
+        ArrayList<Point2D> actual = Metrics.TOTAL_COST.getMetric().overTime(ChronoUnit.DAYS, true, 1).apply(c);
 
         for (Point2D point2D : actual) {
             System.out.println(point2D.toString());

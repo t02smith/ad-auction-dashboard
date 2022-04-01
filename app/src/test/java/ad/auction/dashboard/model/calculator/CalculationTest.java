@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.calculator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
@@ -47,6 +48,8 @@ public class CalculationTest {
     @DisplayName("Run an over time calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeCorrectSizeTest() throws Exception {
+        model.setCumulative(true);
+        model.setTimeResolution(ChronoUnit.DAYS);
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
         while (!actual.isDone()) {}
 
@@ -57,10 +60,10 @@ public class CalculationTest {
     @DisplayName("Run a random value calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeRandomValueTest() throws Exception {
-        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
+        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME, 1).get("2 week - test");
         while (!actual.isDone()) {}
 
-        assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());
+        assertEquals(50712.703487540944, ((ArrayList<Point2D>)actual.get()).get(6).getY());
     }
 
     /*ERRORS*/

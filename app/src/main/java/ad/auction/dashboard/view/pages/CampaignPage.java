@@ -52,13 +52,15 @@ public class CampaignPage extends BasePage {
     private boolean histogramActive = false;
     private boolean cumulative = false;
 
+    private int factor = 2;
+
     //Function to load a given metric
     @SuppressWarnings("unchecked")
     private final Consumer<Metrics> loadMetric = m -> {
         this.setMetric(m);
         this.graph.setYName(m.getMetric().unit());
 
-        HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME);
+        HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME, factor);
         while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
         future.forEach((name, data) -> {
@@ -216,7 +218,7 @@ public class CampaignPage extends BasePage {
                 logger.info("Loading histogram");
                 histogramActive = true;
                 this.histogramToggle.setText("Line");
-                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.HISTOGRAM);
+                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.HISTOGRAM, factor);
                 while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
                 try {

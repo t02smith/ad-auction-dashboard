@@ -2,8 +2,6 @@ package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 
 import javafx.scene.chart.AreaChart;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +18,8 @@ import javafx.scene.chart.XYChart;
 
 public class LineChartModel extends ChartModel {
 
-    private static final Logger logger = LogManager.getLogger(LineChartModel.class.getSimpleName());
-
     // Set of data points
     private final HashMap<String, List<Point2D>> datasets = new HashMap<>();
-
-    private List<Point2D> data;
 
     private Boolean clicked = false;
 
@@ -37,11 +31,6 @@ public class LineChartModel extends ChartModel {
         this.datasets.put(name, data);
     }
 
-    public List<Point2D> getData() {
-        logger.info("Retrieving Data for current graph");
-        return data;
-    }
-
 
     private void setAllSeries(ArrayList<XYChart.Series<Number, Number>> seriesList) {
         datasets.forEach((name, data) -> {
@@ -50,9 +39,7 @@ public class LineChartModel extends ChartModel {
                 return;
             }
 
-            data.forEach((p) -> {
-                dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY()));
-            });
+            data.forEach((p) -> dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
             seriesList.add(dataSeries);
             dataSeries.setName(name);
             
@@ -81,7 +68,7 @@ public class LineChartModel extends ChartModel {
         lChart.getData().addAll(allData);
 
         //lChart.getData().addAll(allData);
-        lChart.setCreateSymbols(false);
+        //lChart.setCreateSymbols(false);
 
         //createCursorMonitor(lChart, dataSeries);
         return lChart;
@@ -110,6 +97,7 @@ public class LineChartModel extends ChartModel {
         return num.doubleValue() < 1 ? "%.3f" : "%.2f";
     }
 
+    @SuppressWarnings("unchecked")
     private void createCursorMonitor(LineChart<Number, Number> chart, XYChart.Series<Number, Number> series) {
 
         final var x = chart.getXAxis();
@@ -168,9 +156,7 @@ public class LineChartModel extends ChartModel {
 
 
         });
-        backgroundNodes.setOnMouseExited((ev) -> {
-            series.setName(this.getTitleName());
-        });
+        backgroundNodes.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
         backgroundNodes.setOnMouseExited((ev) -> series.setName(this.getTitleName()));
         
 

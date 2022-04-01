@@ -27,12 +27,12 @@ public class CTR extends Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit resolution, boolean isCumulative) {
+    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution, boolean isCumulative, int factor) {
         return c -> {           
             ArrayList<Point2D> points = new ArrayList<>();
 
-            Future<ArrayList<Point2D>> impressionPts = executor.submit(() -> Metrics.IMPRESSION_COUNT.getMetric().cumulative(resolution, isCumulative).apply(c));
-            Future<ArrayList<Point2D>> clickPts = executor.submit(() -> Metrics.CLICK_COUNT.getMetric().cumulative(resolution, isCumulative).apply(c));
+            Future<ArrayList<Point2D>> impressionPts = executor.submit(() -> Metrics.IMPRESSION_COUNT.getMetric().overTime(resolution, isCumulative, factor).apply(c));
+            Future<ArrayList<Point2D>> clickPts = executor.submit(() -> Metrics.CLICK_COUNT.getMetric().overTime(resolution, isCumulative, factor).apply(c));
             while (!impressionPts.isDone() || !clickPts.isDone()) {}
 
             try {

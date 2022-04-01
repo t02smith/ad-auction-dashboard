@@ -7,14 +7,12 @@ import ad.auction.dashboard.model.files.records.Impression.Gender;
 import ad.auction.dashboard.model.files.records.Impression.Income;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -138,6 +136,7 @@ public class FilterMenu extends GridPane {
         addRow(15, contexts.get(0), contexts.get(1));
         addRow(16, contexts.get(2), contexts.get(3));
         addRow(17, contexts.get(4), contexts.get(5));
+        addRow(18, timeResOptions());
 
         // Add spacing and margins
         setVgap(5);
@@ -188,6 +187,18 @@ public class FilterMenu extends GridPane {
                 setDisable(empty || date.compareTo(LocalDate.now()) > 0);
             }
         };
+    }
+
+    private ComboBox<ChronoUnit> timeResOptions() {
+        final ComboBox<ChronoUnit> cb = new ComboBox<>();
+        cb.getStyleClass().add("date-res");
+        cb.getItems().addAll(ChronoUnit.DAYS, ChronoUnit.HOURS, ChronoUnit.WEEKS);
+        cb.setValue(ChronoUnit.DAYS);
+        cb.setOnAction(e -> {
+            controller.setTimeResolution(cb.getValue());
+        });
+
+        return cb;
     }
 
 }

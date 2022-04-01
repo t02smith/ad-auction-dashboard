@@ -1,10 +1,8 @@
 package ad.auction.dashboard.model.calculator.calculations;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -50,7 +48,7 @@ public abstract class Metric {
      * (time, metric)
      * @return function for graph points
      */
-    public abstract Function<Campaign, ArrayList<Point2D>> cumulative(ChronoUnit timeResolution, boolean cumulative);
+    public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution, boolean cumulative, int factor);
 
 
     /**
@@ -83,14 +81,14 @@ public abstract class Metric {
      * @return
      */
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time) {
-        return incrementDate(resolution, time, 1);
+        return incrementDate(resolution, time, 2);
     }
 
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time, int factor) {
         return switch (resolution) {
             case HOURS -> time.plusHours(factor);
             case WEEKS -> time.plusDays(7 * factor);
-            case DAYS -> time.plusDays(factor);
+            case DAYS -> time.plusHours(24/factor);
             default -> throw new IllegalStateException("Unexpected value: " + resolution);
         };
     }

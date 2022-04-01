@@ -295,4 +295,8 @@
     -fx-effect: null;
 }
 
+.combo-box {
+    -fx-text-fill: black;
+}
+
 
