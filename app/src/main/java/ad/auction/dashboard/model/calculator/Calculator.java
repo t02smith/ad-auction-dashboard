@@ -25,7 +25,7 @@ public class Calculator {
     // Max calculations to be ran at once
     private static final int CALCULATOR_THREAD_COUNT = 10;
 
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(CALCULATOR_THREAD_COUNT);
+    private final ExecutorService executor = Executors.newFixedThreadPool(CALCULATOR_THREAD_COUNT);
 
     private boolean cumulative = false;
     private ChronoUnit timeResolution = ChronoUnit.DAYS;

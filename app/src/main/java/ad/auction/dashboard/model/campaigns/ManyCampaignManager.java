@@ -14,10 +14,17 @@ public class ManyCampaignManager extends CampaignManager {
     //Campaigns which are to be included
     private final HashSet<String> includedCampaigns = new HashSet<>();
 
+    //Additional campaigns/filtered datasets to include
+    private final HashMap<Integer, CampaignSnapshot> snapshots = new HashMap<>();
+
     public ManyCampaignManager(Model model) {
         super(model);
     }
 
+    /**
+     * Includes a new campaign alongside the current one
+     * @param campaign the campaign to include
+     */
     public void includeCampaign(String campaign) {
         if (!this.campaigns.containsKey(campaign)) throw new IllegalArgumentException("Campaign " + campaign + " not found");
         if (this.includedCampaigns.contains(campaign)) return;
@@ -29,22 +36,44 @@ public class ManyCampaignManager extends CampaignManager {
 
     }
 
-    public void unincludeCampaing(String name) {
-        if (!this.includedCampaigns.contains(name)) return;
+    /**
+     * Create a snapshot of the current campaign configuration
+     * @return a reference hash
+     */
+    public int snapshotCampaign() {
+        logger.info("Snapshotting configuration of " + currentCampaign.name());
+        var snap = this.currentCampaign.generateSnapshot();
+        var hash = snap.hashCode();
+        this.snapshots.put(hash,snap);
+        return hash;
+    }
 
-        logger.info("unincluding campaign {}", name);
-        var c = this.campaigns.get(name);
+    /**
+     * Remove a campaign from the included list
+     * @param campaign the campaign to remove
+     */
+    public void unincludeCampaing(String campaign) {
+        if (!this.includedCampaigns.contains(campaign)) return;
+
+        logger.info("unincluding campaign {}", campaign);
+        var c = this.campaigns.get(campaign);
         c.flushData();
-        this.includedCampaigns.remove(name);
+        this.includedCampaigns.remove(campaign);
     }
 
     public HashMap<String, Campaign> getActiveCampaigns() {
         var cs = new HashMap<String, Campaign>();
         includedCampaigns.forEach(c -> cs.put(c, this.campaigns.get(c)));
+        snapshots.forEach((hash, s) -> cs.put(hash.toString(), s));
         cs.put(currentCampaign.name(), currentCampaign);
         return cs;
     }
 
+    /**
+     * Whether a campaign is included
+     * @param name the campaign's name
+     * @return whether the campaign is included
+     */
     public boolean isIncluded(String name) {
         return this.includedCampaigns.contains(name);
     }

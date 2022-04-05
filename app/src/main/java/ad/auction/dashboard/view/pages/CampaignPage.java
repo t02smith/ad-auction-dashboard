@@ -237,16 +237,21 @@ public class CampaignPage extends BasePage {
         }
     }
 
-    private ButtonList<String> campaignList() {
+    private VBox campaignList() {
+        var genSnapshot = new Button("Snapshot");
+        genSnapshot.setOnAction(e -> controller.snapshot());
+
         var cList = controller.getCampaigns().stream()
                 .map(Campaign.CampaignData::name)
                 .filter(c -> !c.equals(campaignName))
                 .toList();
 
-        return new ButtonList<>(cList, null, true, c -> {
+        var bl = new ButtonList<>(cList, null, true, c -> {
             var res = controller.toggleCampaign(c);
             while (!res.isDone()) {}
             loadMetric.accept(currentMetric);
         });
+
+        return new VBox(bl, genSnapshot);
     }
 }

@@ -113,8 +113,12 @@ public class Controller {
         this.model.setCumulative(state);
     }
 
-    public void setTimeResolution(ChronoUnit res) {
-        this.model.setTimeResolution(res);
+    public void setResolution(int factor) {
+//        this.model.
+    }
+
+    public void snapshot() {
+        this.model.campaigns().snapshotCampaign();
     }
 
     /**

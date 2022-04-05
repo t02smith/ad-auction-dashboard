@@ -25,7 +25,7 @@ public class FileTracker {
     private static final Logger logger = LogManager.getLogger(FileTracker.class.getSimpleName());
 
     //Max number of files to be processed at once
-    private static final int FILE_TRACKER_THREAD_COUNT = 10;
+    private static final int FILE_TRACKER_THREAD_COUNT = 5;
 
     //Files being tracked
     private final HashMap<String, TrackedFile> trackedFiles = new HashMap<>();

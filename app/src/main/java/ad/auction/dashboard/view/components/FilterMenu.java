@@ -5,14 +5,15 @@ import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Impression.Gender;
 import ad.auction.dashboard.model.files.records.Impression.Income;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,8 @@ public class FilterMenu extends GridPane {
     //Start and end times
     private final LocalDate start;
     private final LocalDate end;
+
+    private final SimpleIntegerProperty timeRes = new SimpleIntegerProperty(1);
 
     public FilterMenu(Runnable reloadMetric, LocalDate start, LocalDate end) {
         this.reloadMetric = reloadMetric;
@@ -136,7 +139,7 @@ public class FilterMenu extends GridPane {
         addRow(15, contexts.get(0), contexts.get(1));
         addRow(16, contexts.get(2), contexts.get(3));
         addRow(17, contexts.get(4), contexts.get(5));
-        addRow(18, timeResOptions());
+        addRow(18, resolution());
 
         // Add spacing and margins
         setVgap(5);
@@ -189,16 +192,29 @@ public class FilterMenu extends GridPane {
         };
     }
 
-    private ComboBox<ChronoUnit> timeResOptions() {
-        final ComboBox<ChronoUnit> cb = new ComboBox<>();
-        cb.getStyleClass().add("date-res");
-        cb.getItems().addAll(ChronoUnit.DAYS, ChronoUnit.HOURS, ChronoUnit.WEEKS);
-        cb.setValue(ChronoUnit.DAYS);
-        cb.setOnAction(e -> {
-            controller.setTimeResolution(cb.getValue());
+    private HBox resolution() {
+        var res = new HBox();
+
+
+        var reduce = new Button("-");
+        reduce.setOnAction(e -> {
+            if (timeRes.get() == 1) return;
+            timeRes.set(timeRes.get()-1);
         });
 
-        return cb;
+        var increase = new Button("+");
+        increase.setOnAction(e -> {
+            timeRes.set(timeRes.get()+1);
+        });
+
+        var label = new Label(String.valueOf(timeRes.get()));
+        timeRes.addListener(e -> {
+            label.setText(String.valueOf(timeRes.get()));
+        });
+
+        res.getChildren().addAll(reduce, label, increase);
+
+        return res;
     }
 
 }

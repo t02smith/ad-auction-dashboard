@@ -1,7 +1,6 @@
 package ad.auction.dashboard.model.campaigns;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -27,11 +26,11 @@ public class FilteredCampaign extends Campaign {
     private static final Logger logger = LogManager.getLogger(FilteredCampaign.class.getSimpleName());
 
     //active filters
-    private final HashMap<Integer, Boolean> filterActive = new HashMap<>();
-    private final HashMap<Integer, Predicate<User>> userFilters = new HashMap<>();
+    protected HashMap<Integer, Boolean> filterActive = new HashMap<>();
+    protected HashMap<Integer, Predicate<User>> userFilters = new HashMap<>();
 
     //User data
-    private HashMap<Long, User> userData;
+    protected HashMap<Long, User> userData;
 
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
         super(name, impressionPath, clickPath, serverPath);
@@ -101,6 +100,11 @@ public class FilteredCampaign extends Campaign {
     }
 
     // Getters
+
+    public CampaignSnapshot generateSnapshot() {
+        return new CampaignSnapshot(this);
+    }
+
 
     @Override
     public Stream<Click> clicks() {
