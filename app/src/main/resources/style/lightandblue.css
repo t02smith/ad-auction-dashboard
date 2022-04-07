@@ -6,11 +6,11 @@
 /*Standard*/
 
 .bg-primary {
-    -fx-background-color: #272822;
+    -fx-background-color: white;
 }
 
 .bg-secondary {
-    -fx-background-color: #232323;
+    -fx-background-color: darkgrey;
 }
 
 .text-secondary {
@@ -54,6 +54,7 @@
 }
 
 .menu-text {
+    -fx-text-fill:black;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
@@ -61,7 +62,7 @@
 /*Campaign List*/
 
 .campaign-list {
-    -fx-background-color: #232323;
+    -fx-background-color: grey;
     -fx-padding: 5px;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3,0,0,2 );
     -fx-background-radius: 10;
@@ -168,7 +169,7 @@
 }
 
 .btn-active {
-    -fx-background-color: white;
+    -fx-background-color: grey;
     -fx-text-fill: black;
 }
 
@@ -186,7 +187,7 @@
 	-fx-font-size: 25px;
 	-fx-font-weight: bold;
 	-fx-padding: 15px;
-	-fx-background-color: #272822;
+	-fx-background-color: #232323;
 	-fx-text-fill: white;
 }
 
@@ -222,7 +223,7 @@
 }
 
 .upload-btn{
-	-fx-background-color:#272822;
+	-fx-background-color:darkgrey;
 	-fx-border-color: white;
 	-fx-cursor: hand;
 }
@@ -236,7 +237,7 @@
 }
 
 .topBackground {
-	-fx-background-color: #202020;
+	-fx-background-color: grey;
 }
 
 .titleImageButton {
@@ -246,7 +247,7 @@
 }
 
 .upload-list {
-	-fx-background-color: #272822;
+	-fx-background-color: darkgrey;
 }
 
 /*scroll bar*/
@@ -272,22 +273,22 @@
 /*Chart*/
 
 .chart {
-    -fx-background-color: #272822;
+    -fx-background-color: white;
 }
 
 .chart-legend {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-background-color: transparent;
 }
 
 .axis-label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-size: 16px;
 }
 
 .axis {
     -fx-font-size: 8px;
-    -fx-tick-label-fill: white;
+    -fx-tick-label-fill: black;
 }
 
 .chart-series-line {
@@ -311,7 +312,7 @@
 }
 
 .settingLabel {
+    -fx-text-fill:black;
     -fx-font-size: 15px;
 }
-
 

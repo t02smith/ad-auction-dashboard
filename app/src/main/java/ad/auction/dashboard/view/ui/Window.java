@@ -94,6 +94,11 @@ public class Window {
 	public void openEditPage(String campaign, Runnable returnTo) {
 		loadPage(new EditPage(this, campaign, returnTo));
 	}
+	//Test for setting page
+    public void openSettingPage(){
+		loadPage(new SettingsPage(this));
+	}
+	//Test finished
 
 	/**
 	 * Load a given page

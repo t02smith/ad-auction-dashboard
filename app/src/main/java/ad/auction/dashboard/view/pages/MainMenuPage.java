@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.concurrent.Future;
@@ -73,6 +74,7 @@ public class MainMenuPage extends BasePage {
     }
 
     private HBox menuOptions() {
+
         var options = new HBox(
                 menuBtn("+", "Upload\nCampaign", e -> window.openUploadPage()),
                 menuBtn("L", "Load\nCampaign", e -> openCampaignList()),
@@ -126,6 +128,6 @@ public class MainMenuPage extends BasePage {
     }
 
     private void settings() {
-
+        window.openSettingPage();
     }
 }
