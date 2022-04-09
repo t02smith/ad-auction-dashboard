@@ -114,7 +114,6 @@ public class MainMenuPage extends BasePage {
                     return null;
                 }
             };
-
             task.setOnSucceeded((ee) -> window.openCampaignPage(name));
 
             new Thread(task).start();
@@ -128,4 +127,5 @@ public class MainMenuPage extends BasePage {
     private void settings() {
 
     }
+
 }
