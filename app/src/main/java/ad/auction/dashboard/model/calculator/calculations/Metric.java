@@ -66,14 +66,6 @@ public abstract class Metric {
         };
     }
 
-    public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time, LocalDateTime offset) {
-        var offsetX = getXCoordinate(resolution, offset);
-        return switch (resolution) {
-            case DAYS -> time.getDayOfYear() - offsetX;
-            default -> throw new IllegalStateException("Unexpected value: " + resolution);
-        };
-    }
-
     /**
      *
      * @param resolution

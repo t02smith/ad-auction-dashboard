@@ -139,7 +139,6 @@ public class FilterMenu extends GridPane {
         addRow(15, contexts.get(0), contexts.get(1));
         addRow(16, contexts.get(2), contexts.get(3));
         addRow(17, contexts.get(4), contexts.get(5));
-        addRow(18, resolution());
 
         // Add spacing and margins
         setVgap(5);

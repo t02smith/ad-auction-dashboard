@@ -27,6 +27,10 @@ public class LineChartModel extends ChartModel {
         super(titleName, xAxisName, yAxisName);
     }
 
+    public void clearDatasets() {
+        this.datasets.clear();
+    }
+
     public void addDataset(String name, List<Point2D> data) {
         this.datasets.put(name, data);
     }

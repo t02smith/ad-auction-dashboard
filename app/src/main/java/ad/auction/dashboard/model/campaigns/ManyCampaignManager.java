@@ -41,11 +41,27 @@ public class ManyCampaignManager extends CampaignManager {
      * @return a reference hash
      */
     public int snapshotCampaign() {
+        if (this.currentCampaign == null)
+            throw new IllegalStateException("A campaign must be opened before snapshotting");
+
         logger.info("Snapshotting configuration of " + currentCampaign.name());
         var snap = this.currentCampaign.generateSnapshot();
+
+        this.snapshots.values().forEach(ss -> {
+             if (ss.filterActive.equals(snap.filterActive)) {
+                 logger.error("Snapshot already taken of these filters");
+                 throw new IllegalStateException("Snapshot already taken of these filters");
+             }
+        });
+
         var hash = snap.hashCode();
         this.snapshots.put(hash,snap);
         return hash;
+    }
+
+    public void removeSnapshot(int hash) {
+        logger.info("Removing snapshot {}", hash);
+        this.snapshots.remove(hash);
     }
 
     /**
@@ -78,5 +94,8 @@ public class ManyCampaignManager extends CampaignManager {
         return this.includedCampaigns.contains(name);
     }
 
+    public CampaignSnapshot getSnapshot(int hash) {
+        return this.snapshots.get(hash);
+    }
 
 }

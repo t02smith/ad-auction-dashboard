@@ -117,8 +117,14 @@ public class Controller {
 //        this.model.
     }
 
-    public void snapshot() {
-        this.model.campaigns().snapshotCampaign();
+    /*SNAPSHOTS*/
+
+    public int snapshot() {
+        return this.model.campaigns().snapshotCampaign();
+    }
+
+    public void removeSnapshot(int hash) {
+        this.model.campaigns().removeSnapshot(hash);
     }
 
     /**

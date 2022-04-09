@@ -14,6 +14,7 @@ import ad.auction.dashboard.view.components.TabMenu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
@@ -52,19 +53,22 @@ public class CampaignPage extends BasePage {
     private boolean histogramActive = false;
     private boolean cumulative = false;
 
-    private int factor = 2;
+    private int factor = 4;
 
     //Function to load a given metric
     @SuppressWarnings("unchecked")
     private final Consumer<Metrics> loadMetric = m -> {
         this.setMetric(m);
+        this.graph.clearDatasets();
         this.graph.setYName(m.getMetric().unit());
 
         HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME, factor);
         while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
         future.forEach((name, data) -> {
-            try {this.graph.addDataset(name, (List<Point2D>) data.get());}
+            try {
+                this.graph.addDataset(name, (List<Point2D>) data.get());
+            }
             catch (Exception ignored) {}
         });
 
@@ -238,8 +242,33 @@ public class CampaignPage extends BasePage {
     }
 
     private VBox campaignList() {
+        var title = new Label("Snapshots:");
+        title.getStyleClass().addAll("bg-primary");
+
+        var emptyMsg = new Label("No active snapshots");
+        emptyMsg.getStyleClass().addAll("bg-primary");
+
+        //List of active included/joined campaigns
+        var active = new VBox(title);
+        active.getStyleClass().add("bg-primary");
+
         var genSnapshot = new Button("Snapshot");
-        genSnapshot.setOnAction(e -> controller.snapshot());
+        genSnapshot.setOnAction(e -> {
+            var id = controller.snapshot();
+            var btn = new Label(Integer.toString(id));
+            btn.getStyleClass().add("metric-btn");
+            btn.setMinWidth(300);
+            btn.setOnMouseClicked(ev -> {
+                controller.removeSnapshot(id);
+                active.getChildren().remove(btn);
+                if (active.getChildren().size() == 1)
+                    active.getChildren().add(emptyMsg);
+            });
+
+            if (active.getChildren().size()==1)
+                active.getChildren().remove(emptyMsg);
+            active.getChildren().add(btn);
+        });
 
         var cList = controller.getCampaigns().stream()
                 .map(Campaign.CampaignData::name)
@@ -252,6 +281,6 @@ public class CampaignPage extends BasePage {
             loadMetric.accept(currentMetric);
         });
 
-        return new VBox(bl, genSnapshot);
+        return new VBox(bl, active, genSnapshot);
     }
 }

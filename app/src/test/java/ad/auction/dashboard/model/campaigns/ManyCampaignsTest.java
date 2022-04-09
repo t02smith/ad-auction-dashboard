@@ -46,4 +46,41 @@ public class ManyCampaignsTest {
         assertTrue(ls.containsKey("2 week - test"));
         assertTrue(ls.containsKey("new test"));
     }
+
+    /*SNAPSHOTS*/
+
+    @Test
+    @DisplayName("Store snapshot")
+    public void storeSnapshotTest() {
+        var hash = model.campaigns().snapshotCampaign();
+        assertNotNull(model.campaigns().getSnapshot(hash));
+        model.campaigns().removeSnapshot(hash);
+    }
+
+    @Test
+    @DisplayName("Remove snapshot")
+    public void removeSnapshotTest() {
+        var hash = model.campaigns().snapshotCampaign();
+        model.campaigns().removeSnapshot(hash);
+        assertNull(model.campaigns().getSnapshot(hash));
+    }
+
+    @Test
+    @DisplayName("Snapshot with no open campaign")
+    public void snapshotWithoutOpenCampaign() {
+        model.campaigns().closeCurrentCampaign();
+        assertThrows(IllegalStateException.class,
+                () -> model.campaigns().snapshotCampaign());
+        model.campaigns().openCampaign("2 week - test");
+    }
+
+    @Test
+    @DisplayName("Snapshot with same filters")
+    public void snapshotWithSameFilters() {
+        model.campaigns().addUserFilter(u -> true);
+        var hash = model.campaigns().snapshotCampaign();
+        assertThrows(IllegalStateException.class,
+                () -> model.campaigns().snapshotCampaign());
+        model.campaigns().removeSnapshot(hash);
+    }
 }
