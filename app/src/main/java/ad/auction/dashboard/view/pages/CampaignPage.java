@@ -29,6 +29,8 @@ import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 /**
@@ -286,28 +288,52 @@ public class CampaignPage extends BasePage {
         dashPane.setTop(dTitle);
         BorderPane.setAlignment(dTitle, Pos.CENTER);
 
+        /*
         var metricBox = new VBox();
         metricBox.setPadding(new Insets(5, 0, 0, 15));
         metricBox.setSpacing(15);
 
         for (Metrics m : Metrics.values()) {
-            var metLabel = new Label(m.getMetric().displayName());
-            metLabel.setStyle("-fx-font-size: 15px");
             var overAll = this.controller.runCalculation(m, MetricFunction.OVERALL);
+            var hBox= new HBox();
+            hBox.setSpacing(2);
             overAll.forEach((key, value) -> {
                 try {
-                    var metString = String.format(m.getMetric().displayName() + " : %s", value.get());
+                    var metString = String.format(m.getMetric().displayName() + " : %s  %s", value.get(), m.getMetric().unit());
+                    var metLabel = new Label(m.getMetric().displayName());
+                    metLabel.setStyle("-fx-font-size: 15px");
                     metLabel.setText(metString);
+                    hBox.getChildren().add(metLabel);
                 } catch (Exception ignored) {}
+
             });
 
-            metricBox.getChildren().add(metLabel);
+            metricBox.getChildren().add(hBox);
             
 
         }
 
+
         dashPane.setCenter(metricBox);
-        BorderPane.setAlignment(metricBox, Pos.CENTER);
+        BorderPane.setAlignment(metricBox, Pos.CENTER);*/
+
+        TableView metricBox = new TableView<>();
+
+        TableColumn<String, String> metricColumn = new TableColumn<>("Metrics");
+
+        metricBox.getColumns().add(metricColumn);
+
+        var allCampaigns = this.controller.getCampaigns();
+
+        allCampaigns.forEach((data) -> {
+            metricBox.getColumns().add(new TableColumn<>(data.name()));
+        });
+
+        for (Metrics m : Metrics.values()) {
+            var overAll = this.controller.runCalculation(m, MetricFunction.OVERALL);
+            metricBox.getItems().addAll(m.getMetric().displayName(), overAll.values());
+        }
+        dashPane.setCenter(metricBox);
 
         return dashPane;
 
