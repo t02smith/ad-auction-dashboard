@@ -8,6 +8,7 @@ import ad.auction.dashboard.model.calculator.Calculator;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
+import ad.auction.dashboard.model.config.ConfigHandler;
 import ad.auction.dashboard.model.files.FileTracker;
 
 /**
@@ -26,6 +27,20 @@ public class Model {
 
     //Manages different user campaigns
     private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
+
+    public Model() {
+        var config = fetchConfig();
+        if (config.defaultMetric() != null)
+            this.calculator.setDefaultMetric(config.defaultMetric());
+    }
+
+    private ConfigHandler.Config fetchConfig() {
+        var handler = new ConfigHandler();
+        handler.parse("./config.xml");
+        return handler.getConfig();
+    }
+
+    /*CALCULATOR*/
 
     public HashMap<String, Future<Object>> runCalculation(Metrics metric, MetricFunction func) {
         return runCalculation(metric, func, 1);
@@ -60,6 +75,12 @@ public class Model {
         this.calculator.setTimeResolution(res);
     }
 
+    public void setDefaultMetric(Metrics m) {
+        this.calculator.setDefaultMetric(m);
+    }
+
+    /*GETTERS*/
+
     public ManyCampaignManager campaigns() {
         return this.campaignManager;
     }
@@ -67,9 +88,21 @@ public class Model {
     public FileTracker files() {
         return this.fileTracker;
     }
+
+    public Metrics getDefaultMetric() {
+        return this.calculator.getDefaultMetric();
+    }
+
+
+    /*UTILITY*/
     
     public void close() {
         this.campaignManager.close();
+
+        var handler = new ConfigHandler();
+        handler.writeToFile("./config.xml", new ConfigHandler.Config(
+                this.calculator.getDefaultMetric()
+        ));
     }
 
 }

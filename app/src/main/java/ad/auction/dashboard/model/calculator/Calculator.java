@@ -30,6 +30,9 @@ public class Calculator {
     private boolean cumulative = false;
     private ChronoUnit timeResolution = ChronoUnit.DAYS;
 
+    //The impression loaded when first launching a campaign
+    private Metrics defaultMetric = Metrics.IMPRESSION_COUNT;
+
     public Future<Object> runCalculation(Campaign campaign, Metrics metric, MetricFunction func) {
         return runCalculation(campaign,metric,func,1);
     }
@@ -92,6 +95,17 @@ public class Calculator {
         }
 
         return db;
+    }
+
+    //SETTERS
+
+    public void setDefaultMetric(Metrics m) {
+        logger.info("Updating default metric to {}", m);
+        this.defaultMetric = m;
+    }
+
+    public Metrics getDefaultMetric() {
+        return this.defaultMetric;
     }
 
     public void setCumulative(boolean state) {

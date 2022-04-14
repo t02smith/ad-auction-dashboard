@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
+import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.files.records.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

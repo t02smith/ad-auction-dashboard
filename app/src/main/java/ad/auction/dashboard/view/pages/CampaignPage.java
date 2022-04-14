@@ -37,8 +37,6 @@ import javafx.scene.text.Text;
  */
 public class CampaignPage extends BasePage {
 
-    public static final Metrics DEFAULT_METRIC = Metrics.IMPRESSION_COUNT;
-
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
     private final Controller controller = App.getInstance().controller();
 
@@ -47,7 +45,7 @@ public class CampaignPage extends BasePage {
     private LineChartModel graph;
     private final BorderPane screen = new BorderPane();
 
-    private Metrics currentMetric = DEFAULT_METRIC;
+    private Metrics currentMetric = controller.getDefaultMetric();
 
     private final Button histogramToggle = new Button("Histogram");
     private boolean histogramActive = false;
@@ -120,7 +118,7 @@ public class CampaignPage extends BasePage {
 
         // Tab menu for metrics + filters
         var menu = new TabMenu("metrics");
-        menu.addPane("metrics", new ButtonList<Metrics>(Arrays.asList(Metrics.values()),DEFAULT_METRIC,false,loadMetric));
+        menu.addPane("metrics", new ButtonList<Metrics>(Arrays.asList(Metrics.values()),this.currentMetric,false,loadMetric));
         menu.addPane("filters", filterMenu);
         menu.addPane("compare", campaignList());
         menu.build();

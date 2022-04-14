@@ -38,6 +38,11 @@ public class Controller {
         return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
     }
 
+    /**
+     * Includes/excludes a campaign
+     * @param name the campaign to be toggled
+     * @return when the process is finished
+     */
     public Future<Void> toggleCampaign(String name) {
         return executor.submit(() -> {
             if (!model.campaigns().isIncluded(name)) model.campaigns().includeCampaign(name);
@@ -83,6 +88,18 @@ public class Controller {
         return model.runCalculation(m, function, factor);
     }
 
+    public HashMap<String, Future<Object>> runDefaultCalculation(MetricFunction func, int factor) {
+        return model.runCalculation(model.getDefaultMetric(), func, factor);
+    }
+
+    public void setDefaultMetric(Metrics m) {
+        this.model.setDefaultMetric(m);
+    }
+
+    public Metrics getDefaultMetric() {
+        return this.model.getDefaultMetric();
+    }
+
     /**
      * Shut down the model
      */
@@ -117,8 +134,9 @@ public class Controller {
 //        this.model.
     }
 
-    /*SNAPSHOTS*/
 
+
+    /*SNAPSHOTS*/
     public int snapshot() {
         return this.model.campaigns().snapshotCampaign();
     }

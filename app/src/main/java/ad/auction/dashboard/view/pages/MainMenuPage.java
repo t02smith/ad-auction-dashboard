@@ -55,7 +55,6 @@ public class MainMenuPage extends BasePage {
 
         final Label titleLn1 = new Label("Ad Auction");
         titleLn1.getStyleClass().add("title-text");
-        titleLn1.setPadding(new Insets(0, 0, -15, 0));
 
         final Label titleLn2 = new Label("Dashboard");
         titleLn2.getStyleClass().addAll("title-text", "text-secondary");
@@ -78,7 +77,8 @@ public class MainMenuPage extends BasePage {
         var options = new HBox(
                 menuBtn("+", "Upload\nCampaign", e -> window.openUploadPage()),
                 menuBtn("L", "Load\nCampaign", e -> openCampaignList()),
-                menuBtn("S", "Settings\n  ", e -> settings())
+                menuBtn("S", "Settings\n  ", e -> settings()),
+                menuBtn ("?", "Help\n ", e -> help())
         );
         options.setAlignment(Pos.CENTER);
         options.setSpacing(25);
@@ -130,4 +130,6 @@ public class MainMenuPage extends BasePage {
     private void settings() {
         window.openSettingPage();
     }
+
+    private void help() {}
 }

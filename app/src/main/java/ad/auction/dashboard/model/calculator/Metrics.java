@@ -54,7 +54,6 @@ public enum Metrics {
         return this.metric;
     }
 
-    @Override
     public String toString() {
         return this.metric.displayName();
     }

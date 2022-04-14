@@ -314,4 +314,29 @@
     -fx-font-size: 15px;
 }
 
+/*SETTINGS*/
+
+.settings-section {
+    -fx-padding: 10;
+}
+
+.settings-section-item-title {
+    -fx-font-size: 18px;
+}
+
+.settings-section-title {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: white;
+}
+
+.combo-box-base {
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: black;
+}
 
