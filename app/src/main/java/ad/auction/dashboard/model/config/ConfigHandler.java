@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.config;
 
 import ad.auction.dashboard.model.calculator.Metrics;
+import ad.auction.dashboard.model.campaigns.Campaign;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -17,6 +18,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Store any program info to persist between launches
@@ -28,11 +31,21 @@ public class ConfigHandler extends DefaultHandler {
     private StringBuilder element;
     private ConfigTemp current;
 
+    private CampaignTemp currentCampaign;
+
     static class ConfigTemp {
         Metrics defaultMetric;
+        List<Campaign.CampaignData> campaigns;
     }
 
-    public record Config(Metrics defaultMetric) {}
+    static class CampaignTemp {
+        String name;
+        String impPath;
+        String clkPath;
+        String svrPath;
+    }
+
+    public record Config(Metrics defaultMetric, List<Campaign.CampaignData> campaigns) {}
 
     public void parse(String filename) {
         logger.info("Parsing config file '{};", filename);
@@ -56,9 +69,40 @@ public class ConfigHandler extends DefaultHandler {
             Element configWrapper = doc.createElement("config");
             doc.appendChild(configWrapper);
 
+            //SETTINGS
+            var settings = doc.createElement("settings");
+            configWrapper.appendChild(settings);
+
             var defaultMetric = doc.createElement("defaultMetric");
             defaultMetric.appendChild(doc.createTextNode(config.defaultMetric().name()));
-            configWrapper.appendChild(defaultMetric);
+            settings.appendChild(defaultMetric);
+
+            //CAMPAIGNS
+            Element campaigns = doc.createElement("campaigns");
+            configWrapper.appendChild(campaigns);
+
+            config.campaigns().forEach(c -> {
+                Element camp = doc.createElement("campaign");
+
+                var name = doc.createElement("name");
+                name.appendChild(doc.createTextNode(c.name()));
+                camp.appendChild(name);
+
+                var impPath = doc.createElement("impPath");
+                impPath.appendChild(doc.createTextNode(c.impPath()));
+                camp.appendChild(impPath);
+
+                var svrPath = doc.createElement("svrPath");
+                svrPath.appendChild(doc.createTextNode(c.svrPath()));
+                camp.appendChild(svrPath);
+
+                var clkPath = doc.createElement("clkPath");
+                clkPath.appendChild(doc.createTextNode(c.clkPath()));
+                camp.appendChild(clkPath);
+
+                campaigns.appendChild(camp);
+
+            });
 
 
             TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -86,7 +130,9 @@ public class ConfigHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         switch (qName) {
             case "config" -> this.current = new ConfigTemp();
-            case "defaultMetric" -> element = new StringBuilder();
+            case "campaigns" -> this.current.campaigns = new ArrayList<>();
+            case "campaign" -> this.currentCampaign= new CampaignTemp();
+            case "name", "impPath", "svrPath", "clkPath", "defaultMetric" -> element = new StringBuilder();
         }
     }
 
@@ -97,6 +143,15 @@ public class ConfigHandler extends DefaultHandler {
                 try {this.current.defaultMetric = Metrics.valueOf(element.toString());}
                 catch (IllegalArgumentException e) {logger.error("Default metric {} not found", element.toString());}
             }
+            case "name" -> currentCampaign.name = element.toString();
+            case "impPath" -> currentCampaign.impPath = element.toString();
+            case "svrPath" -> currentCampaign.svrPath = element.toString();
+            case "clkPath" -> currentCampaign.clkPath = element.toString();
+            case "campaign" -> {
+                current.campaigns.add(new Campaign.CampaignData(
+                        currentCampaign.name, currentCampaign.clkPath, currentCampaign.impPath, currentCampaign.svrPath, null, null));
+                logger.info("Campaign '{}' loaded", currentCampaign.name);
+            }
         }
     }
 
@@ -104,7 +159,8 @@ public class ConfigHandler extends DefaultHandler {
 
     public Config getConfig() {
         return new Config(
-                current.defaultMetric
+                current.defaultMetric,
+                current.campaigns
         );
     }
 }

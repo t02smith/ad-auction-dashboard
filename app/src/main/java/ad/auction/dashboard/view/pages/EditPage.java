@@ -6,6 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.io.File;
+
 
 //TODO refactor this 💩💩
 public class EditPage extends UploadPage {
@@ -25,6 +27,11 @@ public class EditPage extends UploadPage {
 
     @Override
     public void build() {
+        this.clkPath = new File(oldCampaign.clkPath()).getName();
+        this.svrPath = new File(oldCampaign.svrPath()).getName();
+        this.impPath = new File(oldCampaign.impPath()).getName();
+        this.campaignName = oldCampaign.name();
+
         super.build();
 
         this.rows.getChildren().remove(submitCancel);

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.files.records.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +24,6 @@ import ad.auction.dashboard.model.files.records.Server;
  */
 public class CampaignManager {
 
-    private static final String CAMPAIGNS_LOCATION = "./campaigns.xml";
-
     private static final Logger logger = LogManager.getLogger(CampaignManager.class.getSimpleName());
     protected final Model model;
 
@@ -34,18 +31,9 @@ public class CampaignManager {
     protected final HashMap<String, FilteredCampaign> campaigns = new HashMap<>();
 
     protected FilteredCampaign currentCampaign;
-    private final CampaignHandler handler = new CampaignHandler();
 
     public CampaignManager(Model model) {
         this.model = model;
-
-        this.handler.parse(CAMPAIGNS_LOCATION);
-        this.handler.getCampaigns().forEach(c -> {
-            campaigns.put(c.name(), c);
-            model.files().trackFile(c.getData().impPath());
-            model.files().trackFile(c.getData().clkPath());
-            model.files().trackFile(c.getData().svrPath());
-        });
     }
 
     /**
@@ -220,13 +208,6 @@ public class CampaignManager {
         logger.info("Successfully updated campaign {}", campaign);
     }
 
-    /**
-     * Close the campaign manager
-     */
-    public void close() {
-        this.handler.writeToFile(CAMPAIGNS_LOCATION, this.campaigns.values().stream().map(Campaign::getData).toList());
-    }
-
     // FILTERS
 
     /**
@@ -254,6 +235,18 @@ public class CampaignManager {
     public int addUserFilter(Predicate<User> usrFilter) {
         return this.currentCampaign.addUserFilter(usrFilter);
     }
+
+    public void setCampaigns(List<CampaignData> campaigns) {
+        this.campaigns.clear();
+        campaigns.forEach(c -> this.campaigns.put(c.name(), new FilteredCampaign(
+                c.name(),
+                c.impPath(),
+                c.clkPath(),
+                c.svrPath()
+        )));
+
+    }
+
 
     // GETTERS
 

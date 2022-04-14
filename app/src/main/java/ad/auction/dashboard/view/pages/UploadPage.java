@@ -107,7 +107,7 @@ public class UploadPage extends BasePage {
         campaignNameInput.setFocusTraversable(false);
         campaignNameInput.setMaxWidth(300);
         campaignNameInput.textProperty().addListener(e -> this.campaignName = campaignNameInput.getText());
-
+        campaignNameInput.setText(campaignName);
         return campaignNameInput;
     }
 
@@ -117,10 +117,26 @@ public class UploadPage extends BasePage {
         final ImageView uploadIcon = new ImageView(new Image(this.getClass().getResourceAsStream("/img/download_48px.png")));
 
         final Label chosenFile = new Label();
-
         final Button uploadBtn = new Button();
         uploadBtn.getStyleClass().add("upload-btn");
-        uploadBtn.setGraphic(uploadIcon);
+
+        switch(type) {
+            case IMPRESSION -> {
+                chosenFile.setText(impPath);
+                if (!impPath.isEmpty()) uploadBtn.setGraphic(csvIcon);
+                else uploadBtn.setGraphic(uploadIcon);
+            }
+            case CLICK -> {
+                chosenFile.setText(clkPath);
+                if (!clkPath.isEmpty()) uploadBtn.setGraphic(csvIcon);
+                else uploadBtn.setGraphic(uploadIcon);
+            }
+            case SERVER -> {
+                chosenFile.setText(svrPath);
+                if (!svrPath.isEmpty()) uploadBtn.setGraphic(csvIcon);
+                else uploadBtn.setGraphic(uploadIcon);
+            }
+        }
 
         uploadBtn.setOnAction(e -> {
             FileChooser chooser = new FileChooser();

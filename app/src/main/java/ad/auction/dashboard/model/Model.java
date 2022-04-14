@@ -32,6 +32,16 @@ public class Model {
         var config = fetchConfig();
         if (config.defaultMetric() != null)
             this.calculator.setDefaultMetric(config.defaultMetric());
+
+        if (config.campaigns() != null) {
+            this.campaignManager.setCampaigns(config.campaigns());
+            config.campaigns().forEach(c -> {
+                fileTracker.trackFile(c.clkPath());
+                fileTracker.trackFile(c.impPath());
+                fileTracker.trackFile(c.svrPath());
+            });
+        }
+
     }
 
     private ConfigHandler.Config fetchConfig() {
@@ -97,11 +107,10 @@ public class Model {
     /*UTILITY*/
     
     public void close() {
-        this.campaignManager.close();
-
         var handler = new ConfigHandler();
         handler.writeToFile("./config.xml", new ConfigHandler.Config(
-                this.calculator.getDefaultMetric()
+                this.calculator.getDefaultMetric(),
+                this.campaignManager.getCampaigns()
         ));
     }
 

@@ -159,5 +159,9 @@ public class Campaign {
         return this.dataLoaded;
     }
 
+    public String impPath() {return this.impPath;}
 
+    public String clkPath() {return this.clkPath;}
+
+    public String svrPath() {return this.svrPath;}
 }
