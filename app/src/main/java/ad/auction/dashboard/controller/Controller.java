@@ -14,6 +14,7 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import ad.auction.dashboard.model.files.records.User;
+import ad.auction.dashboard.view.settings.Themes;
 
 /**
  * The controller class acts as the interface for the 
@@ -165,4 +166,12 @@ public class Controller {
     }
 
     public CampaignData getCampaignData(String name) {return this.model.campaigns().getCampaignData(name);}
+
+    public Themes getTheme() {
+        return model.theme();
+    }
+
+    public void setTheme(Themes theme) {
+        model.setTheme(theme);
+    }
 }

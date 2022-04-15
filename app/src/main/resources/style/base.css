@@ -1,0 +1,191 @@
+
+/**
+All styles not exclusive to a colour scheme
+*/
+
+/*GENERAL*/
+
+.topTitle {
+	-fx-font-family: 'Sen';
+	-fx-font-size: 40px;
+	-fx-stroke-width: 0.5px;
+}
+
+.scroll-bar {
+    -fx-width: 3px;
+    -fx-opacity: 0.4;
+}
+
+.buttonStyle {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
+    -fx-padding: 9 18 9 18;
+	-fx-cursor: hand;
+}
+
+
+/*MAIN MENU*/
+
+.title-text {
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+}
+
+.menu-btn {
+    -fx-background-radius: 50%;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
+}
+
+.menu-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/*CAMPAIGN LIST*/
+
+.campaign-list {
+    -fx-padding: 5px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3,0,0,2 );
+    -fx-background-radius: 10;
+}
+
+.cl-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.cl-campaign {
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+}
+
+.cl-close {
+    -fx-background-color: red;
+    -fx-border-width: 0;
+    -fx-text-fill: black;
+    -fx-cursor: hand;
+    -fx-background-radius: 10;
+}
+
+.settings-icon {
+    -fx-cursor: hand;
+}
+
+.metric-btn {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-padding: 9 18 9 18;
+	-fx-cursor: hand;
+	-fx-border-color: #ffffff15;
+	-fx-border-width: 0 0 1px 0;
+	-fx-margin: 3px;
+}
+
+/*LOAD PAGE*/
+
+.load-page {
+	-fx-font-size: 25px;
+	-fx-font-weight: bold;
+	-fx-padding: 15px;
+}
+
+/*FILTERS*/
+
+.filter-title {
+	-fx-font-size: 16px;
+}
+
+.filter-sub-heading {
+	-fx-font-size: 18px;
+	-fx-font-weight: bold;
+}
+
+/*UPLOAD PAGE*/
+
+.upload-btn {
+    -fx-cursor: hand;
+}
+
+/*TAB MENU*/
+
+.tab-btn {
+    -fx-padding: 5px;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-width: 100%;
+    -fx-alignment: center;
+    -fx-background-radius: 4 0;
+    -fx-cursor: hand;
+}
+
+/*CHART*/
+
+.axis-label {
+    -fx-font-size: 16px;
+}
+
+.axis {
+    -fx-font-size: 8px;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+
+/*SETTINGS*/
+
+.settings-section {
+    -fx-padding: 10;
+}
+
+.settings-section-item-title {
+    -fx-font-size: 18px;
+}
+
+.settings-section-title {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+}
+
+/*JAVAFX COMPONENTS*/
+
+/*date-picker*/
+/*TO BE MADE REDUNDANT*/
+
+.date-picker .cell {
+    -fx-text-fill: black;
+}
+
+.date-picker .cell:hover {
+	-fx-background-color: #004CBE;
+}
+.date-picker .cell:focused {
+	-fx-background-color: #004CBE;
+}
+.date-picker .selected {
+	-fx-background-color: #004CBE;
+	-fx-text-fill: white;
+}
+
+.date-picker-popup .month-year-pane {
+	-fx-background-color: #004CBE;
+}
+.date-picker-popup .month-year-pane .label {
+	-fx-text-fill: black;
+}
+
+.date-picker .arrow-button .arrow {
+	-fx-text-fill: black;
+	-fx-cursor: hand;
+}
+
+.date-picker .arrow-button .arrow:hover {
+	-fx-background-color: #004CBE;
+}

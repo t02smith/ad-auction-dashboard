@@ -41,8 +41,6 @@ public class UploadPage extends BasePage {
     protected String impPath = "";
     protected String svrPath = "";
 
-    protected final Controller controller = App.getInstance().controller();
-
     protected HBox submitCancel;
     protected VBox rows;
 

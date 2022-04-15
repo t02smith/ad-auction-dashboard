@@ -38,7 +38,6 @@ import javafx.scene.text.Text;
 public class CampaignPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
-    private final Controller controller = App.getInstance().controller();
 
     private String campaignName;
 

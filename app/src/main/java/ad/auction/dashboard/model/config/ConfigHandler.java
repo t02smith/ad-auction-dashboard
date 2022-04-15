@@ -2,6 +2,7 @@ package ad.auction.dashboard.model.config;
 
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.view.settings.Themes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -35,6 +36,7 @@ public class ConfigHandler extends DefaultHandler {
 
     static class ConfigTemp {
         Metrics defaultMetric;
+        Themes theme;
         List<Campaign.CampaignData> campaigns;
     }
 
@@ -45,7 +47,7 @@ public class ConfigHandler extends DefaultHandler {
         String svrPath;
     }
 
-    public record Config(Metrics defaultMetric, List<Campaign.CampaignData> campaigns) {}
+    public record Config(Metrics defaultMetric, Themes theme, List<Campaign.CampaignData> campaigns) {}
 
     public void parse(String filename) {
         logger.info("Parsing config file '{};", filename);
@@ -76,6 +78,10 @@ public class ConfigHandler extends DefaultHandler {
             var defaultMetric = doc.createElement("defaultMetric");
             defaultMetric.appendChild(doc.createTextNode(config.defaultMetric().name()));
             settings.appendChild(defaultMetric);
+
+            var theme = doc.createElement("theme");
+            theme.appendChild(doc.createTextNode(config.theme().name()));
+            settings.appendChild(theme);
 
             //CAMPAIGNS
             Element campaigns = doc.createElement("campaigns");
@@ -132,7 +138,7 @@ public class ConfigHandler extends DefaultHandler {
             case "config" -> this.current = new ConfigTemp();
             case "campaigns" -> this.current.campaigns = new ArrayList<>();
             case "campaign" -> this.currentCampaign= new CampaignTemp();
-            case "name", "impPath", "svrPath", "clkPath", "defaultMetric" -> element = new StringBuilder();
+            case "name", "impPath", "svrPath", "clkPath", "defaultMetric", "theme" -> element = new StringBuilder();
         }
     }
 
@@ -141,7 +147,11 @@ public class ConfigHandler extends DefaultHandler {
         switch (qName) {
             case "defaultMetric" -> {
                 try {this.current.defaultMetric = Metrics.valueOf(element.toString());}
-                catch (IllegalArgumentException e) {logger.error("Default metric {} not found", element.toString());}
+                catch (IllegalArgumentException e) {logger.error("Default metric '{}' not found", element.toString());}
+            }
+            case "theme" -> {
+                try {this.current.theme = Themes.valueOf(element.toString());}
+                catch (IllegalArgumentException e) {logger.error("Theme '{}' not found", element.toString());}
             }
             case "name" -> currentCampaign.name = element.toString();
             case "impPath" -> currentCampaign.impPath = element.toString();
@@ -160,6 +170,7 @@ public class ConfigHandler extends DefaultHandler {
     public Config getConfig() {
         return new Config(
                 current.defaultMetric,
+                current.theme,
                 current.campaigns
         );
     }

@@ -1,14 +1,11 @@
 package ad.auction.dashboard.view.pages;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.controller.Controller;
-import ad.auction.dashboard.model.calculator.Metrics;
-import ad.auction.dashboard.model.calculator.Settings;
+import ad.auction.dashboard.view.settings.Settings;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.TabMenu;
 import ad.auction.dashboard.view.ui.Window;
@@ -18,12 +15,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 
 public class SettingsPage extends BasePage{
     private static final Logger logger = LogManager.getLogger(SettingsPage.class.getSimpleName());

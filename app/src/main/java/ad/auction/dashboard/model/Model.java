@@ -10,6 +10,7 @@ import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.config.ConfigHandler;
 import ad.auction.dashboard.model.files.FileTracker;
+import ad.auction.dashboard.view.settings.Themes;
 
 /**
  * Central class for model components
@@ -28,10 +29,16 @@ public class Model {
     //Manages different user campaigns
     private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
 
+    private Themes theme = Themes.DARK;
+
     public Model() {
         var config = fetchConfig();
+
         if (config.defaultMetric() != null)
             this.calculator.setDefaultMetric(config.defaultMetric());
+
+        if (config.theme() != null)
+            this.theme = config.theme();
 
         if (config.campaigns() != null) {
             this.campaignManager.setCampaigns(config.campaigns());
@@ -89,6 +96,10 @@ public class Model {
         this.calculator.setDefaultMetric(m);
     }
 
+    public void setTheme(Themes theme) {
+        this.theme = theme;
+    }
+
     /*GETTERS*/
 
     public ManyCampaignManager campaigns() {
@@ -103,6 +114,9 @@ public class Model {
         return this.calculator.getDefaultMetric();
     }
 
+    public Themes theme() {
+        return this.theme;
+    }
 
     /*UTILITY*/
     
@@ -110,6 +124,7 @@ public class Model {
         var handler = new ConfigHandler();
         handler.writeToFile("./config.xml", new ConfigHandler.Config(
                 this.calculator.getDefaultMetric(),
+                this.theme,
                 this.campaignManager.getCampaigns()
         ));
     }

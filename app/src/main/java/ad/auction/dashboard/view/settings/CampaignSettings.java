@@ -3,22 +3,17 @@ package ad.auction.dashboard.view.settings;
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.calculator.Metrics;
-import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.SettingsSection;
 import ad.auction.dashboard.view.components.SettingsSectionItem;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class CampaignSettingPage extends SettingPage {
+public class CampaignSettings extends SettingPage {
 
     protected final Controller controller = App.getInstance().controller();
-    public CampaignSettingPage() {
+    public CampaignSettings() {
         super("Campaign List");
         this.updateView();
     }

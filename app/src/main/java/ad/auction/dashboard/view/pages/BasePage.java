@@ -1,7 +1,8 @@
 package ad.auction.dashboard.view.pages;
 
-import ad.auction.dashboard.view.settings.SettingPage;
-import ad.auction.dashboard.view.settings.ThemeSettingPage;
+import ad.auction.dashboard.App;
+import ad.auction.dashboard.controller.Controller;
+import ad.auction.dashboard.view.settings.AppearanceSettings;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
  */
 public abstract class BasePage {
 
+    protected final Controller controller = App.getInstance().controller();
     protected final Window window;
 
     protected Scene scene;
@@ -38,9 +40,10 @@ public abstract class BasePage {
         var previous = window.getScene();
         Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
         // get current theme and get theme css path
-        String resPath = ThemeSettingPage.theme.getCssResource();
+        String resPath = controller.getTheme().getCssResource();
         // set css
         scene.getStylesheets().add(getClass().getResource(resPath).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/base.css").toExternalForm());
         this.scene = scene;
 
         return scene;
