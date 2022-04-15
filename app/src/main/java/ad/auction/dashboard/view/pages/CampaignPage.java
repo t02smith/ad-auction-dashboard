@@ -7,11 +7,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+import com.google.common.collect.Table;
+
 import ad.auction.dashboard.model.calculator.Histogram;
+import ad.auction.dashboard.model.calculator.MetricManager;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -31,7 +37,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 /**
  * Advertisement page that holds the UI part of the graphs and controls
@@ -50,6 +59,7 @@ public class CampaignPage extends BasePage {
     private LineChartModel graph;
     private StackPane dashBoard = new StackPane();
     private final BorderPane screen = new BorderPane();
+    private TableView<MetricManager> metricBox;
 
     private Metrics currentMetric = DEFAULT_METRIC;
 
@@ -288,51 +298,60 @@ public class CampaignPage extends BasePage {
         dashPane.setTop(dTitle);
         BorderPane.setAlignment(dTitle, Pos.CENTER);
 
-        /*
-        var metricBox = new VBox();
-        metricBox.setPadding(new Insets(5, 0, 0, 15));
-        metricBox.setSpacing(15);
 
-        for (Metrics m : Metrics.values()) {
-            var overAll = this.controller.runCalculation(m, MetricFunction.OVERALL);
-            var hBox= new HBox();
-            hBox.setSpacing(2);
-            overAll.forEach((key, value) -> {
-                try {
-                    var metString = String.format(m.getMetric().displayName() + " : %s  %s", value.get(), m.getMetric().unit());
-                    var metLabel = new Label(m.getMetric().displayName());
-                    metLabel.setStyle("-fx-font-size: 15px");
-                    metLabel.setText(metString);
-                    hBox.getChildren().add(metLabel);
-                } catch (Exception ignored) {}
+        this.metricBox = new TableView<>();
+        metricBox.getStyleClass().add("table-view");
 
-            });
-
-            metricBox.getChildren().add(hBox);
-            
-
-        }
-
-
-        dashPane.setCenter(metricBox);
-        BorderPane.setAlignment(metricBox, Pos.CENTER);*/
-
-        TableView metricBox = new TableView<>();
-
-        TableColumn<String, String> metricColumn = new TableColumn<>("Metrics");
-
+        metricBox.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        
+        TableColumn metricColumn = new TableColumn<MetricManager, String>("Metrics");
+        metricColumn.setCellValueFactory(new PropertyValueFactory<MetricManager, String>("currentMetric"));
+        
         metricBox.getColumns().add(metricColumn);
 
-        var allCampaigns = this.controller.getCampaigns();
+        var impCountManager = new MetricManager(this.controller, Metrics.IMPRESSION_COUNT);
+        var clkCountManager = new MetricManager(this.controller, Metrics.CLICK_COUNT);
+        var unqCountManager = new MetricManager(this.controller, Metrics.UNIQUES_COUNT);
+        var bounceCountManager = new MetricManager(this.controller, Metrics.BOUNCES_COUNT);
+        var convCountManager = new MetricManager(this.controller, Metrics.CONVERSIONS_COUNT);
+        var impCostManager = new MetricManager(this.controller, Metrics.TOTAL_COST_IMPRESSION);
+        var clkCostManager = new MetricManager(this.controller, Metrics.TOTAL_COST_CLICK);
+        var tCostManager = new MetricManager(this.controller, Metrics.TOTAL_COST);
+        var ctrManager = new MetricManager(this.controller, Metrics.CTR);
+        var cpaManager = new MetricManager(this.controller, Metrics.CPA);
+        var cpcManager = new MetricManager(this.controller, Metrics.CPC);
+        var cpmManager = new MetricManager(this.controller, Metrics.CPM);
+        var bounceRateManager = new MetricManager(this.controller, Metrics.BOUNCE_RATE);
 
-        allCampaigns.forEach((data) -> {
-            metricBox.getColumns().add(new TableColumn<>(data.name()));
+        var activeCampaigns = impCountManager.getActiveCampaigns();
+
+        activeCampaigns.forEach((camp) -> {
+            TableColumn campColumn = new TableColumn<MetricManager, String>(camp);
+            campColumn.setCellValueFactory(new Callback<CellDataFeatures<MetricManager, String>, ObservableValue<String>>() {
+
+                @Override 
+                public ObservableValue<String> call(CellDataFeatures<MetricManager, String> rowObject) { 
+                    return new SimpleStringProperty(rowObject.getValue().getValue(camp)); 
+                } 
+            });
+
+            metricBox.getColumns().add(campColumn);
         });
 
-        for (Metrics m : Metrics.values()) {
-            var overAll = this.controller.runCalculation(m, MetricFunction.OVERALL);
-            metricBox.getItems().addAll(m.getMetric().displayName(), overAll.values());
-        }
+        metricBox.getItems().add(impCountManager);
+        metricBox.getItems().add(clkCountManager);
+        metricBox.getItems().add(unqCountManager);
+        metricBox.getItems().add(bounceCountManager);
+        metricBox.getItems().add(convCountManager);
+        metricBox.getItems().add(impCostManager);
+        metricBox.getItems().add(clkCostManager);
+        metricBox.getItems().add(tCostManager);
+        metricBox.getItems().add(ctrManager);
+        metricBox.getItems().add(cpaManager);
+        metricBox.getItems().add(cpcManager);
+        metricBox.getItems().add(cpmManager);
+        metricBox.getItems().add(bounceRateManager);
+
         dashPane.setCenter(metricBox);
 
         return dashPane;
