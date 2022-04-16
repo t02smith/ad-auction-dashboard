@@ -1,0 +1,13 @@
+
+.root {
+
+    -fx-text-primary: white;
+    -fx-text-secondary: #004CBE;
+
+    -fx-bg-primary: #272822;
+    -fx-bg-secondary: #232323;
+    -fx-bg-tertiary: #004CBE;
+    -fx-bg-4: #202020;
+}
+
+

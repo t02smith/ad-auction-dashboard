@@ -2,8 +2,8 @@ package ad.auction.dashboard.view.settings;
 
 public enum Themes {
     // themes and css path
-    DARK("/style/darkandblue.css"),
-    LIGHT("/style/lightandblue.css");
+    DARK("dark.css"),
+    LIGHT("light.css");
 
     private final String cssResource;
 
@@ -12,6 +12,6 @@ public enum Themes {
     }
 
     public String getCssResource() {
-        return cssResource;
+        return "/style/themes/" + cssResource;
     }
 }

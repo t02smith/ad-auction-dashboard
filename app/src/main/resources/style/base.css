@@ -5,15 +5,43 @@ All styles not exclusive to a colour scheme
 
 /*GENERAL*/
 
+* {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.bg-primary {
+    -fx-background-color: -fx-bg-primary;
+}
+
+.bg-secondary {
+    -fx-background-color: -fx-bg-secondary;
+}
+
+.text-secondary {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+.transparent {
+    -fx-background-color: transparent;
+}
+
+/*HEADER*/
+
 .topTitle {
 	-fx-font-family: 'Sen';
 	-fx-font-size: 40px;
 	-fx-stroke-width: 0.5px;
+	-fx-fill: -fx-text-primary;
+}
+
+.topBackground {
+	-fx-background-color: -fx-bg-4;
 }
 
 .scroll-bar {
     -fx-width: 3px;
     -fx-opacity: 0.4;
+    -fx-background-color: -fx-bg-secondary;
 }
 
 .buttonStyle {
@@ -22,6 +50,15 @@ All styles not exclusive to a colour scheme
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
     -fx-padding: 9 18 9 18;
 	-fx-cursor: hand;
+	-fx-text-fill: -fx-text-primary;
+	-fx-background-color: -fx-bg-tertiary;
+}
+
+.text-input {
+    -fx-text-fill: -fx-bg-primary;
+    -fx-padding: 6px;
+    -fx-border-radius: 5;
+    -fx-font-size: 16px;
 }
 
 
@@ -38,6 +75,12 @@ All styles not exclusive to a colour scheme
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
+    -fx-background-color: -fx-bg-tertiary;
+}
+
+.menu-btn:hover {
+    -fx-background-color: -fx-text-primary;
+    -fx-text-fill: -fx-bg-secondary;
 }
 
 .menu-text {
@@ -51,16 +94,22 @@ All styles not exclusive to a colour scheme
     -fx-padding: 5px;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.8) , 3,0,0,2 );
     -fx-background-radius: 10;
+    -fx-background-color: -fx-bg-secondary;
 }
 
 .cl-title {
     -fx-font-size: 36px;
     -fx-font-weight: bold;
+    -fx-text-fill: -fx-bg-tertiary;
 }
 
 .cl-campaign {
     -fx-font-size: 24px;
     -fx-cursor: hand;
+}
+
+.cl-campaign:hover {
+    -fx-text-fill: -fx-bg-tertiary;
 }
 
 .cl-close {
@@ -83,6 +132,17 @@ All styles not exclusive to a colour scheme
 	-fx-border-color: #ffffff15;
 	-fx-border-width: 0 0 1px 0;
 	-fx-margin: 3px;
+	-fx-background-color: -fx-bg-secondary;
+	-fx-text-fill: -fx-text-primary;
+}
+
+.metric-btn:hover {
+    -fx-background-color: -fx-bg-tertiary;
+}
+
+.btn-active {
+    -fx-background-color: -fx-text-secondary;
+    -fx-text-fill: -fx-bg-secondary;
 }
 
 /*LOAD PAGE*/
@@ -91,6 +151,8 @@ All styles not exclusive to a colour scheme
 	-fx-font-size: 25px;
 	-fx-font-weight: bold;
 	-fx-padding: 15px;
+	-fx-background-color: -fx-bg-primary;
+	-fx-text-fill: -fx-text-primary;
 }
 
 /*FILTERS*/
@@ -102,12 +164,19 @@ All styles not exclusive to a colour scheme
 .filter-sub-heading {
 	-fx-font-size: 18px;
 	-fx-font-weight: bold;
+	-fx-text-fill: -fx-bg-tertiary;
 }
 
 /*UPLOAD PAGE*/
 
 .upload-btn {
     -fx-cursor: hand;
+    -fx-background-color:-fx-bg-primary;
+    	-fx-border-color: -fx-text-primary;
+}
+
+.upload-list {
+    -fx-background-color: -fx-bg-primary;
 }
 
 /*TAB MENU*/
@@ -124,12 +193,23 @@ All styles not exclusive to a colour scheme
 
 /*CHART*/
 
+.chart {
+    -fx-background-color: -fx-bg-primary;
+}
+
+.chart-legend {
+    -fx-text-fill: -fx-text-primary;;
+    -fx-background-color: transparent;
+}
+
 .axis-label {
     -fx-font-size: 16px;
+    -fx-text-fill: -fx-text-primary;
 }
 
 .axis {
     -fx-font-size: 8px;
+    -fx-tick-label-fill: -fx-text-primary;
 }
 
 .chart-series-line {
@@ -152,6 +232,11 @@ All styles not exclusive to a colour scheme
     -fx-font-weight: bold;
     -fx-border-style: hidden hidden solid hidden;
     -fx-border-width: 1;
+    -fx-border-color: -fx-text-primary;
+}
+
+.settingLabel {
+    -fx-font-size: 15px;
 }
 
 /*JAVAFX COMPONENTS*/
@@ -188,4 +273,14 @@ All styles not exclusive to a colour scheme
 
 .date-picker .arrow-button .arrow:hover {
 	-fx-background-color: #004CBE;
+}
+
+/*combo box*/
+
+.combo-box-base {
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: black;
 }
