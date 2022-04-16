@@ -13,7 +13,9 @@ import javafx.geometry.Point2D;
 public class CPM extends Metric {
 
     public CPM() {
-        super("Cost per 1000 Impressions", "£/(impression_count/1000)");
+        super("Cost per 1000 Impressions",
+                "£/(impression_count/1000)",
+                "The average amount of money spent on an ad campaign per 1000 impressions.");
     }
     
     @Override

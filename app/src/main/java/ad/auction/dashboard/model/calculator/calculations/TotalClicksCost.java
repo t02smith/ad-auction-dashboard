@@ -16,7 +16,9 @@ import javafx.geometry.Point2D;
 public class TotalClicksCost extends Metric implements Histogram {
 
     public TotalClicksCost() {
-        super("Clicks Cost", "£");
+        super("Clicks Cost",
+                "£",
+                "The total cost for all clicks on an ad.");
     }
 
     @Override

@@ -13,7 +13,9 @@ import javafx.geometry.Point2D;
 public class CPC extends Metric {
 
     public CPC() {
-        super("Cost per Click", "£/click");
+        super("Cost per Click",
+                "£/click",
+                "The average amount of money spent on an ad campaign per click.");
     }
     
     @Override

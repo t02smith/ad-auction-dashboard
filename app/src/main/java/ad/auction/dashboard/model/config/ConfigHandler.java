@@ -34,13 +34,13 @@ public class ConfigHandler extends DefaultHandler {
 
     private CampaignTemp currentCampaign;
 
-    static class ConfigTemp {
+    private static class ConfigTemp {
         Metrics defaultMetric;
         Themes theme;
         List<Campaign.CampaignData> campaigns;
     }
 
-    static class CampaignTemp {
+    private static class CampaignTemp {
         String name;
         String impPath;
         String clkPath;

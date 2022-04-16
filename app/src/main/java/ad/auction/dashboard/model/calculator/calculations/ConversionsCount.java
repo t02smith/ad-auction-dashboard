@@ -12,7 +12,9 @@ import javafx.geometry.Point2D;
 public class ConversionsCount extends Metric {
 
     public ConversionsCount() {
-        super("Number of Conversions", "count");
+        super("Number of Conversions",
+                "count",
+                "The number of times a user clicks and then acts on an ad.");
     }
 
     @Override

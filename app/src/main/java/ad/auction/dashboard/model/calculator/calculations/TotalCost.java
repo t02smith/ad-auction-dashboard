@@ -14,7 +14,9 @@ import javafx.geometry.Point2D;
 public class TotalCost extends Metric {
 
     public TotalCost() {
-        super("Total Cost", "£");
+        super("Total Cost",
+                "£",
+                "The overall cost for the campaign. (click cost + impression cost)");
     }
 
     @Override

@@ -13,7 +13,9 @@ import javafx.geometry.Point2D;
 public class UniquesCount extends Metric {
 
     public UniquesCount() {
-        super("Number of Uniques", "count");
+        super("Number of Uniques",
+                "count",
+                "How many unique users click on an ad.");
     }
 
     @Override

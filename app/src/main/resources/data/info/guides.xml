@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides>
+    <guide>
+        <id>1</id>
+        <name>Upload a campaign</name>
+        <description>How to upload your campaigns to Ad Auction Dashboard</description>
+        <steps>
+            <step>Make sure you have your log files available. You should have a log file for clicks, impressions and server.</step>
+            <link>
+                <linkText>Click here to read more about your log files</linkText>
+                <linkRef>2</linkRef>
+            </link>
+            <step>Select "Upload Campaign" from the main menu</step>
+            <step>Enter your campaign's name</step>
+            <step>Upload each of your log files by clicking on the labelled boxes</step>
+            <step>Hit "Submit"</step>
+            <step>If successful, you will be directed back to the main menu</step>
+            <step>If unsuccessful, refer to the error message on screen and try again</step>
+        </steps>
+    </guide>
+</guides>

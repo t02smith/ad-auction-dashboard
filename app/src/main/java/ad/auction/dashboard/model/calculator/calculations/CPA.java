@@ -13,7 +13,9 @@ import javafx.geometry.Point2D;
 public class CPA extends Metric {
 
     public CPA() {
-        super("Cost per Acquisition", "£/conversion");
+        super("Cost per Acquisition",
+                "£/conversion",
+                "The average amount of money spent on an advertising campaign per acquisition.");
     }
 
     @Override

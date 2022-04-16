@@ -12,7 +12,9 @@ import javafx.geometry.Point2D;
 public class ClickCount extends Metric {
 
     public ClickCount() {
-        super("Number of Clicks", "count");
+        super("Number of Clicks",
+                "count",
+                "The number of times an ad was click on");
     }
     
     @Override

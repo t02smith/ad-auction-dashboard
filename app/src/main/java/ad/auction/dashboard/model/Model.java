@@ -2,6 +2,7 @@ package ad.auction.dashboard.model;
 
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Future;
 
 import ad.auction.dashboard.model.calculator.Calculator;
@@ -9,6 +10,8 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.config.ConfigHandler;
+import ad.auction.dashboard.model.config.Guide;
+import ad.auction.dashboard.model.config.GuideHandler;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.view.settings.Themes;
 
@@ -30,6 +33,7 @@ public class Model {
     private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
 
     private Themes theme = Themes.DARK;
+    private List<Guide> guides;
 
     public Model() {
         var config = fetchConfig();
@@ -48,6 +52,11 @@ public class Model {
                 fileTracker.trackFile(c.svrPath());
             });
         }
+
+        var gHandler = new GuideHandler();
+        gHandler.parse();
+        guides = gHandler.getGuides();
+        System.out.println(guides);
 
     }
 

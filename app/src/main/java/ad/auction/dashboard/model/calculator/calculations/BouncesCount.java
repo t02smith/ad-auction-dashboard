@@ -13,7 +13,9 @@ public class BouncesCount extends Metric {
     public static final long BOUNCE_MAX_TIME_SEC = 60;
 
     public BouncesCount() {
-        super("Number of Bounces", "count");
+        super("Number of Bounces",
+            "count",
+            "The number of users who click on an ad, but then fail to interact with the website (i.e. leaving after a short time or only visiting one page");
     }
 
     @Override

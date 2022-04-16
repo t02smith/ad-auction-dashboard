@@ -12,7 +12,7 @@ import javafx.geometry.Point2D;
 public class ImpressionCount extends Metric {
     
     public ImpressionCount() {
-        super("Number of Impressions","count");
+        super("Number of Impressions","count", "The total number of times an ad is shown to a user");
     }
     
     @Override

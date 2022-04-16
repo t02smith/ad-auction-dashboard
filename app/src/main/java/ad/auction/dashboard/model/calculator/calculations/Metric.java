@@ -22,13 +22,16 @@ import javafx.geometry.Point2D;
 public abstract class Metric {
 
     protected final String displayName;
+    protected final String description;
+
     protected final String unit;
 
     protected final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    public Metric(String displayName, String unit) {
+    public Metric(String displayName, String unit, String description) {
         this.displayName = displayName;
         this.unit = unit;
+        this.description = description;
     }
 
     public enum MetricFunction {
@@ -92,5 +95,9 @@ public abstract class Metric {
     }
 
     public String unit() {return this.unit;}
+
+    public String desc() {
+        return this.description;
+    }
     
 }
