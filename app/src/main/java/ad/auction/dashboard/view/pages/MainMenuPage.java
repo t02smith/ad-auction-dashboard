@@ -78,7 +78,7 @@ public class MainMenuPage extends BasePage {
                 menuBtn("+", "Upload\nCampaign", e -> window.openUploadPage()),
                 menuBtn("L", "Load\nCampaign", e -> openCampaignList()),
                 menuBtn("S", "Settings\n  ", e -> settings()),
-                menuBtn ("?", "Help\n ", e -> help())
+                menuBtn ("?", "Info\n ", e -> info())
         );
         options.setAlignment(Pos.CENTER);
         options.setSpacing(25);
@@ -131,5 +131,5 @@ public class MainMenuPage extends BasePage {
         window.openSettingPage();
     }
 
-    private void help() {}
+    private void info() {window.openInfoPage();}
 }

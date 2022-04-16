@@ -2,6 +2,7 @@ package ad.auction.dashboard.view.pages;
 
 import java.util.Arrays;
 
+import ad.auction.dashboard.view.components.BackBtn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,13 +21,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class SettingsPage extends BasePage{
+
     private static final Logger logger = LogManager.getLogger(SettingsPage.class.getSimpleName());
     private final BorderPane screen = new BorderPane();
     public static final Settings DEFAULT_SETTINGS = Settings.THEMES;
-    public BorderPane mainPane;
     public BorderPane title;
-    public Text mainMenuText;
-    public Label modeLabel;
+
     public SettingsPage(Window window) {
         super(window);
     }
@@ -45,7 +45,7 @@ public class SettingsPage extends BasePage{
         // load default pane
         settingPane.setCenter(DEFAULT_SETTINGS.getPage());
         DEFAULT_SETTINGS.getPage().updateView();
-        menu.addPane("settings", new ButtonList<Settings>(Arrays.asList(Settings.values()), DEFAULT_SETTINGS, false, settings -> {
+        menu.addPane("settings", new ButtonList<>(Arrays.asList(Settings.values()), DEFAULT_SETTINGS, false, settings -> {
             // load selected setting pane
             settingPane.setCenter(settings.getPage());
             settings.getPage().updateView();
@@ -56,35 +56,6 @@ public class SettingsPage extends BasePage{
         screen.setCenter(settingPane);
     }
 
-
-    private StackPane buildBackButton() {
-        //Create the button
-        var backButton = new Button();
-        backButton.getStyleClass().add("buttonStyle");
-        backButton.setMaxWidth(50);
-        backButton.setMaxHeight(40);
-        var buttonWidth = backButton.getMaxWidth();
-        var buttonHeight = backButton.getMaxHeight();
-        backButton.setOnMouseClicked((e) -> window.startMenu());
-
-
-        // Draw arrow with canvas
-        var canvas = new Canvas(buttonWidth, buttonHeight);
-        canvas.setMouseTransparent(true);
-
-        var gc = canvas.getGraphicsContext2D();
-        gc.setStroke(Color.WHITE);
-        gc.setLineWidth(3);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.75,  buttonHeight * 0.5);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.725);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.275);
-
-        // Stack the drawn arrow on the button
-        var pane = new StackPane();
-        pane.getChildren().addAll(backButton, canvas);
-
-        return pane;
-    }
     private BorderPane title() {
         //Title background on top
         var title = new BorderPane();
@@ -96,7 +67,7 @@ public class SettingsPage extends BasePage{
         title.setCenter(mainMenuText);
 
         //Add back button
-        var backButton = buildBackButton();
+        var backButton = new BackBtn((e) -> window.startMenu());
         BorderPane.setAlignment(backButton, Pos.CENTER);
         BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
         title.setLeft(backButton);

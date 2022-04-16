@@ -83,6 +83,7 @@ public class ButtonList<T> extends ScrollPane {
                 if (v.equals(defaultVal)) {
                     this.active = btn;
                     this.active.getStyleClass().add("btn-active");
+                    this.onClick.accept(v);
                 }
             }
 

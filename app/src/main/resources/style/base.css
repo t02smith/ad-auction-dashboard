@@ -284,3 +284,35 @@ All styles not exclusive to a colour scheme
 .combo-box .list-cell {
     -fx-text-fill: black;
 }
+
+/*GUIDES*/
+
+.guide {
+    -fx-padding: 20;
+}
+
+.guide-name {
+    -fx-padding: 5;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-text-primary;
+}
+
+.guide-desc {
+    -fx-padding: 5;
+    -fx-font-style: italic;
+    -fx-font-size: 18px;
+}
+
+.guide-link {
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-style: italic;
+    -fx-cursor: hand;
+}
+
+.guide-step {
+    -fx-font-size: 18px;
+}

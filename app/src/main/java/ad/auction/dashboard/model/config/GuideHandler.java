@@ -25,18 +25,24 @@ public class GuideHandler extends DefaultHandler {
     //TEMP CLASSES
     private GuideTemp currentGuide;
     private StepTemp currentStep;
+    private SectionTemp currentSection;
 
     private static class GuideTemp {
         int id;
         String name;
         String desc;
         List<Guide.Step> steps;
+        List<Guide.Section> sections;
     }
 
     private static class StepTemp {
         String text;
-        boolean isLink = false;
         Integer ref;
+    }
+
+    private static class SectionTemp {
+        String name;
+        String text;
     }
 
     public void parse() {
@@ -62,19 +68,21 @@ public class GuideHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         switch (qName) {
             case "guide" -> currentGuide = new GuideTemp();
-            case "id", "name", "description","step", "linkRef", "linkText" -> element = new StringBuilder();
+            case "id", "name", "description","step", "linkRef", "linkText", "sectionName", "sectionText" -> element = new StringBuilder();
             case "steps" -> currentGuide.steps = new ArrayList<>();
             case "link" -> {currentStep = new StepTemp(); element = new StringBuilder();}
+            case "sections" -> currentGuide.sections = new ArrayList<>();
+            case "section" -> currentSection = new SectionTemp();
         }
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         switch (qName) {
-            case "guide" -> guides.add(new Guide(currentGuide.id, currentGuide.name, currentGuide.desc, currentGuide.steps));
+            case "guide" -> guides.add(new Guide(currentGuide.id, currentGuide.name, currentGuide.desc, currentGuide.steps, currentGuide.sections));
             case "id" -> currentGuide.id = Integer.parseInt(element.toString());
             case "name" -> currentGuide.name = element.toString();
             case "description" -> currentGuide.desc = element.toString();
@@ -82,6 +90,9 @@ public class GuideHandler extends DefaultHandler {
             case "step" -> currentGuide.steps.add(new Guide.Step(element.toString(), false, null));
             case "linkText" -> currentStep.text = element.toString();
             case "linkRef" -> currentStep.ref = Integer.parseInt(element.toString());
+            case "sectionName" -> currentSection.name = element.toString();
+            case "sectionText" -> currentSection.text = element.toString();
+            case "section" -> currentGuide.sections.add(new Guide.Section(currentSection.name, currentSection.text));
         }
     }
 

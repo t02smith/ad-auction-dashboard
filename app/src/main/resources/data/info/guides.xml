@@ -18,4 +18,23 @@
             <step>If unsuccessful, refer to the error message on screen and try again</step>
         </steps>
     </guide>
+    <guide>
+        <id>2</id>
+        <name>Log files</name>
+        <description>Understanding your campaign's data</description>
+        <sections>
+            <section>
+                <sectionName>Clicks</sectionName>
+                <sectionText>This log file is for all instances in which an ad was clicked on by a user. For each click we know the time, what user clicked on it, and how much that click costed.</sectionText>
+            </section>
+            <section>
+                <sectionName>Impressions</sectionName>
+                <sectionText>Each impression is someone viewing your ad regardless of whether they interact with it. For each impression we know the time and that user's gender (Male/Female), age bracket, income (Low/Medium/High), the context in which they saw the ad (Blog, News, etc.), and how much that impression cost.</sectionText>
+            </section>
+            <section>
+                <sectionName>Server</sectionName>
+                <sectionText>This log file is used to track a user's interactions after clicking on an ad. For each instance we can see the time in which they entered and exited the website, how many pages they viewed and whether a user acts on the ad (e.g.by buying a product)</sectionText>
+            </section>
+        </sections>
+    </guide>
 </guides>

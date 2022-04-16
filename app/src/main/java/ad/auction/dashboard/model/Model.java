@@ -33,7 +33,6 @@ public class Model {
     private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
 
     private Themes theme = Themes.DARK;
-    private List<Guide> guides;
 
     public Model() {
         var config = fetchConfig();
@@ -52,11 +51,6 @@ public class Model {
                 fileTracker.trackFile(c.svrPath());
             });
         }
-
-        var gHandler = new GuideHandler();
-        gHandler.parse();
-        guides = gHandler.getGuides();
-        System.out.println(guides);
 
     }
 
