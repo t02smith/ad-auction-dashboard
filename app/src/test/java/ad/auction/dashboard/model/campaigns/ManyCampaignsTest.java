@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.campaigns;
 
 import ad.auction.dashboard.model.Model;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,11 @@ public class ManyCampaignsTest {
                 "./data/2-week/impression_log.csv",
                 "./data/2-week/server_log.csv");
         model.campaigns().includeCampaign("new test");
+    }
+
+    @AfterAll
+    public static void tearDownAll() {
+        model.campaigns().closeAll();
     }
 
     @Test

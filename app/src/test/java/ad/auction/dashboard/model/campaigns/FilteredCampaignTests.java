@@ -29,7 +29,7 @@ public class FilteredCampaignTests {
     @AfterAll
     public static void tearDown() {
         model.campaigns().removeCampaign("2 week - test");
-        model.close();
+        model.campaigns().closeAll();
     }
 
     @AfterEach

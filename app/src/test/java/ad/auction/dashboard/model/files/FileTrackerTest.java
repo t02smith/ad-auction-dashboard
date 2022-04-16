@@ -65,7 +65,7 @@ public class FileTrackerTest {
     @Test
     @DisplayName("Empty file test")
     public void emptyFileTest() throws Exception {
-        var filename = "./data/empty_impression.csv";
+        var filename = this.getClass().getResource("/data/empty_impression.csv").toExternalForm();
 
         fileTracker.trackFile(filename);
         var res = fileTracker.readFile(filename);

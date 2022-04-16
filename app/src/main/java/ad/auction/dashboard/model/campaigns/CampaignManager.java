@@ -247,6 +247,9 @@ public class CampaignManager {
 
     }
 
+    public void closeAll() {
+        this.campaigns.forEach((name, c) -> c.flushData());
+    }
 
     // GETTERS
 

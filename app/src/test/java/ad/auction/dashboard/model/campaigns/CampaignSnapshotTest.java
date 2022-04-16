@@ -1,10 +1,7 @@
 package ad.auction.dashboard.model.campaigns;
 
 import ad.auction.dashboard.model.Model;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +17,11 @@ public class CampaignSnapshotTest {
                 "./data/2-week/impression_log.csv",
                 "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
+    }
+
+    @AfterAll
+    public static void tearDownAll() {
+        model.campaigns().closeAll();
     }
 
     /*SNAPSHOT CREATION*/

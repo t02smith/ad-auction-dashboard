@@ -1,8 +1,8 @@
 package ad.auction.dashboard.model;
 
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Future;
 
 import ad.auction.dashboard.model.calculator.Calculator;
@@ -10,8 +10,6 @@ import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.config.ConfigHandler;
-import ad.auction.dashboard.model.config.Guide;
-import ad.auction.dashboard.model.config.GuideHandler;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.view.settings.Themes;
 
@@ -56,8 +54,13 @@ public class Model {
 
     private ConfigHandler.Config fetchConfig() {
         var handler = new ConfigHandler();
-        handler.parse("./config.xml");
-        return handler.getConfig();
+        try {
+            handler.parse("./config.xml");
+            return handler.getConfig();
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 
     /*CALCULATOR*/
@@ -130,6 +133,7 @@ public class Model {
                 this.theme,
                 this.campaignManager.getCampaigns()
         ));
+        this.campaignManager.closeAll();
     }
 
 }

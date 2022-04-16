@@ -49,7 +49,7 @@ public class ConfigHandler extends DefaultHandler {
 
     public record Config(Metrics defaultMetric, Themes theme, List<Campaign.CampaignData> campaigns) {}
 
-    public void parse(String filename) {
+    public void parse(String filename) throws IOException {
         logger.info("Parsing config file '{};", filename);
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -57,7 +57,7 @@ public class ConfigHandler extends DefaultHandler {
             SAXParser parser = factory.newSAXParser();
             parser.parse(filename, this);
             logger.info("Parsed config file '{}'", filename);
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             logger.error("Error reading config file '{}': {}", filename, e.getMessage());
         }
     }

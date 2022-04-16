@@ -28,6 +28,11 @@ public class CampaignManagerTest {
 
     }
 
+    @AfterAll
+    public static void tearDownAll() {
+        model.campaigns().closeAll();
+    }
+
     /*OPEN CAMPAIGN*/
 
     @Test

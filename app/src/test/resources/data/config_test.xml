@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <settings>
+        <defaultMetric>TOTAL_COST</defaultMetric>
+        <theme>DARK</theme>
+    </settings>
+    <campaigns>
+        <campaign>
+            <name>Test campaign</name>
+            <impPath>fake/imp/path.csv</impPath>
+            <clkPath>fake/clk/path.csv</clkPath>
+            <svrPath>fake/svr/path.csv</svrPath>
+        </campaign>
+    </campaigns>
+</config>
