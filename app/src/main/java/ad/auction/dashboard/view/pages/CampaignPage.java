@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
+
 import com.google.common.collect.Table;
 
 import ad.auction.dashboard.model.calculator.Histogram;
@@ -15,6 +17,7 @@ import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +42,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
@@ -352,10 +356,31 @@ public class CampaignPage extends BasePage {
         metricBox.getItems().add(cpmManager);
         metricBox.getItems().add(bounceRateManager);
 
+
+        
+        restrictDashboardHeight();
         dashPane.setCenter(metricBox);
 
         return dashPane;
 
+    }
+
+    private void restrictDashboardHeight() {
+
+        metricBox.setFixedCellSize(25);
+        metricBox.setPadding(new Insets(0, 20, 15, 20));
+
+        int rows = metricBox.getItems().size();
+        logger.info(rows);
+        TableHeaderRow headRow = (TableHeaderRow) metricBox.lookup("TableHeaderRow");
+        double height = (rows * metricBox.getFixedCellSize())
+                      + metricBox.getInsets().getTop() + metricBox.getInsets().getBottom()
+                      + (headRow == null ? 0 : headRow.getHeight());
+        logger.info(height);
+
+        metricBox.setMinHeight(height);
+        metricBox.setMaxHeight(height+metricBox.getFixedCellSize());
+        metricBox.setPrefHeight(height);
     }
     
     private ButtonList<String> campaignList() {

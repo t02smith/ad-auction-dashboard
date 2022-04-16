@@ -108,3 +108,8 @@
 .table-view{
 	-fx-background-color: transparent;
  }
+
+.table-row-cell:empty {
+	-fx-background-color: white;
+	-fx-border-color: white;
+} 
