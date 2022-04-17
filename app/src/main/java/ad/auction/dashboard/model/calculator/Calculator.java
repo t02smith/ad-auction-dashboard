@@ -27,7 +27,7 @@ public class Calculator {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(CALCULATOR_THREAD_COUNT);
 
-    private boolean cumulative = false;
+    private boolean cumulative = true;
     private ChronoUnit timeResolution = ChronoUnit.DAYS;
 
     //The impression loaded when first launching a campaign

@@ -239,6 +239,12 @@ All styles not exclusive to a colour scheme
     -fx-font-size: 15px;
 }
 
+.settings-note {
+    -fx-font-size: 15px;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-style: italic;
+}
+
 /*JAVAFX COMPONENTS*/
 
 /*date-picker*/
@@ -279,10 +285,12 @@ All styles not exclusive to a colour scheme
 
 .combo-box-base {
     -fx-text-fill: black;
+    -fx-cursor: hand;
 }
 
 .combo-box .list-cell {
     -fx-text-fill: black;
+    -fx-cursor: hand;
 }
 
 /*GUIDES*/

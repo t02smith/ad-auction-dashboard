@@ -85,12 +85,8 @@ public class Controller {
     }
 
 
-    public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function, int factor) {
-        return model.runCalculation(m, function, factor);
-    }
-
-    public HashMap<String, Future<Object>> runDefaultCalculation(MetricFunction func, int factor) {
-        return model.runCalculation(model.getDefaultMetric(), func, factor);
+    public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
+        return model.runCalculation(m, function);
     }
 
     public void setDefaultMetric(Metrics m) {
@@ -154,6 +150,24 @@ public class Controller {
     public int addUserFilter(Predicate<User> predicate) {
         return this.model.campaigns().addUserFilter(predicate);
     }
+
+    //CONFIG OPTIONS
+
+    /**
+     * Set the number of points calculated per time unit
+     * @param factor new factor value
+     */
+    public void setFactor(int factor) {
+        this.model.setFactor(factor);
+    }
+
+    /**
+     * @return the number of points calculated per time unit
+     */
+    public int getFactor() {
+        return this.model.getFactor();
+    }
+
 
     //GETTERS
 

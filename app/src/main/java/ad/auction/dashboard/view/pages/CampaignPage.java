@@ -11,17 +11,17 @@ import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ad.auction.dashboard.App;
-import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
@@ -39,18 +39,33 @@ public class CampaignPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
 
-    private String campaignName;
+    private final String campaignName;
 
     private LineChartModel graph;
     private final BorderPane screen = new BorderPane();
+    private final VBox selectionWrapper = new VBox();
 
+    //current selection
     private Metrics currentMetric = controller.getDefaultMetric();
+    private CampaignComponent active = CampaignComponent.CUMULATIVE_GRAPH;
 
-    private final Button histogramToggle = new Button("Histogram");
-    private boolean histogramActive = false;
-    private boolean cumulative = false;
+    private enum CampaignComponent {
+        CUMULATIVE_GRAPH("Cumulative"),
+        NON_CUMULATIVE_GRAPH("Trend"),
+        HISTOGRAM("Histogram");
+        //Dashboard tbd
 
-    private int factor = 4;
+        private final String displayName;
+
+        CampaignComponent(String displayName) {
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String toString() {
+            return displayName;
+        }
+    }
 
     //Function to load a given metric
     @SuppressWarnings("unchecked")
@@ -59,17 +74,34 @@ public class CampaignPage extends BasePage {
         this.graph.clearDatasets();
         this.graph.setYName(m.getMetric().unit());
 
-        HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.OVER_TIME, factor);
+
+        if (!(this.currentMetric.getMetric() instanceof Histogram) && this.active == CampaignComponent.HISTOGRAM) {
+            this.active = CampaignComponent.CUMULATIVE_GRAPH;
+        }
+
+        var newSelection = campaignComponents();
+        this.selectionWrapper.getChildren().clear();
+        this.selectionWrapper.getChildren().add(newSelection);
+
+        HashMap<String, Future<Object>> future = controller.runCalculation(m, switch (active) {
+            case HISTOGRAM -> MetricFunction.HISTOGRAM;
+            case CUMULATIVE_GRAPH, NON_CUMULATIVE_GRAPH -> MetricFunction.OVER_TIME;
+        });
         while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
         future.forEach((name, data) -> {
             try {
                 this.graph.addDataset(name, (List<Point2D>) data.get());
+                this.screen.setCenter(
+                        (active == CampaignComponent.HISTOGRAM)
+                                ? this.graph.histogram(this.currentMetric.getMetric().unit(), (List<Point2D>)data.get())
+                                : this.graph.getLineChart()
+                );
             }
             catch (Exception ignored) {}
         });
 
-        this.screen.setCenter(this.graph.getLineChart());
+
 
         
     };
@@ -117,10 +149,12 @@ public class CampaignPage extends BasePage {
 
         // Tab menu for metrics + filters
         var menu = new TabMenu("metrics");
-        menu.addPane("metrics", new ButtonList<Metrics>(Arrays.asList(Metrics.values()),this.currentMetric,false,loadMetric));
+        menu.addPane("metrics", new ButtonList<>(Arrays.asList(Metrics.values()),this.currentMetric,false,loadMetric));
         menu.addPane("filters", filterMenu);
         menu.addPane("compare", campaignList());
         menu.build();
+
+        this.selectionWrapper.setAlignment(Pos.CENTER);
 
         screen.setTop(title());
         screen.setLeft(menu);
@@ -178,64 +212,23 @@ public class CampaignPage extends BasePage {
         title.setLeft(backButton);
 
         //Settings page button
-        var editButton = new Button("Settings");
+        var editButton = new Button("Edit");
         BorderPane.setAlignment(editButton, Pos.CENTER);
         editButton.getStyleClass().add("buttonStyle");
         editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName, window::startMenu));
 
-        //cumulative toggle
-        var cumToggle = new Button("Cumulative");
-        cumToggle.getStyleClass().add("buttonStyle");
-        cumToggle.setOnAction(e -> {
-            cumulative = !cumulative;
-            controller.setCumulative(cumulative);
-            cumToggle.setText(cumulative ? "Per Day": "Cumulative");
-            loadMetric.accept(currentMetric);
-        });
-
-        var right = new HBox(histogramToggle, cumToggle, editButton);
+        selectionWrapper.getChildren().add(campaignComponents());
+        var right = new HBox(selectionWrapper, editButton);
         right.setSpacing(25);
         right.setAlignment(Pos.CENTER);
 
-        histogramToggle.setVisible(false);
-        histogramToggle.getStyleClass().add("buttonStyle");
         title.setRight(right);
-
         return title;
     }
 
-    @SuppressWarnings("unchecked")
+
     private void setMetric(Metrics m) {
         this.currentMetric = m;
-        if (this.currentMetric.getMetric() instanceof Histogram) {
-            histogramToggle.setOnAction(e -> {
-                if (histogramActive) {
-                    this.loadMetric.accept(this.currentMetric);
-                    this.histogramToggle.setText("Histogram");
-                    histogramActive = false;
-                    return;
-                }
-
-                logger.info("Loading histogram");
-                histogramActive = true;
-                this.histogramToggle.setText("Line");
-                HashMap<String, Future<Object>> future = controller.runCalculation(m, MetricFunction.HISTOGRAM, factor);
-                while (future.values().stream().anyMatch(f -> !f.isDone())) {}
-
-                try {
-                    var data = (List<Point2D>)future.get(campaignName).get();
-                    this.graph.setTitleName(m.getMetric().displayName());
-                    this.screen.setCenter(this.graph.histogram(this.currentMetric.getMetric().unit(), data));
-
-                } catch (Exception ignored) {}
-
-
-            });
-            histogramToggle.setVisible(true);
-
-        } else {
-            histogramToggle.setVisible(false);
-        }
     }
 
     private VBox campaignList() {
@@ -279,5 +272,24 @@ public class CampaignPage extends BasePage {
         });
 
         return new VBox(bl, active, genSnapshot);
+    }
+
+    private ComboBox<CampaignComponent> campaignComponents() {
+        var options = new ComboBox<>(FXCollections.observableArrayList(
+                this.currentMetric.getMetric() instanceof Histogram
+                ? CampaignComponent.values()
+                : new CampaignComponent[] {CampaignComponent.CUMULATIVE_GRAPH, CampaignComponent.NON_CUMULATIVE_GRAPH}));
+        options.setValue(this.active);
+        options.valueProperty().addListener(e -> {
+            this.active = options.getValue();
+            switch (this.active) {
+                case CUMULATIVE_GRAPH -> controller.setCumulative(true);
+                case NON_CUMULATIVE_GRAPH -> controller.setCumulative(false);
+            }
+
+            loadMetric.accept(currentMetric);
+        });
+
+        return options;
     }
 }

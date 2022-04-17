@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 
+import java.util.Arrays;
+
 public class CampaignSettings extends SettingPage {
 
     protected final Controller controller = App.getInstance().controller();
@@ -26,6 +28,10 @@ public class CampaignSettings extends SettingPage {
         ));
     }
 
+    /**
+     * Build the campaign list section
+     * @return campaign list section
+     */
     private SettingsSection campaignList() {
         var section = new SettingsSection("Your Campaigns");
         controller.getCampaigns().forEach(c -> {
@@ -44,21 +50,34 @@ public class CampaignSettings extends SettingPage {
         return section;
     }
 
+    /**
+     * Build the campaign options section of the settings menu
+     * @return the campaign options section
+     */
     private SettingsSection campaignOptions() {
         var section = new SettingsSection("Campaign Options");
 
         //Default metric
         ComboBox<Metrics> metricList = new ComboBox<>(FXCollections.observableArrayList(Metrics.values()));
         metricList.setValue(controller.getDefaultMetric());
-        metricList.setOnAction(e -> {
-            controller.setDefaultMetric(metricList.getValue());
-        });
+        metricList.setOnAction(e -> controller.setDefaultMetric(metricList.getValue()));
 
-        section.addChild(new SettingsSectionItem("Default Metric", metricList));
+        section.addChild(new SettingsSectionItem(
+                "Default metric",
+                "The metric calculated when opening a campaign",
+                metricList));
 
         //TODO time resolution
 
-        //TODO factor
+        //Factor
+        ComboBox<Integer> factorList = new ComboBox<>(FXCollections.observableList(Arrays.asList(1,2,3,4,5)));
+        factorList.setValue(controller.getFactor());
+        factorList.setOnAction(e -> controller.setFactor(factorList.getValue()));
+
+        section.addChild(new SettingsSectionItem(
+                "Points per unit of time",
+                "Having this setting high will impact performance",
+                factorList));
 
         return section;
     }

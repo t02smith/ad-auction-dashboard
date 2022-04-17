@@ -37,6 +37,7 @@ public class ConfigHandler extends DefaultHandler {
     private static class ConfigTemp {
         Metrics defaultMetric;
         Themes theme;
+        Integer factor;
         List<Campaign.CampaignData> campaigns;
     }
 
@@ -47,7 +48,7 @@ public class ConfigHandler extends DefaultHandler {
         String svrPath;
     }
 
-    public record Config(Metrics defaultMetric, Themes theme, List<Campaign.CampaignData> campaigns) {}
+    public record Config(Metrics defaultMetric, Themes theme, Integer factor, List<Campaign.CampaignData> campaigns) {}
 
     public void parse(String filename) throws IOException {
         logger.info("Parsing config file '{};", filename);
@@ -82,6 +83,10 @@ public class ConfigHandler extends DefaultHandler {
             var theme = doc.createElement("theme");
             theme.appendChild(doc.createTextNode(config.theme().name()));
             settings.appendChild(theme);
+
+            var factor = doc.createElement("factor");
+            factor.appendChild(doc.createTextNode(String.valueOf(config.factor)));
+            settings.appendChild(factor);
 
             //CAMPAIGNS
             Element campaigns = doc.createElement("campaigns");
@@ -138,7 +143,7 @@ public class ConfigHandler extends DefaultHandler {
             case "config" -> this.current = new ConfigTemp();
             case "campaigns" -> this.current.campaigns = new ArrayList<>();
             case "campaign" -> this.currentCampaign= new CampaignTemp();
-            case "name", "impPath", "svrPath", "clkPath", "defaultMetric", "theme" -> element = new StringBuilder();
+            case "name", "impPath", "svrPath", "clkPath", "defaultMetric", "theme", "factor" -> element = new StringBuilder();
         }
     }
 
@@ -153,6 +158,7 @@ public class ConfigHandler extends DefaultHandler {
                 try {this.current.theme = Themes.valueOf(element.toString());}
                 catch (IllegalArgumentException e) {logger.error("Theme '{}' not found", element.toString());}
             }
+            case "factor" -> this.current.factor = Integer.valueOf(element.toString());
             case "name" -> currentCampaign.name = element.toString();
             case "impPath" -> currentCampaign.impPath = element.toString();
             case "svrPath" -> currentCampaign.svrPath = element.toString();
@@ -171,6 +177,7 @@ public class ConfigHandler extends DefaultHandler {
         return new Config(
                 current.defaultMetric,
                 current.theme,
+                current.factor,
                 current.campaigns
         );
     }

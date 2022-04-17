@@ -44,7 +44,7 @@ public class BouncesCount extends Metric {
                     points.add(new Point2D(x[0], counter[0]));
                     start[0] = end[0];
                     end[0] = Metric.incrementDate(resolution, end[0], factor);
-                    if (isCumulative) counter[0] = 0;
+                    if (!isCumulative) counter[0] = 0;
                 }
 
                 if (svr.pagesViewed() == 1 || svr.secondsOnWebsite() < BOUNCE_MAX_TIME_SEC) {

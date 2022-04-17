@@ -12,6 +12,8 @@ import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.config.ConfigHandler;
 import ad.auction.dashboard.model.files.FileTracker;
 import ad.auction.dashboard.view.settings.Themes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Central class for model components
@@ -20,6 +22,8 @@ import ad.auction.dashboard.view.settings.Themes;
  * @author tcs1g20
  */
 public class Model {
+
+    private static final Logger logger = LogManager.getLogger(Model.class.getSimpleName());
 
     //Tracks and reads data files
     private final FileTracker fileTracker = new FileTracker();
@@ -30,16 +34,24 @@ public class Model {
     //Manages different user campaigns
     private final ManyCampaignManager campaignManager = new ManyCampaignManager(this);
 
+    //Config settings
+    private static final String CONFIG_LOCATION = "./config.xml";
+
     private Themes theme = Themes.DARK;
+    private int factor = 4;
 
     public Model() {
         var config = fetchConfig();
+        if (config == null) return;
 
         if (config.defaultMetric() != null)
             this.calculator.setDefaultMetric(config.defaultMetric());
 
         if (config.theme() != null)
             this.theme = config.theme();
+
+        if (config.factor() != null)
+            this.factor = config.factor();
 
         if (config.campaigns() != null) {
             this.campaignManager.setCampaigns(config.campaigns());
@@ -52,10 +64,14 @@ public class Model {
 
     }
 
+    /**
+     * Get the config settings from the file
+     * @return config settings
+     */
     private ConfigHandler.Config fetchConfig() {
         var handler = new ConfigHandler();
         try {
-            handler.parse("./config.xml");
+            handler.parse(CONFIG_LOCATION);
             return handler.getConfig();
         } catch (IOException e) {
             return null;
@@ -65,17 +81,13 @@ public class Model {
 
     /*CALCULATOR*/
 
-    public HashMap<String, Future<Object>> runCalculation(Metrics metric, MetricFunction func) {
-        return runCalculation(metric, func, 1);
-    }
-
     /**
-     * Run a calculation for the current open campaign
-     * @param metric The calculation
-     * @param func The function to calculate for the metric
-     * @return The result of the calculation
+     * Run a calculation on all included campaigns
+     * @param metric the metric to calculate
+     * @param func what to calculate
+     * @return map - campaignName, result
      */
-    public HashMap<String, Future<Object>> runCalculation(Metrics metric, MetricFunction func, int factor) {
+    public HashMap<String, Future<Object>> runCalculation(Metrics metric, MetricFunction func) {
         var campaigns = this.campaignManager.getActiveCampaigns();
         var res = new HashMap<String, Future<Object>>();
 
@@ -89,20 +101,50 @@ public class Model {
         return res;
     }
 
+    /**
+     * Whether the data is cumulative or per time unit
+     * @param state cumulative data or not
+     */
     public void setCumulative(boolean state) {
         this.campaignManager.getCurrentCampaign().clearCache();
         this.calculator.setCumulative(state);
     }
 
+    /**
+     * Set the time resolution
+     * @param res new resolution
+     */
     public void setTimeResolution(ChronoUnit res) {
         this.calculator.setTimeResolution(res);
     }
 
+    //config setters
+
+    /**
+     * Set the metric to be shown initially
+     * @param m the initially shown metric
+     */
     public void setDefaultMetric(Metrics m) {
         this.calculator.setDefaultMetric(m);
     }
 
+    /**
+     * How many points per time unit
+     * e.g. 2 -> 2 points per day
+     * @param factor points per time unit
+     */
+    public void setFactor(int factor) {
+        logger.info("Setting factor {} -> {}", this.factor, factor);
+        this.factor = factor;
+        this.campaignManager.clearCache();
+    }
+
+    /**
+     * Set the current view's theme
+     * @param theme new theme
+     */
     public void setTheme(Themes theme) {
+        logger.info("Setting theme {} -> {}", this.theme, theme);
         this.theme = theme;
     }
 
@@ -124,13 +166,21 @@ public class Model {
         return this.theme;
     }
 
+    public int getFactor() {
+        return this.factor;
+    }
+
     /*UTILITY*/
-    
+
+    /**
+     * Close the model down
+     */
     public void close() {
         var handler = new ConfigHandler();
         handler.writeToFile("./config.xml", new ConfigHandler.Config(
                 this.calculator.getDefaultMetric(),
                 this.theme,
+                this.factor,
                 this.campaignManager.getCampaigns()
         ));
         this.campaignManager.closeAll();

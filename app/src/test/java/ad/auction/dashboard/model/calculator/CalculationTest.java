@@ -60,7 +60,8 @@ public class CalculationTest {
     @DisplayName("Run a random value calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeRandomValueTest() throws Exception {
-        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME, 1).get("2 week - test");
+        model.setFactor(1);
+        var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
         while (!actual.isDone()) {}
 
         assertEquals(50712.703487540944, ((ArrayList<Point2D>)actual.get()).get(6).getY());

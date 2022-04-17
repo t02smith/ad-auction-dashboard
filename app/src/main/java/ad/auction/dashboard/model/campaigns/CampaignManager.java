@@ -251,6 +251,11 @@ public class CampaignManager {
         this.campaigns.forEach((name, c) -> c.flushData());
     }
 
+    public void clearCache() {
+        if (this.currentCampaign != null)
+            this.currentCampaign.clearCache();
+    }
+
     // GETTERS
 
     public FilteredCampaign getCurrentCampaign() {
