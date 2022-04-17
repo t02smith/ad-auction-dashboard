@@ -1,7 +1,6 @@
 package ad.auction.dashboard.controller;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -84,7 +83,12 @@ public class Controller {
         this.model.campaigns().removeCampaign(campaign);
     }
 
-
+    /**
+     *
+     * @param m
+     * @param function
+     * @return
+     */
     public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
         return model.runCalculation(m, function);
     }

@@ -11,10 +11,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class CampaignSettings extends SettingPage {
 
     protected final Controller controller = App.getInstance().controller();
+
     public CampaignSettings() {
         super("Campaign List");
         this.updateView();
@@ -37,12 +39,16 @@ public class CampaignSettings extends SettingPage {
         controller.getCampaigns().forEach(c -> {
 
             //TODO edit
+            var edit = new Button("Edit");
+            edit.getStyleClass().add("buttonStyle");
+            edit.setOnAction(e -> App.getInstance().window().openEditPage(c.name(), () -> App.getInstance().window().openSettingPage()));
 
             var del = new Button("Delete");
             del.getStyleClass().add("buttonStyle");
             del.setOnAction(e -> controller.removeCampaign(c.name()));
 
-            var options = new HBox(del);
+            var options = new HBox(edit, del);
+            options.setSpacing(10);
 
             section.addChild(new SettingsSectionItem(c.name(), options));
         });

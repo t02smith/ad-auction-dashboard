@@ -20,6 +20,7 @@ public class App extends Application {
     private static App instance;
 
     private final Controller controller = new Controller();
+    private Window window;
 
 
     @Override
@@ -27,15 +28,8 @@ public class App extends Application {
     	instance = this;
     	
         this.stage = stage;
-        openWindow();
-    }
-    
-    /**
-     * Opens the window of the application
-     */
-    private void openWindow() {
-    	new Window(stage,HEIGHT,WIDTH);
-    	stage.show();
+        this.window = new Window(stage,HEIGHT,WIDTH);
+        stage.show();
     }
 
     /**
@@ -54,8 +48,11 @@ public class App extends Application {
      */
     public static App getInstance() { return instance; }
 
-
     public Controller controller() {
         return this.controller;
+    }
+
+    public Window window() {
+        return this.window;
     }
 }

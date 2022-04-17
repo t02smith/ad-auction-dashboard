@@ -21,6 +21,15 @@ public class ManyCampaignManager extends CampaignManager {
         super(model);
     }
 
+    @Override
+    public void openCampaign(String name) {
+        logger.info("Clearing included & snapshot campaigns");
+        this.includedCampaigns.clear();
+        this.snapshots.clear();
+
+        super.openCampaign(name);
+    }
+
     /**
      * Includes a new campaign alongside the current one
      * @param campaign the campaign to include
@@ -77,6 +86,10 @@ public class ManyCampaignManager extends CampaignManager {
         this.includedCampaigns.remove(campaign);
     }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<String, Campaign> getActiveCampaigns() {
         var cs = new HashMap<String, Campaign>();
         includedCampaigns.forEach(c -> cs.put(c, this.campaigns.get(c)));

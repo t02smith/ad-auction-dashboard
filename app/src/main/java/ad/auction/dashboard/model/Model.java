@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import ad.auction.dashboard.model.calculator.Calculator;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
+import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.model.campaigns.ManyCampaignManager;
 import ad.auction.dashboard.model.config.ConfigHandler;
 import ad.auction.dashboard.model.files.FileTracker;
@@ -106,7 +107,7 @@ public class Model {
      * @param state cumulative data or not
      */
     public void setCumulative(boolean state) {
-        this.campaignManager.getCurrentCampaign().clearCache();
+        this.campaignManager.getActiveCampaigns().values().forEach(Campaign::clearCache);
         this.calculator.setCumulative(state);
     }
 

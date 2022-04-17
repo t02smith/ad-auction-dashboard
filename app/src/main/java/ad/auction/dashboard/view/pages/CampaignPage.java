@@ -51,7 +51,7 @@ public class CampaignPage extends BasePage {
 
     private enum CampaignComponent {
         CUMULATIVE_GRAPH("Cumulative"),
-        NON_CUMULATIVE_GRAPH("Trend"),
+        TREND_GRAPH("Trend"),
         HISTOGRAM("Histogram");
         //Dashboard tbd
 
@@ -70,10 +70,9 @@ public class CampaignPage extends BasePage {
     //Function to load a given metric
     @SuppressWarnings("unchecked")
     private final Consumer<Metrics> loadMetric = m -> {
-        this.setMetric(m);
+        this.currentMetric = m;
         this.graph.clearDatasets();
         this.graph.setYName(m.getMetric().unit());
-
 
         if (!(this.currentMetric.getMetric() instanceof Histogram) && this.active == CampaignComponent.HISTOGRAM) {
             this.active = CampaignComponent.CUMULATIVE_GRAPH;
@@ -85,7 +84,7 @@ public class CampaignPage extends BasePage {
 
         HashMap<String, Future<Object>> future = controller.runCalculation(m, switch (active) {
             case HISTOGRAM -> MetricFunction.HISTOGRAM;
-            case CUMULATIVE_GRAPH, NON_CUMULATIVE_GRAPH -> MetricFunction.OVER_TIME;
+            case CUMULATIVE_GRAPH, TREND_GRAPH -> MetricFunction.OVER_TIME;
         });
         while (future.values().stream().anyMatch(f -> !f.isDone())) {}
 
@@ -100,10 +99,6 @@ public class CampaignPage extends BasePage {
             }
             catch (Exception ignored) {}
         });
-
-
-
-        
     };
 
     public CampaignPage(Window window, String campaignName) {
@@ -226,11 +221,6 @@ public class CampaignPage extends BasePage {
         return title;
     }
 
-
-    private void setMetric(Metrics m) {
-        this.currentMetric = m;
-    }
-
     private VBox campaignList() {
         var title = new Label("Snapshots:");
         title.getStyleClass().addAll("bg-primary");
@@ -278,13 +268,13 @@ public class CampaignPage extends BasePage {
         var options = new ComboBox<>(FXCollections.observableArrayList(
                 this.currentMetric.getMetric() instanceof Histogram
                 ? CampaignComponent.values()
-                : new CampaignComponent[] {CampaignComponent.CUMULATIVE_GRAPH, CampaignComponent.NON_CUMULATIVE_GRAPH}));
+                : new CampaignComponent[] {CampaignComponent.CUMULATIVE_GRAPH, CampaignComponent.TREND_GRAPH}));
         options.setValue(this.active);
         options.valueProperty().addListener(e -> {
             this.active = options.getValue();
             switch (this.active) {
                 case CUMULATIVE_GRAPH -> controller.setCumulative(true);
-                case NON_CUMULATIVE_GRAPH -> controller.setCumulative(false);
+                case TREND_GRAPH -> controller.setCumulative(false);
             }
 
             loadMetric.accept(currentMetric);
