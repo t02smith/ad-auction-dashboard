@@ -37,4 +37,17 @@
             </section>
         </sections>
     </guide>
+    <guide>
+        <id>3</id>
+        <name>Adding Filters</name>
+        <description>How to add filters to your loaded campaign</description>
+        <steps>
+            <step>Select "Load Campaign" from the main menu</step>
+            <step>Select the campaign you wish to load into the system</step>
+            <step>Select the filters tab in the bottom left</step>
+            <step>Choose the filters you want to apply</step>
+            <step>E.g. Unchecking the boxes for "Male" and "High" and picking a "Before" date</step>
+            <step>An updated graph will now be displayed</step>
+        </steps>
+    </guide>
 </guides>
