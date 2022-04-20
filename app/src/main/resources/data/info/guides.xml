@@ -87,4 +87,16 @@
             <step>An updated graph will now be displayed</step>
         </steps>
     </guide>
+    <guide>
+        <id>7</id>
+        <name>Change themes on the setting page</name>
+        <description>How to change themes of the app</description>
+        <steps>
+            <step>Select "Setttings" from the main menu</step>
+            <step>Select the "Appearence" on the side menu of the setting page</step>
+            <step>Select the "DARK" mode or "LIGHT" mode for the theme selection</step>
+            <step>Click the selection</step>
+            <step>The theme will change to the one you choose</step>
+        </steps>
+    </guide>
 </guides>
