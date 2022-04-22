@@ -39,6 +39,41 @@
     </guide>
     <guide>
         <id>3</id>
+        <name>Viewing your campaigns</name>
+        <description>See how your ad campaign performed</description>
+        <steps>
+            <step>Make sure you have uploaded your campaign</step>
+            <link>
+                <linkText>Click here to read about uploading campaigns</linkText>
+                <linkRef>1</linkRef>
+            </link>
+            <step>Select "Load Campaign" on the main menu</step>
+            <step>Select your campaign from the list</step>
+            <step>Once your campaign has finished loading you will be directed to the campaign page</step>
+            <step>You can change which metric to view for your campaign from the menu on the left</step>
+            <link>
+                <linkText>Click here to read about different metrics</linkText>
+                <linkRef>4</linkRef>
+            </link>
+            <step>You can change the type of graph to look at through the dropdown menu in the top right</step>
+            <link>
+                <linkText>Click here to read about graph types</linkText>
+                <linkRef>1</linkRef>
+            </link>
+            <step>You can also apply filters to your dataset</step>
+            <link>
+                <linkText>Click here to read about using filters</linkText>
+                <linkRef>5</linkRef>
+            </link>
+            <step>You can include other campaigns and "snapshot" your current settings</step>
+            <link>
+                <linkText>Click here to read about including other campaigns</linkText>
+                <linkRef>6</linkRef>
+            </link>
+        </steps>
+    </guide>
+    <guide>
+        <id>5</id>
         <name>Adding Filters</name>
         <description>How to add filters to your loaded campaign</description>
         <steps>

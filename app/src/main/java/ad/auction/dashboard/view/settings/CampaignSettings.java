@@ -11,7 +11,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class CampaignSettings extends SettingPage {
 

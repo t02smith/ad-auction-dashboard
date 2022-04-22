@@ -176,10 +176,12 @@ public class UploadPage extends BasePage {
                     boolean[] out = res.get();
                     if (out[0] && out[1] && out[2]) window.startMenu();
                     else {
-                        var b = new StringBuilder("The following files have incorrect formats: ");
+                        var b = new StringBuilder();
+                        b.append("The following files have incorrect formats: ");
                         if (!out[0]) b.append(clkPath).append(", ");
                         if (!out[1]) b.append(impPath).append(", ");
                         if (!out[2]) b.append(svrPath);
+
                         this.alertUser(b.toString());
 
                         controller.removeCampaign(campaignName);

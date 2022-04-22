@@ -293,10 +293,26 @@ All styles not exclusive to a colour scheme
     -fx-cursor: hand;
 }
 
+/*SNAPSHOT MENU*/
+
+.snapshot-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 17px;
+}
+
+.snapshot-new {
+    padding: 10px;
+}
+
 /*GUIDES*/
 
 .guide {
     -fx-padding: 20;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
 }
 
 .guide-name {

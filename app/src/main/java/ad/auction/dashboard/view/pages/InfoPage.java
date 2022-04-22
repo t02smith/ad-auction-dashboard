@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
+import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.config.Guide;
 import ad.auction.dashboard.model.config.GuideHandler;
 import ad.auction.dashboard.view.components.BackBtn;
@@ -12,6 +13,8 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
+import java.util.Arrays;
+
 
 /**
  *  Displays help settings for users to learn
@@ -20,6 +23,7 @@ import javafx.scene.text.Text;
 public class InfoPage extends BasePage {
 
     private final BorderPane bp = new BorderPane();
+    private GuideView guide;
 
     public InfoPage(Window window) {
         super(window);
@@ -36,8 +40,7 @@ public class InfoPage extends BasePage {
         this.bp.setLeft(tabs);
 
         var guides = guides();
-        if (guides != null)
-            tabs.addPane("guides", guides);
+        tabs.addPane("guides", guides);
 
         tabs.build();
         //TODO definitions
@@ -50,13 +53,20 @@ public class InfoPage extends BasePage {
         var gHandler = new GuideHandler();
         gHandler.parse();
         var guides = gHandler.getGuides();
+        guides.add(metricList());
 
-        if (guides.size() == 0) return null;
-
-        //Create component
-        return new ButtonList<>(guides, guides.get(0), false, g -> {
-            this.bp.setCenter(new GuideView(g));
+        ButtonList<Guide> bl;
+        this.guide = new GuideView(guides.get(0), ref -> {
+            var newG = guides.stream().filter(g -> g.id() == ref);
+            var guide = newG.findFirst();
+            guide.ifPresent(value -> this.guide.setGuide(value));
         });
+
+        this.bp.setCenter(this.guide);
+        bl = new ButtonList<>(guides, guides.get(0), false, g ->
+                this.guide.setGuide(g));
+
+        return bl;
     }
 
     private BorderPane title() {
@@ -75,6 +85,12 @@ public class InfoPage extends BasePage {
         BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
         title.setLeft(backButton);
         return title;
+    }
+
+    private Guide metricList() {
+        return new Guide(4,"Metrics", "Understanding how to review your campaign", null, Arrays.stream(Metrics.values()).map(m ->
+            new Guide.Section(m.getMetric().displayName(), m.getMetric().desc())
+        ).toList());
     }
 
 }

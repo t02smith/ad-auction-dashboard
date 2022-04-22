@@ -1,30 +1,46 @@
 package ad.auction.dashboard.view.components;
 
+import ad.auction.dashboard.App;
 import ad.auction.dashboard.model.config.Guide;
+import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.util.function.Consumer;
 
-public class GuideView extends VBox {
 
-    private final Guide guide;
+public class GuideView extends ScrollPane {
 
-    public GuideView(Guide g) {
+    private Guide guide;
+    private final Consumer<Integer> openLink;
+
+    public GuideView(Guide g, Consumer<Integer> openLink) {
         this.guide = g;
+        this.openLink = openLink;
+        this.getStyleClass().add("scroll-pane");
+        this.setHbarPolicy(ScrollBarPolicy.NEVER);
+        this.setMaxWidth(App.getInstance().window().getWidth() - 300);
+        App.getInstance().window().widthProperty().addListener(e -> this.setMaxWidth(App.getInstance().window().getWidth() - 300));
+
         this.build();
     }
 
     private void build() {
-        this.getStyleClass().addAll("guide", "bg-primary");
-        this.getChildren().addAll(
+        var vb = new VBox(
                 name(),
                 description(),
                 guide.steps() != null ? steps(): new Text(),
                 guide.sections() != null ? sections(): new Text()
         );
+        vb.setMaxWidth(App.getInstance().window().getWidth() - 300);
+        App.getInstance().window().widthProperty().addListener(e -> vb.setMaxWidth(App.getInstance().window().getWidth() - 300));
+        vb.getStyleClass().addAll("guide, bg-primary");
+        this.setContent(vb);
+
     }
 
     private Label name() {
@@ -53,6 +69,7 @@ public class GuideView extends VBox {
             if (s.isLink()) {
                 lbl.setText(" -> " + s.text());
                 lbl.getStyleClass().add("guide-link");
+                lbl.setOnMouseClicked(e -> this.openLink.accept(s.ref()));
             } else {
                 lbl.setText(step[0] + ": " + s.text());
                 lbl.getStyleClass().add("guide-step");
@@ -82,5 +99,11 @@ public class GuideView extends VBox {
         });
 
         return secs;
+    }
+
+    public void setGuide(Guide g) {
+        this.guide = g;
+        //this.getChildren().clear();
+        this.build();
     }
 }

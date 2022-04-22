@@ -222,20 +222,27 @@ public class CampaignPage extends BasePage {
     }
 
     private VBox campaignList() {
-        var title = new Label("Snapshots:");
-        title.getStyleClass().addAll("bg-primary");
-
         var emptyMsg = new Label("No active snapshots");
-        emptyMsg.getStyleClass().addAll("bg-primary");
-
-        //List of active included/joined campaigns
-        var active = new VBox(title);
-        active.getStyleClass().add("bg-primary");
+        emptyMsg.getStyleClass().addAll("bg-secondary");
 
         var genSnapshot = new Button("Snapshot");
+        var hbox = new HBox(genSnapshot);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setPadding(new Insets(10));
+        hbox.getStyleClass().add("bg-secondary");
+
+        //List of active included/joined campaigns
+        var active = new VBox(hbox);
+        active.setMinWidth(300);
+        active.getStyleClass().add("bg-primary");
+
+        int[] counter = new int[] {1};
+
+        genSnapshot.getStyleClass().add("buttonStyle");
         genSnapshot.setOnAction(e -> {
             var id = controller.snapshot();
-            var btn = new Label(Integer.toString(id));
+            var btn = new Label("Snapshot " + counter[0]);
+            counter[0] += 1;
             btn.getStyleClass().add("metric-btn");
             btn.setMinWidth(300);
             btn.setOnMouseClicked(ev -> {
@@ -261,7 +268,7 @@ public class CampaignPage extends BasePage {
             loadMetric.accept(currentMetric);
         });
 
-        return new VBox(bl, active, genSnapshot);
+        return new VBox(bl, active);
     }
 
     private ComboBox<CampaignComponent> campaignComponents() {

@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.ui;
 
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -121,6 +122,10 @@ public class Window {
 
 	public double getWidth() {
 		return stage.getWidth();
+	}
+
+	public ReadOnlyDoubleProperty widthProperty() {
+		return this.stage.widthProperty();
 	}
 
 	public double getHeight() {

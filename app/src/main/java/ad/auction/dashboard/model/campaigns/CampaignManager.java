@@ -65,7 +65,7 @@ public class CampaignManager {
         var output = new boolean[] {
                 this.model.files().correctFileType(clickPath, FileType.CLICK),
                 this.model.files().correctFileType(impressionPath, FileType.IMPRESSION),
-                this.model.files().correctFileType(serverPath, FileType.SERVER)
+                this.model.files().correctFileType(serverPath, FileType.SERVER),
         };
 
         if (output[0] && output[1] && output[2]) {
