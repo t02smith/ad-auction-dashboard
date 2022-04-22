@@ -85,4 +85,53 @@
             <step>An updated graph will now be displayed</step>
         </steps>
     </guide>
+    <guide>
+        <id>4</id>
+        <name>Change between metrics</name>
+        <description>How to change between metrics for your loaded campaign</description>
+        <steps>
+            <step>Select "Load Campaign" from the main menu</step>
+            <step>Select the campaign you wish to load into the system</step>
+            <step>Select the metrics tab in the bottom left</step>
+            <step>Choose the metrics you wish to look at (E.g. "Number of Impressions" or "Number of Clicks")</step>
+            <step>An updated graph will now be displayed</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>5</id>
+        <name>Change type of graph</name>
+        <description>How to change type of graph for your loaded campaign</description>
+        <steps>
+            <step>Select "Load Campaign" from the main menu</step>
+            <step>Select the campaign you wish to load into the system</step>
+            <step>Select the drop down button in the top right</step>
+            <step>Choose the between the available graphs (E.g. "Cumulative" or "Trend")</step>
+            <step>An updated graph will now be displayed</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>6</id>
+        <name>Switch between graph and dashboard</name>
+        <description>How to switch between graph and dashboard for your loaded campaign</description>
+        <steps>
+            <step>Select "Load Campaign" from the main menu</step>
+            <step>Select the campaign you wish to load into the system</step>
+            <step>If currently displaying graphs, click the Dashboard button on the top right</step>
+            <step>A dashboard will now be displayed</step>
+            <step>If currently displaying dashboard, Click the Graph button on the top right</step>
+            <step>An updated graph will now be displayed</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>7</id>
+        <name>Change themes on the setting page</name>
+        <description>How to change themes of the app</description>
+        <steps>
+            <step>Select "Setttings" from the main menu</step>
+            <step>Select the "Appearence" on the side menu of the setting page</step>
+            <step>Select the "DARK" mode or "LIGHT" mode for the theme selection</step>
+            <step>Click the selection</step>
+            <step>The theme will change to the one you choose</step>
+        </steps>
+    </guide>
 </guides>

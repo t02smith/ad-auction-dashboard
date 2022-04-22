@@ -56,7 +56,8 @@ public class ButtonList<T> extends ScrollPane {
         this.setContent(elems);
         values.forEach((v -> {
             var btn = new Label(v.toString());
-            btn.setMaxWidth(Double.MAX_VALUE);
+            btn.setMaxWidth(300);
+            btn.setWrapText(true);
             btn.setMinWidth(300);
             btn.setOnMouseClicked(e -> {
                 onClick.accept(v);
