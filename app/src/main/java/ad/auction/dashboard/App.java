@@ -8,8 +8,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class App extends Application {
-	// stage of the app
-	private Stage stage;
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
 
     //Will be changed
@@ -27,7 +25,6 @@ public class App extends Application {
     public void start(Stage stage) {
     	instance = this;
     	
-        this.stage = stage;
         this.window = new Window(stage,HEIGHT,WIDTH);
         stage.show();
     }

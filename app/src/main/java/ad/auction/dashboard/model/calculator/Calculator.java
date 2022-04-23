@@ -115,6 +115,7 @@ public class Calculator {
     public void setTimeResolution(ChronoUnit res) {
         switch (res) {
             case DAYS, HOURS, WEEKS -> this.timeResolution = res;
+            default -> this.timeResolution = ChronoUnit.DAYS;
         }
     }
 }

@@ -2,7 +2,6 @@ package ad.auction.dashboard.view.pages;
 
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.controller.Controller;
-import ad.auction.dashboard.view.settings.AppearanceSettings;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;

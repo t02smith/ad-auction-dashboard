@@ -2,7 +2,6 @@ package ad.auction.dashboard.view.components;
 
 import ad.auction.dashboard.App;
 import ad.auction.dashboard.model.config.Guide;
-import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

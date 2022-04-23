@@ -8,8 +8,6 @@ import javafx.scene.layout.*;
 
 import java.io.File;
 
-
-//TODO refactor this 💩💩
 public class EditPage extends UploadPage {
 
     private final CampaignData oldCampaign;

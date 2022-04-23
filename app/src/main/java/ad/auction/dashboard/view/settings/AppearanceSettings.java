@@ -5,12 +5,8 @@ import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.view.components.SettingsSection;
 import ad.auction.dashboard.view.components.SettingsSectionItem;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 
 public class AppearanceSettings extends SettingPage {
     private final Controller controller = App.getInstance().controller();

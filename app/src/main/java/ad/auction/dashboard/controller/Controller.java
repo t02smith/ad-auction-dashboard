@@ -138,12 +138,12 @@ public class Controller {
 
 
     /*SNAPSHOTS*/
-    public int snapshot() {
+    public String snapshot() {
         return this.model.campaigns().snapshotCampaign();
     }
 
-    public void removeSnapshot(int hash) {
-        this.model.campaigns().removeSnapshot(hash);
+    public void removeSnapshot(String name) {
+        this.model.campaigns().removeSnapshot(name);
     }
 
     /**
@@ -181,6 +181,10 @@ public class Controller {
 
     public List<CampaignData> getCampaigns() {
         return this.model.campaigns().getCampaigns();
+    }
+
+    public List<CampaignData> getActiveCampaigns() {
+        return this.model.campaigns().getActiveCampaignData();
     }
 
     public CampaignData getCampaignData(String name) {return this.model.campaigns().getCampaignData(name);}

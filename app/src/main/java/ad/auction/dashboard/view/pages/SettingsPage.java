@@ -12,12 +12,8 @@ import ad.auction.dashboard.view.components.TabMenu;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class SettingsPage extends BasePage{

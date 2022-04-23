@@ -6,14 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import ad.auction.dashboard.model.calculator.Histogram;
+import ad.auction.dashboard.model.calculator.MetricManager;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterList;
-import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
 import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +33,13 @@ import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 /**
  * Advertisement page that holds the UI part of the graphs and controls
@@ -44,8 +53,10 @@ public class CampaignPage extends BasePage {
     private final String campaignName;
 
     private LineChartModel graph;
+    private StackPane dashBoard = new StackPane();
     private final BorderPane screen = new BorderPane();
     private final VBox selectionWrapper = new VBox();
+    private TableView<MetricManager> metricBox;
 
     //current selection
     private Metrics currentMetric = controller.getDefaultMetric();
@@ -68,6 +79,9 @@ public class CampaignPage extends BasePage {
             return displayName;
         }
     }
+    
+    private final Button dashButton = new Button("Dashboard");
+    private boolean onDashboard = false;
 
     //Function to load a given metric
     @SuppressWarnings("unchecked")
@@ -185,12 +199,14 @@ public class CampaignPage extends BasePage {
         gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.725);
         gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.275);
 
+
         // Stack the drawn arrow on the button
         var pane = new StackPane();
         pane.getChildren().addAll(backButton, canvas);
 
         return pane;
     }
+
 
     private BorderPane title() {
         //Title background on top
@@ -219,6 +235,31 @@ public class CampaignPage extends BasePage {
         right.setSpacing(25);
         right.setAlignment(Pos.CENTER);
 
+        //DashBoard toggle button
+        dashButton.setPrefHeight(40);
+        dashButton.setPrefWidth(150);
+        dashButton.getStyleClass().add("buttonStyle");
+        dashButton.setText("Dashboard");
+        onDashboard = false;
+        dashButton.setOnAction(e -> {
+            if (onDashboard) {
+                logger.info("Changing to Linechart");
+                onDashboard = false;
+                dashButton.setText("Dashboard");
+                loadMetric.accept(currentMetric);
+            } else {
+                logger.info("Loading Dashboard");
+                onDashboard = true;
+                dashButton.setText("Graph");
+                this.screen.setCenter(this.dashBoard);
+                dashBoard.getChildren().add(buildDashBoard());
+
+            }
+        });
+
+
+        right.getChildren().add(dashButton);
+
         title.setRight(right);
         return title;
     }
@@ -244,7 +285,7 @@ public class CampaignPage extends BasePage {
                 var id = controller.snapshot();
                 counter[0] += 1;
 
-                var btn = new Label("Snapshot " + counter[0]);
+                var btn = new Label(String.valueOf(id));
                 btn.getStyleClass().add("snapshot-btn");
                 btn.setMinWidth(250);
 
@@ -267,7 +308,6 @@ public class CampaignPage extends BasePage {
             } catch (IllegalStateException err) {
                 //TODO
             }
-
         });
 
         var cList = controller.getCampaigns().stream()
@@ -284,6 +324,73 @@ public class CampaignPage extends BasePage {
         return new VBox(bl, active);
     }
 
+    private BorderPane buildDashBoard() {
+        var dashPane = new BorderPane();
+        dashPane.getStyleClass().setAll("bg-primary");
+
+        var dTitle = new Label("Dashboard");
+        dTitle.setAlignment(Pos.CENTER);
+        dTitle.getStyleClass().setAll("topTitle");
+
+        dashPane.setTop(dTitle);
+        BorderPane.setAlignment(dTitle, Pos.CENTER);
+
+
+        this.metricBox = new TableView<>();
+        metricBox.getStyleClass().add("table-view");
+
+        metricBox.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        
+        TableColumn<MetricManager, String> metricColumn = new TableColumn<MetricManager, String>("Metrics");
+        metricColumn.setCellValueFactory(new PropertyValueFactory<MetricManager, String>("currentMetric"));
+        
+        metricBox.getColumns().add(metricColumn);
+
+        var activeCampaigns = controller.getActiveCampaigns();
+
+        activeCampaigns.forEach((camp) -> {
+            TableColumn<MetricManager, String> campColumn = new TableColumn<MetricManager, String>(camp.name());
+            campColumn.setCellValueFactory(new Callback<CellDataFeatures<MetricManager, String>, ObservableValue<String>>() {
+
+                @Override 
+                public ObservableValue<String> call(CellDataFeatures<MetricManager, String> rowObject) { 
+                    return new SimpleStringProperty(rowObject.getValue().getOutput(camp.name())); 
+                } 
+            });
+
+            metricBox.getColumns().add(campColumn);
+        });
+
+        metricBox.getItems().addAll(
+            Stream.of(Metrics.values()).map(m -> new MetricManager(m)).toList()
+        );
+        
+        restrictDashboardHeight();
+        dashPane.setCenter(metricBox);
+
+        return dashPane;
+
+    }
+
+    private void restrictDashboardHeight() {
+
+        metricBox.setFixedCellSize(25);
+        metricBox.setPadding(new Insets(0, 20, 15, 20));
+
+        int rows = metricBox.getItems().size();
+        logger.info(rows);
+        TableHeaderRow headRow = (TableHeaderRow) metricBox.lookup("TableHeaderRow");
+        double height = (rows * metricBox.getFixedCellSize())
+                      + metricBox.getInsets().getTop() + metricBox.getInsets().getBottom()
+                      + (headRow == null ? 0 : headRow.getHeight());
+        logger.info(height);
+
+        metricBox.setMinHeight(height);
+        metricBox.setMaxHeight(height+metricBox.getFixedCellSize());
+        metricBox.setPrefHeight(height);
+    }
+
+
     private ComboBox<CampaignComponent> campaignComponents() {
         var options = new ComboBox<>(FXCollections.observableArrayList(
                 this.currentMetric.getMetric() instanceof Histogram
@@ -295,6 +402,7 @@ public class CampaignPage extends BasePage {
             switch (this.active) {
                 case CUMULATIVE_GRAPH -> controller.setCumulative(true);
                 case TREND_GRAPH -> controller.setCumulative(false);
+                default -> logger.error("err");
             }
 
             loadMetric.accept(currentMetric);

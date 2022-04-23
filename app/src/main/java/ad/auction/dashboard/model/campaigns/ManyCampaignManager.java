@@ -1,11 +1,16 @@
 package ad.auction.dashboard.model.campaigns;
 
 import ad.auction.dashboard.model.Model;
+import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public class ManyCampaignManager extends CampaignManager {
 
@@ -15,7 +20,7 @@ public class ManyCampaignManager extends CampaignManager {
     private final HashSet<String> includedCampaigns = new HashSet<>();
 
     //Additional campaigns/filtered datasets to include
-    private final HashMap<Integer, CampaignSnapshot> snapshots = new HashMap<>();
+    private final HashMap<String, CampaignSnapshot> snapshots = new HashMap<>();
 
     public ManyCampaignManager(Model model) {
         super(model);
@@ -49,7 +54,7 @@ public class ManyCampaignManager extends CampaignManager {
      * Create a snapshot of the current campaign configuration
      * @return a reference hash
      */
-    public int snapshotCampaign() {
+    public String snapshotCampaign() {
         if (this.currentCampaign == null)
             throw new IllegalStateException("A campaign must be opened before snapshotting");
 
@@ -63,14 +68,13 @@ public class ManyCampaignManager extends CampaignManager {
              }
         });
 
-        var hash = snap.hashCode();
-        this.snapshots.put(hash,snap);
-        return hash;
+        this.snapshots.put(snap.name(),snap);
+        return snap.name();
     }
 
-    public void removeSnapshot(int hash) {
-        logger.info("Removing snapshot {}", hash);
-        this.snapshots.remove(hash);
+    public void removeSnapshot(String name) {
+        logger.info("Removing snapshot {}", name);
+        this.snapshots.remove(name);
     }
 
     /**
@@ -86,16 +90,20 @@ public class ManyCampaignManager extends CampaignManager {
         this.includedCampaigns.remove(campaign);
     }
 
-    /**
-     *
-     * @return
-     */
+
     public HashMap<String, Campaign> getActiveCampaigns() {
         var cs = new HashMap<String, Campaign>();
         includedCampaigns.forEach(c -> cs.put(c, this.campaigns.get(c)));
         snapshots.forEach((hash, s) -> cs.put(hash.toString(), s));
         cs.put(currentCampaign.name(), currentCampaign);
         return cs;
+    }
+
+    public List<CampaignData> getActiveCampaignData() {
+        Collection<Campaign> res = this.getActiveCampaigns().values();
+        List<CampaignData> data = new ArrayList<>();
+        res.forEach(c -> data.add(c.getData()));
+        return data;
     }
 
     /**
@@ -107,8 +115,8 @@ public class ManyCampaignManager extends CampaignManager {
         return this.includedCampaigns.contains(name);
     }
 
-    public CampaignSnapshot getSnapshot(int hash) {
-        return this.snapshots.get(hash);
+    public CampaignSnapshot getSnapshot(String name) {
+        return this.snapshots.get(name);
     }
 
 }

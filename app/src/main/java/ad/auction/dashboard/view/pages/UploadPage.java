@@ -1,6 +1,5 @@
 package ad.auction.dashboard.view.pages;
 
-import ad.auction.dashboard.App;
 import ad.auction.dashboard.model.files.FileType;
 import ad.auction.dashboard.view.ui.Window;
 import javafx.geometry.Pos;
@@ -13,8 +12,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.List;
-
-import ad.auction.dashboard.controller.Controller;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
