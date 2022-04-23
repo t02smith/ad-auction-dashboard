@@ -1,5 +1,6 @@
 package ad.auction.dashboard.view.pages;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.function.Consumer;
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import ad.auction.dashboard.view.components.ButtonList;
+import ad.auction.dashboard.view.components.FilterList;
 import ad.auction.dashboard.view.components.FilterMenu;
 import ad.auction.dashboard.view.components.TabMenu;
 import javafx.collections.FXCollections;
@@ -136,7 +138,7 @@ public class CampaignPage extends BasePage {
 
         var filterTitle = new Text("Filters");
         filterTitle.getStyleClass().add("filter-title");
-        var filterMenu = new FilterMenu(() -> this.loadMetric.accept(this.currentMetric), cData.start().toLocalDate(), cData.end().toLocalDate());
+        var filterMenu = new FilterList(() -> this.loadMetric.accept(this.currentMetric), (int)ChronoUnit.DAYS.between(cData.start().toLocalDate(), cData.end().toLocalDate()));
         rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
         graphPane.setBottom(graphButtonPane);
@@ -222,8 +224,6 @@ public class CampaignPage extends BasePage {
     }
 
     private VBox campaignList() {
-        var emptyMsg = new Label("No active snapshots");
-        emptyMsg.getStyleClass().addAll("bg-secondary");
 
         var genSnapshot = new Button("Snapshot");
         var hbox = new HBox(genSnapshot);
@@ -240,21 +240,34 @@ public class CampaignPage extends BasePage {
 
         genSnapshot.getStyleClass().add("buttonStyle");
         genSnapshot.setOnAction(e -> {
-            var id = controller.snapshot();
-            var btn = new Label("Snapshot " + counter[0]);
-            counter[0] += 1;
-            btn.getStyleClass().add("metric-btn");
-            btn.setMinWidth(300);
-            btn.setOnMouseClicked(ev -> {
-                controller.removeSnapshot(id);
-                active.getChildren().remove(btn);
-                if (active.getChildren().size() == 1)
-                    active.getChildren().add(emptyMsg);
-            });
+            try {
+                var id = controller.snapshot();
+                counter[0] += 1;
 
-            if (active.getChildren().size()==1)
-                active.getChildren().remove(emptyMsg);
-            active.getChildren().add(btn);
+                var btn = new Label("Snapshot " + counter[0]);
+                btn.getStyleClass().add("snapshot-btn");
+                btn.setMinWidth(250);
+
+                var close = new Button("x");
+                close.getStyleClass().add("snapshot-close");
+                close.setMinWidth(50);
+
+                var hb = new HBox(btn, close);
+                hb.setMinWidth(300);
+                hb.getStyleClass().addAll("bg-secondary", "snapshot-box");
+                hb.setAlignment(Pos.CENTER);
+
+                close.setOnMouseClicked(ev -> {
+                    controller.removeSnapshot(id);
+                    active.getChildren().remove(hb);
+                    loadMetric.accept(currentMetric);
+                });
+
+                active.getChildren().add(hb);
+            } catch (IllegalStateException err) {
+                //TODO
+            }
+
         });
 
         var cList = controller.getCampaigns().stream()

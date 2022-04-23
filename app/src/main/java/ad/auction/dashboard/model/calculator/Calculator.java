@@ -23,7 +23,7 @@ public class Calculator {
     private static final Logger logger = LogManager.getLogger(Calculator.class.getSimpleName());
 
     // Max calculations to be ran at once
-    private static final int CALCULATOR_THREAD_COUNT = 10;
+    private static final int CALCULATOR_THREAD_COUNT = 15;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(CALCULATOR_THREAD_COUNT);
 

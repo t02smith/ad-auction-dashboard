@@ -304,6 +304,32 @@ All styles not exclusive to a colour scheme
     padding: 10px;
 }
 
+.snapshot-btn {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-padding: 9 18 9 18;
+	-fx-cursor: hand;
+	-fx-margin: 3px;
+	-fx-background-color: transparent;
+	-fx-text-fill: -fx-text-primary;
+}
+
+.snapshot-close {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.snapshot-box {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: -fx-text-primary;
+}
+
+.snapshot-box:hover {
+    -fx-background-color: -fx-bg-tertiary;
+}
+
 /*GUIDES*/
 
 .guide {
