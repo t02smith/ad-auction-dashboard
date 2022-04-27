@@ -10,7 +10,7 @@ import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 public class MetricManager {
 
     private final Metrics currentMetric;
-    private HashMap<String, String> allVals = new HashMap<String, String>();
+    private final HashMap<String, String> allVals = new HashMap<String, String>();
 
     
     public MetricManager(Metrics currentMetric) {

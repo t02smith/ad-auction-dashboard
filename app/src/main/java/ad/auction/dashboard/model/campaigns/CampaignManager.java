@@ -42,6 +42,10 @@ public class CampaignManager {
      */
     public void removeCampaign(String name) {
         if (this.campaigns.containsKey(name)) {
+            if (currentCampaign.name().equals(name)) {
+                currentCampaign.flushData();
+            }
+
             this.campaigns.remove(name);
             logger.info("Removing campaign {}", name);
         } else throw new NoSuchElementException("No campaign " + name + " found");
@@ -97,7 +101,8 @@ public class CampaignManager {
 
         if (c.dataLoaded()) {
             logger.error("Data already loaded for '{}'", c.name());
-            throw new RuntimeException("Data already loaded for " + campaign);
+            return;
+            //throw new RuntimeException("Data already loaded for " + campaign);
         }
 
         logger.info("Reading data for campaign '{}'", c.name());

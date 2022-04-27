@@ -131,4 +131,8 @@ public class Window {
 	public double getHeight() {
 		return stage.getHeight();
 	}
+
+	public Stage stage() {
+		return this.stage;
+	}
 }

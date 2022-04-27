@@ -1,8 +1,10 @@
 package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 
+import ad.auction.dashboard.App;
 import javafx.scene.chart.AreaChart;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +17,20 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
-
+import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import org.gillius.jfxutils.chart.ChartPanManager;
+import org.gillius.jfxutils.chart.ChartZoomManager;
 
 
 public class LineChartModel extends ChartModel {
 
     // Set of data points
     private final HashMap<String, List<Point2D>> datasets = new HashMap<>();
+    private Node graph;
 
     private Boolean clicked = false;
 
@@ -46,7 +54,7 @@ public class LineChartModel extends ChartModel {
                 return;
             }
 
-            data.forEach((p) -> dataSeries.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
+            data.forEach((p) -> dataSeries.getData().add(new XYChart.Data<>(p.getX(), p.getY())));
             seriesList.add(dataSeries);
             dataSeries.setName(name);
             
@@ -61,20 +69,12 @@ public class LineChartModel extends ChartModel {
         var yAxis = new NumberAxis();
         yAxis.setLabel(getYName());
 
-        
         var allData = new ArrayList<XYChart.Series<Number, Number>>();
-        //setAllSeries(allData);
-        
-
         var lChart = new LineChart<>(xAxis, yAxis);
-        //lChart.setTitle(getTitleName());
+
 
         setAllSeries(allData);
         lChart.getData().addAll(allData);
-
-        //lChart.getData().addAll(allData);
-        //lChart.setCreateSymbols(false);
-
 
         var label = new Label();
         label.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
@@ -86,6 +86,16 @@ public class LineChartModel extends ChartModel {
         StackPane.setMargin(label, new Insets(25));
 
         createCursorMonitor(lChart, label);
+        graph = lChart;
+
+        //
+        ChartZoomManager zm = new ChartZoomManager(pane, new Rectangle(), lChart);
+        zm.start();
+        zm.setZoomAnimated(true);
+
+        ChartPanManager pm = new ChartPanManager(lChart);
+        pm.start();
+
         return pane;
 
     }
@@ -99,7 +109,7 @@ public class LineChartModel extends ChartModel {
 
         var series = new XYChart.Series<Number, Number>();
         series.setName(this.getTitleName());
-        data.forEach((p) -> series.getData().add(new XYChart.Data<Number,Number>(p.getX(), p.getY())));
+        data.forEach((p) -> series.getData().add(new XYChart.Data<>(p.getX(), p.getY())));
 
         var aChart = new AreaChart<>(xAxis, yAxis);
         aChart.getData().add(series);
@@ -115,6 +125,7 @@ public class LineChartModel extends ChartModel {
         StackPane.setMargin(label, new Insets(25));
 
         createCursorMonitor(aChart, label);
+        graph = aChart;
         return pane;
     }
     
@@ -142,33 +153,37 @@ public class LineChartModel extends ChartModel {
         }
 
         backgroundNodes.setOnMouseClicked((ev) -> {
-            label.setVisible(true);
-            if (clicked) {
-                //noinspection unchecked
-                chart.getData().removeAll(xDash, yDash);
-                xDash.getData().clear();
-                yDash.getData().clear();
-            } else {
-                var xVal = x.getValueForDisplay(ev.getX());
-                var yVal = y.getValueForDisplay(ev.getY());
+            if (ev.getButton() == MouseButton.SECONDARY) {
+                label.setVisible(true);
+                if (clicked) {
+                    //noinspection unchecked
+                    chart.getData().removeAll(xDash, yDash);
+                    xDash.getData().clear();
+                    yDash.getData().clear();
+                } else {
+                    var xVal = x.getValueForDisplay(ev.getX());
+                    var yVal = y.getValueForDisplay(ev.getY());
 
-                xDash.getData().add(new XYChart.Data<Number,Number>(xVal, 0.0));
-                xDash.getData().add(new XYChart.Data<Number,Number>(xVal, yVal));
-                xDash.setName(String.format("x = " + getFormat(xVal), xVal));
-                
+                    xDash.getData().add(new XYChart.Data<>(xVal, 0.0));
+                    xDash.getData().add(new XYChart.Data<>(xVal, yVal));
+                    xDash.setName(String.format("x = " + getFormat(xVal), xVal));
 
-                yDash.getData().add(new XYChart.Data<Number,Number>(0.0, yVal));
-                yDash.getData().add(new XYChart.Data<Number,Number>(xVal, yVal));
-                yDash.setName(String.format("y = " + getFormat(yVal), yVal));
-                
 
-                chart.getData().addAll(xDash, yDash);
-                xDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
-                yDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
-                 
+                    yDash.getData().add(new XYChart.Data<>(0.0, yVal));
+                    yDash.getData().add(new XYChart.Data<>(xVal, yVal));
+                    yDash.setName(String.format("y = " + getFormat(yVal), yVal));
+
+                    //noinspection unchecked
+                    chart.getData().addAll(xDash, yDash);
+                    xDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
+                    yDash.getNode().setStyle("-fx-stroke-dash-array: 2 12 12 2; filter: brightness(25%); -fx-stroke: #5999ce;");
+
+                }
+
+                clicked = !clicked;
             }
 
-            clicked = !clicked;
+
         });
 
         //Coordinates of Nodes
@@ -195,7 +210,7 @@ public class LineChartModel extends ChartModel {
         });
         x.setOnMouseExited((ev) -> label.setVisible(false));
 
-        //Coordinates in y axis
+        //Coordinates in y-axis
         y.setOnMouseMoved((ev) -> {
             label.setVisible(true);
             var currentValue = y.getValueForDisplay(ev.getY());
@@ -204,6 +219,22 @@ public class LineChartModel extends ChartModel {
         });
         y.setOnMouseExited((ev) -> label.setVisible(false));
 
+    }
+
+    public void screenshot() {
+        WritableImage snapshot = graph.snapshot(null, null);
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                "image files (*.png)", "*.png"));
+
+        File file = fileChooser.showOpenDialog(App.getInstance().window().stage());
+        if (file != null) {
+            String name = file.getName();
+            if (!name.toUpperCase().endsWith(".PNG")) {
+                file = new File(file.getAbsolutePath() + ".png");
+            }
+        }
     }
 
 }

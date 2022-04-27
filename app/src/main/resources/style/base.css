@@ -195,6 +195,7 @@ All styles not exclusive to a colour scheme
 
 .chart {
     -fx-background-color: -fx-bg-primary;
+    -fx-cursor: hand
 }
 
 .chart-legend {

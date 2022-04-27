@@ -46,7 +46,7 @@ public class Controller {
     public Future<Void> toggleCampaign(String name) {
         return executor.submit(() -> {
             if (!model.campaigns().isIncluded(name)) model.campaigns().includeCampaign(name);
-            else model.campaigns().unincludeCampaing(name);
+            else model.campaigns().unincludeCampaign(name);
             return null;
         });
     }

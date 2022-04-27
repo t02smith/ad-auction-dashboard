@@ -40,7 +40,7 @@ public class ManyCampaignsTest {
     @Test
     @DisplayName("uninclude a campaign")
     public void unincludeCampaignTest() {
-        model.campaigns().unincludeCampaing("new test");
+        model.campaigns().unincludeCampaign("new test");
         assertFalse(model.campaigns().isIncluded("new test"));
         model.campaigns().includeCampaign("new test");
     }

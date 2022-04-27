@@ -16,7 +16,6 @@ import ad.auction.dashboard.view.components.FilterList;
 import ad.auction.dashboard.view.components.TabMenu;
 import javafx.collections.FXCollections;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -35,11 +34,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
 
 /**
  * Advertisement page that holds the UI part of the graphs and controls
@@ -53,7 +50,7 @@ public class CampaignPage extends BasePage {
     private final String campaignName;
 
     private LineChartModel graph;
-    private StackPane dashBoard = new StackPane();
+    private final StackPane dashBoard = new StackPane();
     private final BorderPane screen = new BorderPane();
     private final VBox selectionWrapper = new VBox();
     private TableView<MetricManager> metricBox;
@@ -335,14 +332,13 @@ public class CampaignPage extends BasePage {
         dashPane.setTop(dTitle);
         BorderPane.setAlignment(dTitle, Pos.CENTER);
 
-
         this.metricBox = new TableView<>();
         metricBox.getStyleClass().add("table-view");
 
         metricBox.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-        TableColumn<MetricManager, String> metricColumn = new TableColumn<MetricManager, String>("Metrics");
-        metricColumn.setCellValueFactory(new PropertyValueFactory<MetricManager, String>("currentMetric"));
+        TableColumn<MetricManager, String> metricColumn = new TableColumn<>("Metrics");
+        metricColumn.setCellValueFactory(new PropertyValueFactory<>("currentMetric"));
         
         metricBox.getColumns().add(metricColumn);
 
@@ -350,19 +346,15 @@ public class CampaignPage extends BasePage {
 
         activeCampaigns.forEach((camp) -> {
             TableColumn<MetricManager, String> campColumn = new TableColumn<MetricManager, String>(camp.name());
-            campColumn.setCellValueFactory(new Callback<CellDataFeatures<MetricManager, String>, ObservableValue<String>>() {
-
-                @Override 
-                public ObservableValue<String> call(CellDataFeatures<MetricManager, String> rowObject) { 
-                    return new SimpleStringProperty(rowObject.getValue().getOutput(camp.name())); 
-                } 
-            });
+            campColumn.setCellValueFactory(rowObject -> new SimpleStringProperty(rowObject.getValue().getOutput(camp.name())));
 
             metricBox.getColumns().add(campColumn);
         });
 
         metricBox.getItems().addAll(
-            Stream.of(Metrics.values()).map(m -> new MetricManager(m)).toList()
+            Stream.of(Metrics.values())
+                    .parallel()
+                    .map(MetricManager::new).toList()
         );
         
         restrictDashboardHeight();

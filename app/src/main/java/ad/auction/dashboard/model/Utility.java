@@ -1,5 +1,9 @@
 package ad.auction.dashboard.model;
 
+import javafx.scene.image.WritableImage;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,6 +34,10 @@ public final class Utility {
     public static double roundNDp(double number, int n) {
         final double factor = Math.pow(10, n);
         return (double)Math.round(number*factor)/factor;
+    }
+
+    public static void saveScreenshot(String name, WritableImage img) {
+
     }
     
 }

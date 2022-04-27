@@ -6,11 +6,7 @@ import ad.auction.dashboard.model.campaigns.Campaign.CampaignData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ManyCampaignManager extends CampaignManager {
 
@@ -33,6 +29,17 @@ public class ManyCampaignManager extends CampaignManager {
         this.snapshots.clear();
 
         super.openCampaign(name);
+    }
+
+    @Override
+    public void removeCampaign(String name) {
+        if (this.campaigns.containsKey(name)) {
+            if (includedCampaigns.contains(name)) {
+                this.campaigns.get(name).flushData();
+            }
+            this.campaigns.remove(name);
+            logger.info("Removing campaign {}", name);
+        } else throw new NoSuchElementException("No campaign " + name + " found");
     }
 
     /**
@@ -81,7 +88,7 @@ public class ManyCampaignManager extends CampaignManager {
      * Remove a campaign from the included list
      * @param campaign the campaign to remove
      */
-    public void unincludeCampaing(String campaign) {
+    public void unincludeCampaign(String campaign) {
         if (!this.includedCampaigns.contains(campaign)) return;
 
         logger.info("unincluding campaign {}", campaign);

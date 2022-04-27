@@ -141,12 +141,4 @@ public class CampaignManagerTest {
     public void loadInvalidCampaignTest() {
         assertThrows(NoSuchElementException.class,() -> model.campaigns().loadCampaignData("not a real campaign"));
     }
-
-    @Test
-    @DisplayName("Load already loaded campaign")
-    public void loadLoadedCampaignTest() {
-        model.campaigns().loadCampaignData("2 week - test");
-        assertThrows(RuntimeException.class, () -> model.campaigns().loadCampaignData("2 week - test"));
-
-    }
 }
