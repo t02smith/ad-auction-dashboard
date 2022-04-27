@@ -37,8 +37,8 @@ public class CampaignList extends BorderPane {
 
         var title = new Label("Your campaigns");
         title.getStyleClass().add("cl-title");
-        var titleWrapper = new HBox(title);
-        titleWrapper.setAlignment(Pos.CENTER);
+        var titleWrapper = new BorderPane();
+        titleWrapper.setCenter(title);
 
         this.setTop(titleWrapper);
 
@@ -63,10 +63,10 @@ public class CampaignList extends BorderPane {
             campaignLs.getChildren().add(new HBox(campaign, empty, settings));
         });
 
-        var close = new Button("Close");
+        var close = new Button("X");
         close.setOnAction(e -> this.close.run());
         close.getStyleClass().add("cl-close");
 
-        this.setBottom(close);
+        titleWrapper.setRight(close);
     }
 }
