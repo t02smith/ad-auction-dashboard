@@ -35,14 +35,27 @@ public enum FileType {
         this.headers = headers;
     }
 
+    /**
+     * Runs the FileType producer on a line from the log file
+     * @param line the log line
+     * @return the generated data record
+     */
     public SharedFields produce(String[] line) {
         return this.producer.apply(line);
     }
 
+    /**
+     * @return The expected headers for the file
+     */
     public String[] getHeaders() {
         return this.headers;
     }
 
+    /**
+     * Determine a log file's type given its column headers
+     * @param headers the file's column headers
+     * @return the log file's type
+     */
     public static FileType determineType(String[] headers) {
         HashSet<String> actual = new HashSet<>(Arrays.asList(headers));
 

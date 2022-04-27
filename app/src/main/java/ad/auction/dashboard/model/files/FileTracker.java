@@ -43,6 +43,12 @@ public class FileTracker {
         }
     }
 
+    /**
+     * Checks if a file matches an expected type
+     * @param filename the log file
+     * @param expected the expected type
+     * @return whether the file matches the expected type
+     */
     public boolean correctFileType(String filename, FileType expected) {
         synchronized (this.trackedFiles) {
             return this.trackedFiles.get(filename).getType() == expected;

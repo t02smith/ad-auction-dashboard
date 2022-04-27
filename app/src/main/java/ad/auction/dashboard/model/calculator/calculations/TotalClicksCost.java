@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
@@ -23,7 +23,7 @@ public class TotalClicksCost extends Metric implements Histogram {
 
     @Override
     public Function<Campaign, Number> overall() {
-        return c -> Utility.roundNDp(c.clicks()
+        return c -> Util.roundNDp(c.clicks()
                 .parallel()
                 .reduce(0.0, (acc, elem) -> acc + elem.clickCost(), Double::sum),3);
     }
@@ -71,9 +71,9 @@ public class TotalClicksCost extends Metric implements Histogram {
                 if (clk.clickCost() > max[0]) max[0] = clk.clickCost();
             });
 
-            double step = Utility.roundNDp(max[0]/Histogram.DISTRIBUTION_GROUPS, 5);
+            double step = Util.roundNDp(max[0]/Histogram.DISTRIBUTION_GROUPS, 5);
             for (double i=0; i<=step*(DISTRIBUTION_GROUPS+1); i+=step) {
-                points.put(Utility.roundNDp(i,5), 0L);
+                points.put(Util.roundNDp(i,5), 0L);
             }
 
             var steps = points.keySet().stream().sorted(Comparator.reverseOrder()).toList();
@@ -89,8 +89,8 @@ public class TotalClicksCost extends Metric implements Histogram {
 
             List<Point2D> pointsLs = new ArrayList<>();
             for (int i=0; i<Histogram.DISTRIBUTION_GROUPS; i++) {
-                var curr = Utility.roundNDp(i*step, 5);
-                var next = Utility.roundNDp(i*step+step, 5);
+                var curr = Util.roundNDp(i*step, 5);
+                var next = Util.roundNDp(i*step+step, 5);
                 pointsLs.add(new Point2D(curr, 0));
                 pointsLs.add(new Point2D(curr, points.get(curr)));
                 pointsLs.add(new Point2D(next, points.get(curr)));

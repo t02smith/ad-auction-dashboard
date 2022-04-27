@@ -57,6 +57,13 @@ public class Campaign {
         }
     }
 
+    /**
+     * Generate a new campaign
+     * @param name the name of the campaign
+     * @param impressionPath the filepath of the impressions log
+     * @param clickPath the filepath of the clicks log
+     * @param serverPath the filepath of the server log
+     */
     public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
         this.name = name;
         this.impPath = impressionPath;
@@ -64,6 +71,9 @@ public class Campaign {
         this.svrPath = serverPath;
     }
 
+    /**
+     * Clears the calculated values cache
+     */
     public void clearCache() {
         this.cache = new HashMap<>();
     }
@@ -77,7 +87,7 @@ public class Campaign {
         this.clicks = null;
         this.server = null;
         this.dataLoaded = false;
-        this.cache = new HashMap<>();
+        this.clearCache();
     }
 
     /**
@@ -111,57 +121,118 @@ public class Campaign {
 
     /* SETTERS */
 
+    /**
+     * Set the impression log data
+     * @param imps impression log data
+     */
     void setImpressions(List<Impression> imps) {
         this.impressions = imps;
     }
 
+    /**
+     * Set the server log data
+     * @param svrs sever log data
+     */
     void setServer(List<Server> svrs) {
         this.server = svrs;
     }
 
+    /**
+     * Set the click log data
+     * @param clks click log data
+     */
     void setClicks(List<Click> clks) {
         this.clicks = clks;
     }
 
+    /**
+     * Whether to store calculated values temporarily
+     * @param state cache value (true)/ don't cache values (false)
+     */
     public void setCacheValues(boolean state) {
         this.cacheValues = state;
     }
 
     // GETTERS
 
-    public boolean isCached(Metrics m) {return this.cache.containsKey(m);}
+    /**
+     * Whether there is a cache value for a given metric
+     * @param m the metric being checked
+     * @return metric cached (true) / metric not cached (false)
+     */
+    public boolean isCached(Metrics m) {
+        return this.cache.containsKey(m);
+    }
 
-    public List<Point2D> getData(Metrics m) {
+    /**
+     * Get the cached data for a given metric
+     * @param m the metric to get from cache
+     * @return the list of points cached for that metric
+     */
+    public List<Point2D> getCacheData(Metrics m) {
         return this.cache.get(m);
     }
 
+    /**
+     * @return get data record for this campaign
+     */
     public CampaignData getData() {
         return new CampaignData(name, clkPath, impPath, svrPath, start, end);
     }
 
+    /**
+     * @return stream of impression log records
+     */
     public Stream<Impression> impressions() {
         return this.impressions.stream();
     }
 
+    /**
+     * @return stream of server log records
+     */
     public Stream<Server> server() {
         return this.server.stream();
     }
 
+    /**
+     * @return stream of click log records
+     */
     public Stream<Click> clicks() {
         return this.clicks.stream();
     }
 
+    /**
+     * @return campaign name
+     */
     public String name() {
         return this.name;
     }
 
+    /**
+     * @return whether the data has been read from the log files
+     */
     public boolean dataLoaded() {
         return this.dataLoaded;
     }
 
-    public String impPath() {return this.impPath;}
+    /**
+     * @return the impression log file path
+     */
+    public String impPath() {
+        return this.impPath;
+    }
 
-    public String clkPath() {return this.clkPath;}
+    /**
+     * @return the click log file path
+     */
+    public String clkPath() {
+        return this.clkPath;
+    }
 
-    public String svrPath() {return this.svrPath;}
+    /**
+     * @return the server log file path
+     */
+    public String svrPath() {
+        return this.svrPath;
+    }
 }

@@ -1,9 +1,7 @@
 package ad.auction.dashboard.model;
 
 import javafx.scene.image.WritableImage;
-import javafx.stage.FileChooser;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  * Utility functions for all model classes
  * @author tcs1g20
  */
-public final class Utility {
+public final class Util {
     
     //Format given for dates in input files
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -22,7 +20,7 @@ public final class Utility {
      * @return The parsed date
      */
     public static LocalDateTime parseDate(String date) {
-        return LocalDateTime.parse(date, Utility.formatter);
+        return LocalDateTime.parse(date, Util.formatter);
     }
 
     /**

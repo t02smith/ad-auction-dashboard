@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handler to parse the guides.xml file
+ *
+ * @author tcs1g20
+ */
 public class GuideHandler extends DefaultHandler {
 
     private static final Logger logger = LogManager.getLogger(GuideHandler.class.getSimpleName());
@@ -45,6 +50,9 @@ public class GuideHandler extends DefaultHandler {
         String text;
     }
 
+    /**
+     * Parse guides.xml
+     */
     public void parse() {
         logger.info("Parsing guides file '{};", GUIDE_LOCATION);
         SAXParserFactory factory = SAXParserFactory.newInstance();

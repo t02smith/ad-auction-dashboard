@@ -21,6 +21,7 @@ import ad.auction.dashboard.model.files.records.Server;
 /**
  * Used to perform operations concerning campaigns
  *
+ * @author tcs1g20
  */
 public class CampaignManager {
 
@@ -32,6 +33,10 @@ public class CampaignManager {
 
     protected FilteredCampaign currentCampaign;
 
+    /**
+     * Create a new campaign manager
+     * @param model the model this campaign manager is part of
+     */
     public CampaignManager(Model model) {
         this.model = model;
     }
@@ -241,6 +246,11 @@ public class CampaignManager {
         return this.currentCampaign.addUserFilter(usrFilter);
     }
 
+    /**
+     * Create campaign object from a list of campaign data records
+     * These data records are typically read from the config file
+     * @param campaigns list of campaign data records
+     */
     public void setCampaigns(List<CampaignData> campaigns) {
         this.campaigns.clear();
         campaigns.forEach(c -> this.campaigns.put(c.name(), new FilteredCampaign(
@@ -252,10 +262,17 @@ public class CampaignManager {
 
     }
 
+    /**
+     * Close the campaign manager
+     * flush all data stored in any campaign
+     */
     public void closeAll() {
         this.campaigns.forEach((name, c) -> c.flushData());
     }
 
+    /**
+     * Clear the cache of the currently opened campaign
+     */
     public void clearCache() {
         if (this.currentCampaign != null)
             this.currentCampaign.clearCache();
@@ -263,16 +280,27 @@ public class CampaignManager {
 
     // GETTERS
 
+    /**
+     * @return the currently opened campaign
+     */
     public FilteredCampaign getCurrentCampaign() {
         return this.currentCampaign;
     }
 
+    /**
+     * Get the data record of a given campaign
+     * @param name the campaign to get the record of
+     * @return the campaign's data record
+     */
     public CampaignData getCampaignData(String name) {
         if (!this.campaigns.containsKey(name)) return null;
 
         return this.campaigns.get(name).getData();
     }
 
+    /**
+     * @return the data records of all stored campaigns
+     */
     public List<CampaignData> getCampaigns() {
         return this.campaigns.values().stream().map(Campaign::getData).toList();
     }

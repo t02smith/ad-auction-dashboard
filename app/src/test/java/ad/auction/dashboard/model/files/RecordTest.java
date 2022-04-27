@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Impression.*;
 import ad.auction.dashboard.model.files.records.Server;
@@ -23,7 +23,7 @@ public class RecordTest {
         final Impression actual = (Impression)FileType.IMPRESSION.produce(line.split(","));
 
         assertTrue(
-            actual.dateTime().equals(Utility.parseDate("2015-01-01 12:00:02")) &&
+            actual.dateTime().equals(Util.parseDate("2015-01-01 12:00:02")) &&
             actual.ID() == 4620864431353617408L &&
             actual.gender() == Gender.Male &&
             actual.ageGroup() == AgeGroup.BETWEEN_25_34 &&
@@ -42,9 +42,9 @@ public class RecordTest {
         final Server actual = (Server)FileType.SERVER.produce(line.split(","));
 
         assertTrue(
-            actual.dateTime().equals(Utility.parseDate("2015-01-01 12:04:13")) &&
+            actual.dateTime().equals(Util.parseDate("2015-01-01 12:04:13")) &&
             actual.ID() == 8370837523317244928L &&
-            actual.exitDate().equals(Utility.parseDate("2015-01-01 12:09:50")) &&
+            actual.exitDate().equals(Util.parseDate("2015-01-01 12:09:50")) &&
             actual.pagesViewed() == 10 &&
             !actual.conversion()
         );
@@ -57,7 +57,7 @@ public class RecordTest {
         final Click actual = (Click)FileType.CLICK.produce(line.split(","));
 
         assertTrue(
-            actual.dateTime().equals(Utility.parseDate("2015-01-01 12:59:29")) &&
+            actual.dateTime().equals(Util.parseDate("2015-01-01 12:59:29")) &&
             actual.ID() == 541711580562437120L &&
             actual.clickCost() == 8.762051f
         );

@@ -7,8 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+/**
+ * A styled back button
+ *
+ * @author Ahmed
+ */
 public class BackBtn extends StackPane {
 
+    /**
+     * Creates a new back button
+     * @param onClick What to run when the button is clicked
+     */
     public BackBtn(EventHandler<ActionEvent> onClick) {
         var backButton = new Button();
         backButton.getStyleClass().add("buttonStyle");

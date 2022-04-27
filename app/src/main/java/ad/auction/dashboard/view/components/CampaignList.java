@@ -12,6 +12,11 @@ import javafx.scene.layout.*;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * List of campaigns that can be opened
+ *
+ * @author tcs1g20
+ */
 public class CampaignList extends BorderPane {
 
     private final List<Campaign.CampaignData> campaigns;
@@ -20,6 +25,13 @@ public class CampaignList extends BorderPane {
     private final Consumer<String> editCampaign;
     private final Runnable close;
 
+    /**
+     * Create a new campaign list
+     * @param campaigns The list of possible campaigns
+     * @param openCampaign Function to open a campaign
+     * @param editCampaign Function to edit a campaign
+     * @param close Function to close campaign list
+     */
     public CampaignList(List<Campaign.CampaignData> campaigns, Consumer<String> openCampaign, Consumer<String> editCampaign, Runnable close) {
         this.campaigns = campaigns;
         this.openCampaign = openCampaign;
@@ -28,6 +40,9 @@ public class CampaignList extends BorderPane {
         this.build();
     }
 
+    /**
+     * Build the campaign list
+     */
     public void build() {
         this.getStyleClass().add("campaign-list");
         this.setMaxWidth(500);

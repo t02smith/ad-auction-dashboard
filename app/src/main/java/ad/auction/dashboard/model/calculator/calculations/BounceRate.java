@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
@@ -24,7 +24,7 @@ public class BounceRate extends Metric {
             long bounceCount = (long)Metrics.BOUNCES_COUNT.getMetric().overall().apply(c);
             long clickCount = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(c);
 
-            return Utility.roundNDp((double)bounceCount/clickCount, 3);
+            return Util.roundNDp((double)bounceCount/clickCount, 3);
         };
     }
 

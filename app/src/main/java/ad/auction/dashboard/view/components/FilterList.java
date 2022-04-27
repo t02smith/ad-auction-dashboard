@@ -14,6 +14,11 @@ import org.controlsfx.control.RangeSlider;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * List of filter options
+ *
+ * @author tcs1g20
+ */
 public class FilterList extends VBox {
 
     private final Controller controller = App.getInstance().controller();
@@ -21,6 +26,11 @@ public class FilterList extends VBox {
 
     private int daySpan;
 
+    /**
+     * Create a new filter list
+     * @param reloadMetric Function to call whenever a filter section changes
+     * @param daySpan the number of days the data goes over
+     */
     public FilterList(Runnable reloadMetric, int daySpan) {
         this.reloadMetric = reloadMetric;
         this.daySpan = daySpan;
@@ -28,13 +38,13 @@ public class FilterList extends VBox {
         build();
     }
 
+    /**
+     * Build the filter list
+     */
     private void build() {
         this.setSpacing(15);
         this.setPadding(new Insets(10));
 
-
-
-        //date
         this.getChildren().addAll(
                 timeSlider(),
                 group(genders(), "Genders"),
@@ -44,6 +54,10 @@ public class FilterList extends VBox {
         );
     }
 
+    /**
+     * Create the slider to control which dates to include
+     * @return the time slider component
+     */
     private RangeSlider timeSlider() {
         var slider = new RangeSlider(0, daySpan, 0, daySpan);
         slider.setBlockIncrement(1);
@@ -54,6 +68,12 @@ public class FilterList extends VBox {
         return slider;
     }
 
+    /**
+     *
+     * @param ls
+     * @param title
+     * @return
+     */
     private VBox group(List<CheckBox> ls, String title) {
         var grp = new VBox();
         grp.setSpacing(5);

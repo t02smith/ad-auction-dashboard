@@ -8,6 +8,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
+/**
+ * Campaign manager to handle many open campaigns including:
+ *  - other campaigns
+ *  - snapshot campaigns
+ */
 public class ManyCampaignManager extends CampaignManager {
 
     private static final Logger logger = LogManager.getLogger(ManyCampaignManager.class.getSimpleName());
@@ -18,10 +23,19 @@ public class ManyCampaignManager extends CampaignManager {
     //Additional campaigns/filtered datasets to include
     private final HashMap<String, CampaignSnapshot> snapshots = new HashMap<>();
 
+    /**
+     * Create a new ManyCampaignManager
+     * @param model the model this manager is a part of
+     */
     public ManyCampaignManager(Model model) {
         super(model);
     }
 
+    /**
+     * Open a new campaign
+     * Clears included and snapshot campaigns
+     * @param name The campaigns name
+     */
     @Override
     public void openCampaign(String name) {
         logger.info("Clearing included & snapshot campaigns");
@@ -31,6 +45,11 @@ public class ManyCampaignManager extends CampaignManager {
         super.openCampaign(name);
     }
 
+    /**
+     * Remove a campaign
+     * If it is included then the data is flushed first
+     * @param name the name of a campaign
+     */
     @Override
     public void removeCampaign(String name) {
         if (this.campaigns.containsKey(name)) {
@@ -79,6 +98,10 @@ public class ManyCampaignManager extends CampaignManager {
         return snap.name();
     }
 
+    /**
+     * Remove a given snapshot
+     * @param name the name of the snapshot returned when created
+     */
     public void removeSnapshot(String name) {
         logger.info("Removing snapshot {}", name);
         this.snapshots.remove(name);
@@ -97,15 +120,20 @@ public class ManyCampaignManager extends CampaignManager {
         this.includedCampaigns.remove(campaign);
     }
 
-
+    /**
+     * @return active campaign (campaign name, campaign object)
+     */
     public HashMap<String, Campaign> getActiveCampaigns() {
         var cs = new HashMap<String, Campaign>();
         includedCampaigns.forEach(c -> cs.put(c, this.campaigns.get(c)));
-        snapshots.forEach((hash, s) -> cs.put(hash.toString(), s));
+        cs.putAll(snapshots);
         cs.put(currentCampaign.name(), currentCampaign);
         return cs;
     }
 
+    /**
+     * @return active campaign data records
+     */
     public List<CampaignData> getActiveCampaignData() {
         Collection<Campaign> res = this.getActiveCampaigns().values();
         List<CampaignData> data = new ArrayList<>();
@@ -122,6 +150,10 @@ public class ManyCampaignManager extends CampaignManager {
         return this.includedCampaigns.contains(name);
     }
 
+    /**
+     * @param name the snapshot's name
+     * @return the snapshot object
+     */
     public CampaignSnapshot getSnapshot(String name) {
         return this.snapshots.get(name);
     }

@@ -13,5 +13,9 @@ public interface Histogram {
 
     int DISTRIBUTION_GROUPS = 15;
 
+    /**
+     * Calculates the points for a histogram
+     * @return (campaign name, chart points)
+     */
     Function<Campaign, List<Point2D>> histogram();
 }

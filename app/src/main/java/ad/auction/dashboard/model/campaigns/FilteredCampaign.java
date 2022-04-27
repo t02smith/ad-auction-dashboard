@@ -32,6 +32,13 @@ public class FilteredCampaign extends Campaign {
     //User data
     protected HashMap<Long, User> userData;
 
+    /**
+     * Generate a new filtered campaign
+     * @param name the name of the campaign
+     * @param impressionPath the filepath of the impressions log
+     * @param clickPath the filepath of the clicks log
+     * @param serverPath the filepath of the server log
+     */
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
         super(name, impressionPath, clickPath, serverPath);
     }
@@ -93,6 +100,11 @@ public class FilteredCampaign extends Campaign {
 
     /* SETTERS */
 
+    /**
+     * Set the impression data
+     * Collects user data for filtering
+     * @param imps impression log data
+     */
     @Override
     void setImpressions(List<Impression> imps) {
         super.setImpressions(imps);
@@ -101,11 +113,17 @@ public class FilteredCampaign extends Campaign {
 
     // Getters
 
+    /**
+     * @return a snapshot of the current filter settings
+     */
     public CampaignSnapshot generateSnapshot() {
         return new CampaignSnapshot(this);
     }
 
 
+    /**
+     * @return stream of click data records with filters applied
+     */
     @Override
     public Stream<Click> clicks() {
         return this.clicks.stream()
@@ -115,6 +133,9 @@ public class FilteredCampaign extends Campaign {
                                 .allMatch(f -> userFilters.get(f).test(userData.get(c.ID()))));
     }
 
+    /**
+     * @return stream of impression data records with filters applied
+     */
     @Override
     public Stream<Impression> impressions() {
         return this.impressions.stream()
@@ -124,10 +145,16 @@ public class FilteredCampaign extends Campaign {
                         .allMatch(f -> userFilters.get(f).test(userData.get(i.ID()))));
     }
 
+    /**
+     * @return impression list without filters
+     */
     List<Impression> impressionsLs() {
         return this.impressions;
     }
 
+    /**
+     * @return stream of server data records with filters applied
+     */
     @Override
     public Stream<Server> server() {
         return this.server.stream()

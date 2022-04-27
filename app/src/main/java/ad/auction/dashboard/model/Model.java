@@ -39,8 +39,12 @@ public class Model {
     private static final String CONFIG_LOCATION = "./config.xml";
 
     private Themes theme = Themes.DARK;
-    private int factor = 4;
+    private int factor = 2;
 
+    /**
+     * Construct a new model
+     * Attempts to read from the config file
+     */
     public Model() {
         var config = fetchConfig();
         if (config == null) return;
@@ -151,22 +155,37 @@ public class Model {
 
     /*GETTERS*/
 
+    /**
+     * @return the campaign manager
+     */
     public ManyCampaignManager campaigns() {
         return this.campaignManager;
     }
 
+    /**
+     * @return the file tracker
+     */
     public FileTracker files() {
         return this.fileTracker;
     }
 
+    /**
+     * @return the default metric loaded when a campaign is opened
+     */
     public Metrics getDefaultMetric() {
         return this.calculator.getDefaultMetric();
     }
 
+    /**
+     * @return the current application theme
+     */
     public Themes theme() {
         return this.theme;
     }
 
+    /**
+     * @return the number of points generated per time res
+     */
     public int getFactor() {
         return this.factor;
     }

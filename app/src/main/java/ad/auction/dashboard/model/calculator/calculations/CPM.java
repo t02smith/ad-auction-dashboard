@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
@@ -24,7 +24,7 @@ public class CPM extends Metric {
             long impressionCount = (long)Metrics.IMPRESSION_COUNT.getMetric().overall().apply(c)/1000;
             double totalCost = (double)Metrics.TOTAL_COST.getMetric().overall().apply(c);
 
-            return Utility.roundNDp(totalCost/impressionCount, 5);
+            return Util.roundNDp(totalCost/impressionCount, 5);
         };
     }
 

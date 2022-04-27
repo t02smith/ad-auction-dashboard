@@ -48,6 +48,9 @@ public class ButtonList<T> extends ScrollPane {
         this.setFocusTraversable(false);
     }
 
+    /**
+     * Builds the ButtonList
+     */
     private void build() {
         var elems = new VBox();
         this.getStyleClass().addAll("metric-panel","bg-primary");

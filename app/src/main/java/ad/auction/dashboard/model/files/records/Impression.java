@@ -2,17 +2,32 @@ package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 
+/**
+ * A data record from the impression log
+ * @param dateTime the date & time of the impression
+ * @param ID the user's uid
+ * @param gender the user's gender (Male/Female)
+ * @param ageGroup the user's age group (<25/25-34/35-44/45-54/>54)
+ * @param income the user's income (Low/Medium/High)
+ * @param context the context of the impression (News/Shopping/Social Media/Blog/Hobbies/Travel)
+ * @param impressionCost the cost of this impression
+ */
 public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGroup ageGroup, Income income,
         Context context, float impressionCost) implements SharedFields {
 
+    /**
+     * Create an Impression data record based off a single line from the impression log
+     * @param line the line from the impression log
+     * @return the generate Impression data record
+     */
     public static Impression producer(String[] line) {
         float ic = Float.parseFloat(line[6]);
         if (ic < 0) throw new IllegalArgumentException("Impression cost must be above 0");
 
         return new Impression(
-                Utility.parseDate(line[0]), // Date of impression
+                Util.parseDate(line[0]), // Date of impression
                 Long.parseLong(line[1]), // ID
                 Gender.valueOf(line[2]), // Gender
                 AgeGroup.getAgeGroup(line[3]), // Age Group

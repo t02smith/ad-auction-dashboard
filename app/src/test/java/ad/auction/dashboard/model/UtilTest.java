@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-public class UtilityTest {
+public class UtilTest {
     
 
     @Test
@@ -16,7 +16,7 @@ public class UtilityTest {
     @Tag("model")
     public void parseDateTest() {
         final String date = "2015-01-01 12:01:47";
-        final LocalDateTime actual = Utility.parseDate(date);
+        final LocalDateTime actual = Util.parseDate(date);
 
         assertTrue(
             actual.getDayOfMonth() == 1 &&

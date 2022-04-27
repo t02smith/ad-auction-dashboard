@@ -84,21 +84,13 @@ public class Controller {
     }
 
     /**
-     *
-     * @param m
-     * @param function
-     * @return
+     * Runs a calculation on all active campaigns
+     * @param m The metric to run
+     * @param function The type of calculation
+     * @return a map (campaign name, process running the calculation)
      */
     public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
         return model.runCalculation(m, function);
-    }
-
-    public void setDefaultMetric(Metrics m) {
-        this.model.setDefaultMetric(m);
-    }
-
-    public Metrics getDefaultMetric() {
-        return this.model.getDefaultMetric();
     }
 
     /**
@@ -108,7 +100,33 @@ public class Controller {
         this.model.close();
     }
 
-    //Filters
+    //CONFIG
+
+    /**
+     * Sets the metric loaded initially when opening a campaign
+     * @param m the new default metric
+     */
+    public void setDefaultMetric(Metrics m) {
+        this.model.setDefaultMetric(m);
+    }
+
+    /**
+     * Set the number of points calculated per time unit
+     * @param factor new factor value
+     */
+    public void setFactor(int factor) {
+        this.model.setFactor(factor);
+    }
+
+    /**
+     * Sets the current application theme
+     * @param theme the new theme
+     */
+    public void setTheme(Themes theme) {
+        model.setTheme(theme);
+    }
+
+    //FILTERS
 
     /**
      * Toggle a filter on/off
@@ -127,21 +145,28 @@ public class Controller {
         this.model.campaigns().setDate(start, value);
     }
 
+    /**
+     * Sets whether a graph is a cumulative or trend graph
+     * @param state cumulative(true) or trend(false)
+     */
     public void setCumulative(boolean state) {
         this.model.setCumulative(state);
     }
 
-    public void setResolution(int factor) {
-//        this.model.
-    }
+    //SNAPSHOTS
 
-
-
-    /*SNAPSHOTS*/
+    /**
+     * Generate a new snapshot of the current filter settings
+     * @return The name of the snapshot
+     */
     public String snapshot() {
         return this.model.campaigns().snapshotCampaign();
     }
 
+    /**
+     * Remove an active snapshot
+     * @param name the snapshots name returned upon creation
+     */
     public void removeSnapshot(String name) {
         this.model.campaigns().removeSnapshot(name);
     }
@@ -155,14 +180,43 @@ public class Controller {
         return this.model.campaigns().addUserFilter(predicate);
     }
 
-    //CONFIG OPTIONS
+    //GETTERS
 
     /**
-     * Set the number of points calculated per time unit
-     * @param factor new factor value
+     * @return The current campaigns data record
      */
-    public void setFactor(int factor) {
-        this.model.setFactor(factor);
+    public CampaignData getCampaignData() {
+        return this.model.campaigns().getCurrentCampaign().getData();
+    }
+
+    /**
+     * @return Gets data records for all campaigns
+     */
+    public List<CampaignData> getCampaigns() {
+        return this.model.campaigns().getCampaigns();
+    }
+
+    /**
+     * @return Gets data records for active campaigns
+     */
+    public List<CampaignData> getActiveCampaigns() {
+        return this.model.campaigns().getActiveCampaignData();
+    }
+
+    /**
+     * Get the data record for a specific campaign
+     * @param name the campaign to retrieve
+     * @return the campaign's data record
+     */
+    public CampaignData getCampaignData(String name) {
+        return this.model.campaigns().getCampaignData(name);
+    }
+
+    /**
+     * @return The active application theme
+     */
+    public Themes getTheme() {
+        return model.theme();
     }
 
     /**
@@ -172,28 +226,11 @@ public class Controller {
         return this.model.getFactor();
     }
 
-
-    //GETTERS
-
-    public CampaignData getCampaignData() {
-        return this.model.campaigns().getCurrentCampaign().getData();
-    }
-
-    public List<CampaignData> getCampaigns() {
-        return this.model.campaigns().getCampaigns();
-    }
-
-    public List<CampaignData> getActiveCampaigns() {
-        return this.model.campaigns().getActiveCampaignData();
-    }
-
-    public CampaignData getCampaignData(String name) {return this.model.campaigns().getCampaignData(name);}
-
-    public Themes getTheme() {
-        return model.theme();
-    }
-
-    public void setTheme(Themes theme) {
-        model.setTheme(theme);
+    /**
+     * Gets the default metric that is calculated when a campaign is opened
+     * @return the default metric
+     */
+    public Metrics getDefaultMetric() {
+        return this.model.getDefaultMetric();
     }
 }

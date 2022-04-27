@@ -46,14 +46,22 @@ public enum Metrics {
     //Produces a metric object to perform calculations
     private final Metric metric;
 
+    /**
+     * Create a new metric
+     * @param metric The metric object reference
+     */
     Metrics(Metric metric) {
         this.metric = metric;
     }
 
+    /**
+     * @return Metric object reference
+     */
     public Metric getMetric() {
         return this.metric;
     }
 
+    @Override
     public String toString() {
         return this.metric.displayName();
     }

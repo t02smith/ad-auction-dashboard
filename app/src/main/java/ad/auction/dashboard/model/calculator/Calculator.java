@@ -1,8 +1,6 @@
 package ad.auction.dashboard.model.calculator;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -57,7 +55,7 @@ public class Calculator {
             case OVER_TIME:
                 if (campaign.isCached(metric)) {
                     logger.info("{} collected from cache", metric);
-                    return executor.submit(() -> campaign.getData(metric));
+                    return executor.submit(() -> campaign.getCacheData(metric));
                 }
 
                 var res = executor.submit(
@@ -80,42 +78,42 @@ public class Calculator {
         }
     }
 
-    public HashMap<Metrics, Number> dashboardValues(Campaign campaign) {
-        HashMap<Metrics, Number> db = new HashMap<>();
-
-        var data = Arrays.stream(Metrics.values())
-                .map(m -> runCalculation(campaign, m, MetricFunction.OVERALL));
-
-        while (!data.allMatch(Future::isDone)) {}
-
-        var ls = (Number[])data.toArray();
-        for (int i = 0; i < ls.length; i++) {
-            db.put(Metrics.values()[i], ls[i]);
-            logger.info(Metrics.values()[i] + " " + ls[i]);
-        }
-
-        return db;
-    }
-
     //SETTERS
 
+    /**
+     * Sets the default metric calculated when an application is opened
+     * @param m the new default metric
+     */
     public void setDefaultMetric(Metrics m) {
         logger.info("Updating default metric to {}", m);
         this.defaultMetric = m;
     }
 
-    public Metrics getDefaultMetric() {
-        return this.defaultMetric;
-    }
-
+    /**
+     * Whether the data is cumulative or per time unit
+     * @param state cumulative data or not
+     */
     public void setCumulative(boolean state) {
         this.cumulative = state;
     }
 
+    /**
+     * Set the time resolution
+     * @param res new resolution
+     */
     public void setTimeResolution(ChronoUnit res) {
         switch (res) {
             case DAYS, HOURS, WEEKS -> this.timeResolution = res;
             default -> this.timeResolution = ChronoUnit.DAYS;
         }
+    }
+
+    //GETTERS
+
+    /**
+     * @return the default metric
+     */
+    public Metrics getDefaultMetric() {
+        return this.defaultMetric;
     }
 }

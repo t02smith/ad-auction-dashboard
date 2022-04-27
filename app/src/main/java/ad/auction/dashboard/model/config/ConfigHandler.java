@@ -24,6 +24,8 @@ import java.util.List;
 
 /**
  * Store any program info to persist between launches
+ *
+ * @author tcs1g20
  */
 public class ConfigHandler extends DefaultHandler {
 
@@ -50,6 +52,11 @@ public class ConfigHandler extends DefaultHandler {
 
     public record Config(Metrics defaultMetric, Themes theme, Integer factor, List<Campaign.CampaignData> campaigns) {}
 
+    /**
+     * Parse a config file
+     * @param filename the location of the config file
+     * @throws IOException if there is an error reading the config file
+     */
     public void parse(String filename) throws IOException {
         logger.info("Parsing config file '{};", filename);
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -63,6 +70,11 @@ public class ConfigHandler extends DefaultHandler {
         }
     }
 
+    /**
+     * Write config settings to a file
+     * @param filename the file to write to
+     * @param config the current config settings
+     */
     public void writeToFile(String filename, Config config) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

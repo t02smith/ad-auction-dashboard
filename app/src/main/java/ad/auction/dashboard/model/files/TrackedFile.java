@@ -28,6 +28,10 @@ public class TrackedFile implements Callable<List<SharedFields>> {
     private final String filename;
     private final FileType type;
 
+    /**
+     * Create a new tracked file
+     * @param filename the file's location
+     */
     public TrackedFile(String filename) {
         this.filename = filename;
         this.type = this.determineFileType();
@@ -56,6 +60,10 @@ public class TrackedFile implements Callable<List<SharedFields>> {
         
     }
 
+    /**
+     * Read the data from the log file
+     * @return the data records read from the file
+     */
     @Override
     public List<SharedFields> call() {
         long time = System.currentTimeMillis();
@@ -90,6 +98,9 @@ public class TrackedFile implements Callable<List<SharedFields>> {
 
     }
 
+    /**
+     * @return the file's type
+     */
     public FileType getType() {
         return this.type;
     }

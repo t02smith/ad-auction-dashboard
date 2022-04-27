@@ -21,19 +21,26 @@ import javafx.geometry.Point2D;
  */
 public abstract class Metric {
 
+    //Metric information
     protected final String displayName;
     protected final String description;
-
     protected final String unit;
 
     protected final ExecutorService executor = Executors.newFixedThreadPool(2);
 
+    /**
+     * Generate a new metric
+     * @param displayName the metrics name to be displayed to the user
+     * @param unit the y-axis unit of the metric
+     * @param description a description of what the metric shows
+     */
     public Metric(String displayName, String unit, String description) {
         this.displayName = displayName;
         this.unit = unit;
         this.description = description;
     }
 
+    //Different functions for each metric
     public enum MetricFunction {
         OVERALL,
         OVER_TIME,
@@ -53,36 +60,17 @@ public abstract class Metric {
      */
     public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution, boolean cumulative, int factor);
 
-
     /**
-     * Get the x coordinate of a corresponding date
-     * @param resolution the timescale being used
-     * @param time the time to find the x coordinate of
-     * @return the x coordinate of the date
+     * Gets the next date to calculate a point for
+     * @param resolution The timescale to increase by
+     * @param time the last time point
+     * @param factor how many points per time resolution
+     * @return the next date
      */
-    public static double getXCoordinate(ChronoUnit resolution, LocalDateTime time) {
-        return switch (resolution) {
-            case HOURS -> time.getHour();
-            case WEEKS -> Math.round(time.getDayOfYear() / 52);
-            case DAYS -> time.getDayOfYear();
-            default -> throw new IllegalStateException("Unexpected value: " + resolution);
-        };
-    }
-
-    /**
-     *
-     * @param resolution
-     * @param time
-     * @return
-     */
-    public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time) {
-        return incrementDate(resolution, time, 2);
-    }
-
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time, int factor) {
         return switch (resolution) {
             case HOURS -> time.plusHours(factor);
-            case WEEKS -> time.plusDays(7 * factor);
+            case WEEKS -> time.plusDays(7L * factor);
             case DAYS -> time.plusHours(24/factor);
             default -> throw new IllegalStateException("Unexpected value: " + resolution);
         };
@@ -90,12 +78,23 @@ public abstract class Metric {
 
     //GETTERS
 
+    /**
+     * @return the metrics display name
+     */
     public String displayName() {
         return this.displayName;
     }
 
-    public String unit() {return this.unit;}
+    /**
+     * @return the metrics y-axis unit
+     */
+    public String unit() {
+        return this.unit;
+    }
 
+    /**
+     * @return the metrics description
+     */
     public String desc() {
         return this.description;
     }

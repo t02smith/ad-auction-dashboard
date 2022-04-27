@@ -7,6 +7,11 @@ import ad.auction.dashboard.view.ui.Window;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Ad Auction Dashboard application wrapper
+ *
+ * @author group 7
+ */
 public class App extends Application {
     private static final Logger logger = LogManager.getLogger(App.class.getSimpleName());
 
@@ -19,7 +24,6 @@ public class App extends Application {
 
     private final Controller controller = new Controller();
     private Window window;
-
 
     @Override
     public void start(Stage stage) {
@@ -45,10 +49,16 @@ public class App extends Application {
      */
     public static App getInstance() { return instance; }
 
+    /**
+     * @return The controller to communicate with the model
+     */
     public Controller controller() {
         return this.controller;
     }
 
+    /**
+     * @return Currently displayed window
+     */
     public Window window() {
         return this.window;
     }

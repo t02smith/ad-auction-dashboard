@@ -33,6 +33,12 @@ public class Calculation<T> implements Callable<Object> {
         this.campaign = c;       
     }
 
+    /**
+     * Runs the given calculation
+     * @return the result of the calculation
+     * @throws NullPointerException if the campaign or the function given is null
+     * @throws IllegalStateException if the campaign data is not loaded
+     */
     @Override
     public T call() throws NullPointerException, IllegalStateException {
         if (campaign == null) throw new NullPointerException("Null campaign given");

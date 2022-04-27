@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
-import ad.auction.dashboard.model.Utility;
+import ad.auction.dashboard.model.Util;
 import ad.auction.dashboard.model.calculator.Metrics;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
@@ -23,7 +23,7 @@ public class CPC extends Metric {
         return c -> {
             double totalCost = (double)Metrics.TOTAL_COST.getMetric().overall().apply(c);
             double clickCount = (long)Metrics.CLICK_COUNT.getMetric().overall().apply(c);
-            return Utility.roundNDp(totalCost/clickCount,3);
+            return Util.roundNDp(totalCost/clickCount,3);
         };
     }
 
