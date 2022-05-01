@@ -124,6 +124,16 @@
         </sections>
     </guide>
     <guide>
+        <id>6</id>
+        <name>Show the campaign dashboard</name>
+        <description>How to show the dashboard of the campaign</description>
+        <steps>
+            <step>Open the campaign page of one campaign</step>
+            <step>Click the Dashboard button on the top right</step>
+            <step>The dashboard of the campaign will be shown</step>
+        </steps>
+    </guide>
+    <guide>
         <id>7</id>
         <name>Changing Themes</name>
         <description>How to change colour scheme of Ad Auction Dashboard</description>
@@ -132,6 +142,53 @@
             <step>Select the "Appearance" on the side menu of the setting page</step>
             <step>Select a theme from the dropdown menu</step>
             <step>Ad Auction Dashboard will update</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>8</id>
+        <name>Editing Campaign</name>
+        <description>How to change the data of one campaign</description>
+        <steps>
+            <step>Enter the edit page from the settings page, the campaign page or the upload campaign page</step>
+            <step>Enter the new campaign name or choose the csv file that needs to be edited</step>
+            <step>Click the Submit button when the changes are done</step>
+            <step>Click the cancel button if you don't want to do these changes</step>
+            <step>Click the delete button to delete this campaign</step>
+        </steps>
+        <sections>
+            <section>
+                <sectionName>Editing from the setting page</sectionName>
+                <sectionText>Click the edit button for each campaign on the campaign list.</sectionText>
+            </section>
+            <section>
+                <sectionName>Editing from the campaign page</sectionName>
+                <sectionText>Click the Edit button on the top right.</sectionText>
+            </section>
+            <section>
+                <sectionName>Editing from the upload campaign page</sectionName>
+                <sectionText>Click the toothed gear symbol for each campaign</sectionText>
+            </section>
+        </sections>
+    </guide>
+    <guide>
+        <id>9</id>
+        <name>Delete campaign</name>
+        <description>How to delete one campaign</description>
+        <steps>
+            <step>Enter the edit page</step>
+            <step>Click the red delete campaigns button</step>
+            <step>Another way is Enter the campaign list in the settings page and click the delete button</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>10</id>
+        <name>Change campaign page appearance</name>
+        <description>How to change the appearance of the campaign page</description>
+        <steps>
+            <step>Enter the settings page</step>
+            <step>Click the campaign list button on the side menu</step>
+            <step>Find the campaign options section</step>
+            <step>Choose the default metric and the points per unit of time</step>
         </steps>
     </guide>
 </guides>
