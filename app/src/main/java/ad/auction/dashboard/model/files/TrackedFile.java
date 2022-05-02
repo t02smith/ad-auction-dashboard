@@ -24,9 +24,14 @@ public class TrackedFile implements Callable<List<SharedFields>> {
 
     private static final Logger logger = LogManager.getLogger(TrackedFile.class.getSimpleName());
 
-    //File location and type
+    //File location
     private final String filename;
+
+    //File type: IMPRESSION, CLICK, SERVER
     private final FileType type;
+
+    //Records of invalid format
+    private int invalidRecords = 0;
 
     /**
      * Create a new tracked file
@@ -82,7 +87,6 @@ public class TrackedFile implements Callable<List<SharedFields>> {
 
 
         String[] ln;
-        long invalidRecords = 0;
         while ((ln = parser.parseNext()) != null) {
             try {
                 records.add(type.produce(ln));
@@ -105,4 +109,11 @@ public class TrackedFile implements Callable<List<SharedFields>> {
         return this.type;
     }
 
+    /**
+     * Get the number of invalid records
+     * @return number of invalid records
+     */
+    public int getInvalidRecords() {
+        return this.invalidRecords;
+    }
 }

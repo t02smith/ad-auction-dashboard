@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import ad.auction.dashboard.model.calculator.Histogram;
 import ad.auction.dashboard.model.calculator.MetricManager;
 import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.view.components.BackBtn;
 import ad.auction.dashboard.view.components.ButtonList;
 import ad.auction.dashboard.view.components.FilterList;
 import ad.auction.dashboard.view.components.TabMenu;
@@ -50,20 +51,28 @@ public class CampaignPage extends BasePage {
     private final String campaignName;
 
     private LineChartModel graph;
+
     private final StackPane dashBoard = new StackPane();
+    private TableView<MetricManager> metricBox;
+
     private final BorderPane screen = new BorderPane();
     private final VBox selectionWrapper = new VBox();
-    private TableView<MetricManager> metricBox;
+
 
     //current selection
     private Metrics currentMetric = controller.getDefaultMetric();
     private CampaignComponent active = CampaignComponent.CUMULATIVE_GRAPH;
 
+    private final Button dashButton = new Button("Dashboard");
+    private boolean onDashboard = false;
+
+    /**
+     * The graph to be displayed
+     */
     private enum CampaignComponent {
         CUMULATIVE_GRAPH("Cumulative"),
         TREND_GRAPH("Trend"),
         HISTOGRAM("Histogram");
-        //Dashboard tbd
 
         private final String displayName;
 
@@ -76,9 +85,6 @@ public class CampaignPage extends BasePage {
             return displayName;
         }
     }
-    
-    private final Button dashButton = new Button("Dashboard");
-    private boolean onDashboard = false;
 
     //Function to load a given metric
     @SuppressWarnings("unchecked")
@@ -114,11 +120,15 @@ public class CampaignPage extends BasePage {
         });
     };
 
+    /**
+     * Create a new CampaignPage
+     * @param window the window the page is on
+     * @param campaignName the name of the campaign to show
+     */
     public CampaignPage(Window window, String campaignName) {
         super(window);
         this.campaignName = campaignName;
         this.graph = new LineChartModel(campaignName, "Time (days)", "");
-
     }
 
     /**
@@ -171,40 +181,9 @@ public class CampaignPage extends BasePage {
     }
 
     /**
-     * Build the back button
-     * @return back button
+     * Create the title bar for the campaign
+     * @return campaign title bar w/ option buttons
      */
-    private StackPane buildBackButton() {
-        //Create the button
-        var backButton = new Button();
-        backButton.getStyleClass().add("buttonStyle");
-        backButton.setMaxWidth(50);
-        backButton.setMaxHeight(40);
-        var buttonWidth = backButton.getMaxWidth();
-        var buttonHeight = backButton.getMaxHeight();
-        backButton.setOnMouseClicked((e) -> window.startMenu());
-
-
-        // Draw arrow with canvas
-        var canvas = new Canvas(buttonWidth, buttonHeight);
-        canvas.setMouseTransparent(true);
-
-        var gc = canvas.getGraphicsContext2D();
-        gc.setStroke(Color.WHITE);
-        gc.setLineWidth(3);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.75,  buttonHeight * 0.5);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.725);
-        gc.strokeLine(buttonWidth * 0.25, buttonHeight * 0.5, buttonWidth * 0.5, buttonHeight * 0.275);
-
-
-        // Stack the drawn arrow on the button
-        var pane = new StackPane();
-        pane.getChildren().addAll(backButton, canvas);
-
-        return pane;
-    }
-
-
     private BorderPane title() {
         //Title background on top
         var title = new BorderPane();
@@ -216,7 +195,7 @@ public class CampaignPage extends BasePage {
         title.setCenter(mainMenuText);
 
         //Add back button
-        var backButton = buildBackButton();
+        var backButton = new BackBtn(e -> window.startMenu());
         BorderPane.setAlignment(backButton, Pos.CENTER);
         BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
         title.setLeft(backButton);
@@ -240,7 +219,7 @@ public class CampaignPage extends BasePage {
         onDashboard = false;
         dashButton.setOnAction(e -> {
             if (onDashboard) {
-                logger.info("Changing to Linechart");
+                logger.info("Changing to Line chart");
                 onDashboard = false;
                 dashButton.setText("Dashboard");
                 loadMetric.accept(currentMetric);
@@ -254,13 +233,15 @@ public class CampaignPage extends BasePage {
             }
         });
 
-
         right.getChildren().add(dashButton);
-
         title.setRight(right);
         return title;
     }
 
+    /**
+     * Creates the list of loadable campaigns and snapshot manager
+     * @return list of loadable campaigns and snapshot manager
+     */
     private VBox campaignList() {
 
         var genSnapshot = new Button("Snapshot");
@@ -274,13 +255,10 @@ public class CampaignPage extends BasePage {
         active.setMinWidth(300);
         active.getStyleClass().add("bg-primary");
 
-        int[] counter = new int[] {1};
-
         genSnapshot.getStyleClass().add("buttonStyle");
         genSnapshot.setOnAction(e -> {
             try {
                 var id = controller.snapshot();
-                counter[0] += 1;
 
                 var btn = new Label(String.valueOf(id));
                 btn.getStyleClass().add("snapshot-btn");
@@ -321,6 +299,11 @@ public class CampaignPage extends BasePage {
         return new VBox(bl, active);
     }
 
+    /**
+     * Dashboard to show overall values
+     * Will show all active campaigns
+     * @return campaign dashboard
+     */
     private BorderPane buildDashBoard() {
         var dashPane = new BorderPane();
         dashPane.getStyleClass().setAll("bg-primary");
@@ -361,11 +344,12 @@ public class CampaignPage extends BasePage {
         dashPane.setCenter(metricBox);
 
         return dashPane;
-
     }
 
+    /**
+     * Enforces the height of the dashboard
+     */
     private void restrictDashboardHeight() {
-
         metricBox.setFixedCellSize(25);
         metricBox.setPadding(new Insets(0, 20, 15, 20));
 
@@ -382,7 +366,10 @@ public class CampaignPage extends BasePage {
         metricBox.setPrefHeight(height);
     }
 
-
+    /**
+     *
+     * @return
+     */
     private ComboBox<CampaignComponent> campaignComponents() {
         var options = new ComboBox<>(FXCollections.observableArrayList(
                 this.currentMetric.getMetric() instanceof Histogram

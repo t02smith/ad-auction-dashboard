@@ -20,6 +20,10 @@ public abstract class BasePage {
     protected Scene scene;
     protected StackPane root = new StackPane();
 
+    /**
+     * Create a new page
+     * @param window the window this page is displayed on
+     */
     public BasePage(Window window) {
         this.window = window;
     }
@@ -31,7 +35,6 @@ public abstract class BasePage {
 
     /**
      * Create a new JavaFX scene
-     *
      * @return JavaFX scene
      */
     public Scene createScene() {

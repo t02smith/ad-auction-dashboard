@@ -27,6 +27,7 @@ public class CalculationTest {
                 "./data/2-week/impression_log.csv",
                 "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
+        model.setFactor(1);
     }
 
     @AfterAll
@@ -60,11 +61,10 @@ public class CalculationTest {
     @DisplayName("Run a random value calculation")
     @SuppressWarnings("unchecked")
     public void runOvertimeRandomValueTest() throws Exception {
-        model.setFactor(1);
         var actual = model.runCalculation(Metrics.TOTAL_COST, MetricFunction.OVER_TIME).get("2 week - test");
         while (!actual.isDone()) {}
 
-        assertEquals(50712.703487540944, ((ArrayList<Point2D>)actual.get()).get(6).getY());
+        assertEquals(50799.194687536336, ((ArrayList<Point2D>)actual.get()).get(6).getY());
     }
 
     /*ERRORS*/
@@ -86,7 +86,7 @@ public class CalculationTest {
     @Test
     @DisplayName("Non loaded campaign")
     public void nonLoadedCampaign() {
-        var camp = new Campaign("non-loaded", "imp", "clk", "svr");
+        var camp = new Campaign("non-loaded", "clk", "imp", "svr");
         var calc = new Calculation<Number>(c -> 5, camp);
         assertThrows(IllegalStateException.class, calc::call);
     }

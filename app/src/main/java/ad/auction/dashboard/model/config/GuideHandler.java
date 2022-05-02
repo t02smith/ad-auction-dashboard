@@ -53,17 +53,21 @@ public class GuideHandler extends DefaultHandler {
     /**
      * Parse guides.xml
      */
-    public void parse() {
-        logger.info("Parsing guides file '{};", GUIDE_LOCATION);
+    public void parse(String filename) {
+        logger.info("Parsing guides file '{};", filename);
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
         try {
             SAXParser parser = factory.newSAXParser();
-            parser.parse(GUIDE_LOCATION, this);
-            logger.info("Parsed guides file '{}'", GUIDE_LOCATION);
+            parser.parse(filename, this);
+            logger.info("Parsed guides file '{}'", filename);
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            logger.error("Error reading guides file '{}': {}", GUIDE_LOCATION, e.getMessage());
+            logger.error("Error reading guides file '{}': {}", filename, e.getMessage());
         }
+    }
+
+    public void parse() {
+        this.parse(GUIDE_LOCATION);
     }
 
     // HANDLER METHODS

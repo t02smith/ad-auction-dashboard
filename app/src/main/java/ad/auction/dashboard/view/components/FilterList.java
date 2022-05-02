@@ -24,7 +24,7 @@ public class FilterList extends VBox {
     private final Controller controller = App.getInstance().controller();
     private final Runnable reloadMetric;
 
-    private int daySpan;
+    private final int daySpan;
 
     /**
      * Create a new filter list
@@ -69,15 +69,18 @@ public class FilterList extends VBox {
     }
 
     /**
-     *
-     * @param ls
-     * @param title
-     * @return
+     * A group of related filter options
+     * @param ls the filter checkboxes
+     * @param title the group's title
+     * @return group of related filter options w/ title
      */
     private VBox group(List<CheckBox> ls, String title) {
         var grp = new VBox();
         grp.setSpacing(5);
-        grp.getChildren().add(sectionTitle(title));
+
+        var ttl = new Label(title);
+        ttl.getStyleClass().add("filter-sub-heading");
+        grp.getChildren().add(ttl);
         for (int i=0; i < ls.size()/2 + (ls.size()%2); i+=2) {
             HBox h = new HBox(ls.get(i));
             h.setSpacing(12);
@@ -87,12 +90,10 @@ public class FilterList extends VBox {
         return grp;
     }
 
-    private Label sectionTitle(String title) {
-        var ttl = new Label(title);
-        ttl.getStyleClass().add("filter-sub-heading");
-        return ttl;
-    }
-
+    /**
+     * Checkboxes for gender filters
+     * @return list of gender checkboxes
+     */
     private List<CheckBox> genders() {
         return Arrays.stream(Impression.Gender.values()).map(g -> {
             int hash = controller.addUserFilter(u -> u.gender() != g);
@@ -109,6 +110,10 @@ public class FilterList extends VBox {
         }).toList();
     }
 
+    /**
+     * Checkboxes for income filters
+     * @return list of income checkboxes
+     */
     private List<CheckBox> income() {
         return Arrays.stream(Impression.Income.values()).map(i -> {
             int hash = controller.addUserFilter(u -> u.income() != i);
@@ -125,6 +130,10 @@ public class FilterList extends VBox {
         }).toList();
     }
 
+    /**
+     * Checkboxes for age group filters
+     * @return list of age group checkboxes
+     */
     private List<CheckBox> ageGroup() {
         return Arrays.stream(Impression.AgeGroup.values()).map(ag -> {
             int hash = controller.addUserFilter(u -> u.ageGroup() != ag);
@@ -141,6 +150,10 @@ public class FilterList extends VBox {
         }).toList();
     }
 
+    /**
+     * Checkboxes for context filters
+     * @return list of context checkboxes
+     */
     private List<CheckBox> context() {
         return Arrays.stream(Impression.Context.values()).map(c -> {
             int hash = controller.addUserFilter(u -> u.context() != c);

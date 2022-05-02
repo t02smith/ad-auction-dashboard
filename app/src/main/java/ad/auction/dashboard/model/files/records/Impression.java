@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 import ad.auction.dashboard.model.Util;
 
@@ -23,17 +24,28 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
      * @return the generate Impression data record
      */
     public static Impression producer(String[] line) {
-        float ic = Float.parseFloat(line[6]);
-        if (ic < 0) throw new IllegalArgumentException("Impression cost must be above 0");
 
-        return new Impression(
-                Util.parseDate(line[0]), // Date of impression
-                Long.parseLong(line[1]), // ID
-                Gender.valueOf(line[2]), // Gender
-                AgeGroup.getAgeGroup(line[3]), // Age Group
-                Income.valueOf(line[4]), // Income
-                Context.valueOf(line[5].replace(" ", "_")), // Context
-                ic); // Impression cost
+        try {
+            float ic = Float.parseFloat(line[6]);
+            if (ic < 0) throw new IllegalArgumentException("Impression cost must be above 0");
+
+            return new Impression(
+                    Util.parseDate(line[0]), // Date of impression
+                    Long.parseLong(line[1]), // ID
+                    Gender.valueOf(line[2]), // Gender
+                    AgeGroup.getAgeGroup(line[3]), // Age Group
+                    Income.valueOf(line[4]), // Income
+                    Context.valueOf(line[5].replace(" ", "_")), // Context
+                    ic); // Impression cost
+
+
+        } catch (NumberFormatException | DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid impression field");
+        }
+
+
+
+
     }
 
     // ENUM

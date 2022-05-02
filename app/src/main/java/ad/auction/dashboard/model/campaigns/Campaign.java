@@ -59,12 +59,13 @@ public class Campaign {
 
     /**
      * Generate a new campaign
-     * @param name the name of the campaign
+     *
+     * @param name           the name of the campaign
+     * @param clickPath      the filepath of the clicks log
      * @param impressionPath the filepath of the impressions log
-     * @param clickPath the filepath of the clicks log
-     * @param serverPath the filepath of the server log
+     * @param serverPath     the filepath of the server log
      */
-    public Campaign(String name, String impressionPath, String clickPath, String serverPath) {
+    public Campaign(String name, String clickPath, String impressionPath, String serverPath) {
         this.name = name;
         this.impPath = impressionPath;
         this.clkPath = clickPath;

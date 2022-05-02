@@ -24,12 +24,21 @@ public class FileTrackerTest {
     public void tearDown() {
         this.fileTracker = null;
     }
-    
+
+
+    public static void readFile(FileTracker tracker, String relativeFilename) {
+        var filename = TestUtility.getResourceFile(relativeFilename);
+        if (filename == null) fail();
+
+        tracker.trackFile(filename);
+        var res = tracker.readFile(filename);
+        while (!res.isDone()) {}
+    }
+
     @Test
     @DisplayName("File tracked successfully")
     public void isFileTrackedTest() {
-
-        var filename = TestUtility.getResourceFile("/data/test-1.txt");
+        var filename = TestUtility.getResourceFile("/data/log_files/impression_log.csv");
         if (filename == null) fail();
 
         fileTracker.trackFile(filename);
@@ -43,8 +52,8 @@ public class FileTrackerTest {
     }
 
     @Test
-    @DisplayName("File track and untrack successfully")
-    public void fileTrackUntrackTest() {
+    @DisplayName("File tracked and untracked successfully")
+    public void fileTrackUntrackedTest() {
         var filename = TestUtility.getResourceFile("/data/test-1.txt");
         if (filename == null) fail();
 
@@ -65,14 +74,61 @@ public class FileTrackerTest {
     @Test
     @DisplayName("Empty file test")
     public void emptyFileTest() throws Exception {
-        var filename = FileTrackerTest.class.getResource("/data/empty_impression.csv").toExternalForm();
+        var filename = TestUtility.getResourceFile("/data/log_files/empty_impression.csv");
 
         fileTracker.trackFile(filename);
         var res = fileTracker.readFile(filename);
-
         while (!res.isDone()) {}
 
         assertEquals(0, res.get().size());
+    }
+
+    @Test
+    @DisplayName("No invalid records")
+    public void noInvalidRecordsTest() {
+        var filename = TestUtility.getResourceFile("/data/log_files/empty_impression.csv");
+
+        fileTracker.trackFile(filename);
+        var res = fileTracker.readFile(filename);
+        while (!res.isDone()) {}
+
+        assertEquals(0, fileTracker.getFile(filename).getInvalidRecords());
+    }
+
+    @Test
+    @DisplayName("Many invalid records - click")
+    public void manyInvalidRecordsClickTest() {
+        var filename = TestUtility.getResourceFile("/data/log_files/invalid/invalid_click.csv");
+
+        fileTracker.trackFile(filename);
+        var res = fileTracker.readFile(filename);
+        while (!res.isDone()) {}
+
+        assertEquals(3, fileTracker.getFile(filename).getInvalidRecords());
+    }
+
+    @Test
+    @DisplayName("Many invalid records - impression")
+    public void manyInvalidRecordsImpressionTest() {
+        var filename = TestUtility.getResourceFile("/data/log_files/invalid/invalid_impressions.csv");
+
+        fileTracker.trackFile(filename);
+        var res = fileTracker.readFile(filename);
+        while (!res.isDone()) {}
+
+        assertEquals(6, fileTracker.getFile(filename).getInvalidRecords());
+    }
+
+    @Test
+    @DisplayName("Many invalid records - server")
+    public void manyInvalidRecordsServerTest() {
+        var filename = TestUtility.getResourceFile("/data/log_files/invalid/invalid_server.csv");
+
+        fileTracker.trackFile(filename);
+        var res = fileTracker.readFile(filename);
+        while (!res.isDone()) {}
+
+        assertEquals(5, fileTracker.getFile(filename).getInvalidRecords());
     }
 
 }

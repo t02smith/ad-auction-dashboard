@@ -40,7 +40,7 @@ public class FilteredCampaign extends Campaign {
      * @param serverPath the filepath of the server log
      */
     public FilteredCampaign(String name, String impressionPath, String clickPath, String serverPath) {
-        super(name, impressionPath, clickPath, serverPath);
+        super(name, clickPath, impressionPath, serverPath);
     }
 
     /**

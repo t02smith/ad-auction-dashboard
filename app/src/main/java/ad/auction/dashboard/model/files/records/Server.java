@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.files.records;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 import ad.auction.dashboard.model.Util;
@@ -22,20 +23,32 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
      * @return the generated Server record
      */
     public static Server producer(String[] line) {
-        int pv = Integer.parseInt(line[3]);
-        if (pv < 0) throw new IllegalArgumentException("Pages viewed must be at least 0");
 
-        var start = Util.parseDate(line[0]);
-        var end = line[2].equals("n/a") ? LocalDateTime.MAX : Util.parseDate(line[2]);
-        if (start.isAfter(end)) throw new IllegalArgumentException("Start date must be before end date");
+        try {
+            int pv = Integer.parseInt(line[3]);
+            if (pv < 0) throw new IllegalArgumentException("Pages viewed must be at least 0");
 
-        return new Server(
-                start, // Date
-                Long.parseLong(line[1]), // ID
-                end, // Exit date
-                pv, // Pages viewed
-                line[4].equals("Yes") // Conversion
-        );
+            var start = Util.parseDate(line[0]);
+            var end = line[2].equals("n/a") ? LocalDateTime.MAX : Util.parseDate(line[2]);
+            if (start.isAfter(end)) throw new IllegalArgumentException("Start date must be before end date");
+
+            boolean conversion;
+            if (line[4].equals("Yes")) conversion = true;
+            else if (line[4].equals("No")) conversion = false;
+            else throw new IllegalArgumentException("Conversion must be yes/no");
+
+            return new Server(
+                    start, // Date
+                    Long.parseLong(line[1]), // ID
+                    end, // Exit date
+                    pv, // Pages viewed
+                    conversion // Conversion
+            );
+        } catch (NumberFormatException | DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid server log record");
+        }
+
+
     }
 
     /**

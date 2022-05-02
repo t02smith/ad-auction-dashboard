@@ -25,6 +25,17 @@ public class Controller {
 
     private final Model model = new Model();
 
+    private boolean available = true;
+
+    /**
+     * Checks whether the controller has been closed
+     * @throws RuntimeException if the controller is unavailable
+     */
+    public void isAvailable() throws RuntimeException {
+        if (!available)
+            throw new RuntimeException("Controller has been closed");
+    }
+
     //Max calculations to be run at once
     private static final int CONTROLLER_THREAD_COUNT = 10;
     private final ExecutorService executor = Executors.newFixedThreadPool(CONTROLLER_THREAD_COUNT);
@@ -35,6 +46,7 @@ public class Controller {
      * @return The process that must finish before opening campaign screen
      */
     public Future<Void> openCampaign(String name) {
+        this.isAvailable();
         return executor.submit(() -> {model.campaigns().openCampaign(name); return null;});
     }
 
@@ -44,6 +56,7 @@ public class Controller {
      * @return when the process is finished
      */
     public Future<Void> toggleCampaign(String name) {
+        this.isAvailable();
         return executor.submit(() -> {
             if (!model.campaigns().isIncluded(name)) model.campaigns().includeCampaign(name);
             else model.campaigns().unincludeCampaign(name);
@@ -59,6 +72,7 @@ public class Controller {
      * @param svrPath server log location
      */
     public Future<boolean[]> newCampaign(String name, String clkPath, String impPath, String svrPath) {
+        this.isAvailable();
         return executor.submit(() -> model.campaigns().newCampaign(name, clkPath, impPath, svrPath));
     }
 
@@ -72,6 +86,7 @@ public class Controller {
      * @param svrPath new server log location
      */
     public void editCampaign(String campaign, String name, String clkPath, String impPath, String svrPath) {
+        this.isAvailable();
         this.model.campaigns().editCampaign(campaign, name, clkPath, impPath, svrPath);
     }
 
@@ -80,6 +95,7 @@ public class Controller {
      * @param campaign the name of the campaign
      */
     public void removeCampaign(String campaign) {
+        this.isAvailable();
         this.model.campaigns().removeCampaign(campaign);
     }
 
@@ -90,6 +106,7 @@ public class Controller {
      * @return a map (campaign name, process running the calculation)
      */
     public HashMap<String, Future<Object>> runCalculation(Metrics m, MetricFunction function) {
+        this.isAvailable();
         return model.runCalculation(m, function);
     }
 
@@ -97,6 +114,8 @@ public class Controller {
      * Shut down the model
      */
     public void close() {
+        this.isAvailable();
+        this.available = false;
         this.model.close();
     }
 
@@ -107,6 +126,7 @@ public class Controller {
      * @param m the new default metric
      */
     public void setDefaultMetric(Metrics m) {
+        this.isAvailable();
         this.model.setDefaultMetric(m);
     }
 
@@ -115,6 +135,7 @@ public class Controller {
      * @param factor new factor value
      */
     public void setFactor(int factor) {
+        this.isAvailable();
         this.model.setFactor(factor);
     }
 
@@ -123,6 +144,7 @@ public class Controller {
      * @param theme the new theme
      */
     public void setTheme(Themes theme) {
+        this.isAvailable();
         model.setTheme(theme);
     }
 
@@ -133,6 +155,7 @@ public class Controller {
      * @param hash The hash of the filter returned when adding it initially
      */
     public void toggleFilter(int hash) {
+        this.isAvailable();
         this.model.campaigns().toggleFilter(hash);
     }
 
@@ -150,6 +173,7 @@ public class Controller {
      * @param state cumulative(true) or trend(false)
      */
     public void setCumulative(boolean state) {
+        this.isAvailable();
         this.model.setCumulative(state);
     }
 
@@ -160,6 +184,7 @@ public class Controller {
      * @return The name of the snapshot
      */
     public String snapshot() {
+        this.isAvailable();
         return this.model.campaigns().snapshotCampaign();
     }
 
@@ -168,6 +193,7 @@ public class Controller {
      * @param name the snapshots name returned upon creation
      */
     public void removeSnapshot(String name) {
+        this.isAvailable();
         this.model.campaigns().removeSnapshot(name);
     }
 
@@ -177,29 +203,36 @@ public class Controller {
      * @return the hash of the filter
      */
     public int addUserFilter(Predicate<User> predicate) {
+        this.isAvailable();
         return this.model.campaigns().addUserFilter(predicate);
     }
 
     //GETTERS
 
     /**
+     * returns current campaigns data record
      * @return The current campaigns data record
      */
     public CampaignData getCampaignData() {
+        this.isAvailable();
         return this.model.campaigns().getCurrentCampaign().getData();
     }
 
     /**
+     * returns data records for all campaigns
      * @return Gets data records for all campaigns
      */
     public List<CampaignData> getCampaigns() {
+        this.isAvailable();
         return this.model.campaigns().getCampaigns();
     }
 
     /**
+     * returns list of data records for active campaigns
      * @return Gets data records for active campaigns
      */
     public List<CampaignData> getActiveCampaigns() {
+        this.isAvailable();
         return this.model.campaigns().getActiveCampaignData();
     }
 
@@ -209,6 +242,7 @@ public class Controller {
      * @return the campaign's data record
      */
     public CampaignData getCampaignData(String name) {
+        this.isAvailable();
         return this.model.campaigns().getCampaignData(name);
     }
 
@@ -216,6 +250,7 @@ public class Controller {
      * @return The active application theme
      */
     public Themes getTheme() {
+        this.isAvailable();
         return model.theme();
     }
 
@@ -223,6 +258,7 @@ public class Controller {
      * @return the number of points calculated per time unit
      */
     public int getFactor() {
+        this.isAvailable();
         return this.model.getFactor();
     }
 
@@ -231,6 +267,7 @@ public class Controller {
      * @return the default metric
      */
     public Metrics getDefaultMetric() {
+        this.isAvailable();
         return this.model.getDefaultMetric();
     }
 }

@@ -120,5 +120,12 @@ public class FileTracker {
         logger.info("Files cleaned");
     }
 
-
+    /**
+     * Gets a tracked file
+     * @param filename the name of the file
+     * @return the tracked file object
+     */
+    public TrackedFile getFile(String filename) {
+        return this.trackedFiles.get(filename);
+    }
 }

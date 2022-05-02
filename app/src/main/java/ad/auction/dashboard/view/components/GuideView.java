@@ -11,12 +11,24 @@ import javafx.scene.text.Text;
 
 import java.util.function.Consumer;
 
-
+/**
+ * Display component for a guide
+ *
+ * @author tcs1g20
+ */
 public class GuideView extends ScrollPane {
 
+    //Currently open guide
     private Guide guide;
+
+    //What to do when a link is clicked in a guide
     private final Consumer<Integer> openLink;
 
+    /**
+     * Create a new guide view to display guides
+     * @param g the default guide
+     * @param openLink function to open a guide link
+     */
     public GuideView(Guide g, Consumer<Integer> openLink) {
         this.guide = g;
         this.openLink = openLink;
@@ -28,6 +40,9 @@ public class GuideView extends ScrollPane {
         this.build();
     }
 
+    /**
+     * Builds the GuideView
+     */
     private void build() {
         var vb = new VBox(
                 name(),
@@ -42,6 +57,9 @@ public class GuideView extends ScrollPane {
 
     }
 
+    /**
+     * @return label for the guide's title
+     */
     private Label name() {
         var name = new Label(guide.name());
         name.setPrefWidth(Double.MAX_VALUE);
@@ -50,6 +68,9 @@ public class GuideView extends ScrollPane {
         return name;
     }
 
+    /**
+     * @return label for guide's description
+     */
     private Label description() {
         var desc = new Label(guide.desc());
         desc.setPrefWidth(Double.MAX_VALUE);
@@ -58,6 +79,9 @@ public class GuideView extends ScrollPane {
         return desc;
     }
 
+    /**
+     * @return list of steps from the guide
+     */
     private VBox steps() {
         var steps = new VBox();
         steps.setPadding(new Insets(15));
@@ -80,6 +104,9 @@ public class GuideView extends ScrollPane {
         return steps;
     }
 
+    /**
+     * @return list of guide sections
+     */
     private VBox sections() {
         var secs = new VBox();
         secs.setSpacing(15);
@@ -100,9 +127,12 @@ public class GuideView extends ScrollPane {
         return secs;
     }
 
+    /**
+     * Changes the active guide
+     * @param g the new guide
+     */
     public void setGuide(Guide g) {
         this.guide = g;
-        //this.getChildren().clear();
         this.build();
     }
 }

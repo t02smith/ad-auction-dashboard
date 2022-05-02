@@ -6,20 +6,39 @@ import javafx.scene.layout.*;
 
 import java.util.HashMap;
 
+/**
+ * A sidebar component that can have many tabs with different content
+ *
+ * @author tcs1g20
+ */
 public class TabMenu extends StackPane  {
 
+    //Each tab <name, content>
     private final HashMap<String, Node> panes = new HashMap<>();
     private final String defaultNode;
     private Label active;
 
+    /**
+     * Create a new TabMenu
+     * @param defaultNode the name of the default tab
+     */
     public TabMenu(String defaultNode) {
         this.defaultNode = defaultNode;
     }
 
+    /**
+     * Add a new tab into the TabMenu
+     * @param name the tab's name
+     * @param pane th tab's content
+     */
     public void addPane(String name, Node pane) {
         this.panes.put(name, pane);
     }
 
+    /**
+     * Builds the TabMenu
+     * Should be used after all tabs have been added
+     */
     public void build() {
         HBox options = new HBox();
         this.getStyleClass().add("bg-primary");

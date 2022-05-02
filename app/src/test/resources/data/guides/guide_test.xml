@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides>
+    <guide>
+        <id>1</id>
+        <name>Upload a campaign</name>
+        <description>How to upload your campaigns to Ad Auction Dashboard</description>
+        <steps>
+            <step>Make sure you have your log files available. You should have a log file for clicks, impressions and server.</step>
+            <link>
+                <linkText>Click here to read more about your log files</linkText>
+                <linkRef>2</linkRef>
+            </link>
+            <step>Select "Upload Campaign" from the main menu</step>
+            <step>Enter your campaign's name</step>
+            <step>Upload each of your log files by clicking on the labelled boxes</step>
+            <step>Hit "Submit"</step>
+            <step>If successful, you will be directed back to the main menu</step>
+            <step>If unsuccessful, refer to the error message on screen and try again</step>
+        </steps>
+    </guide>
+    <guide>
+        <id>2</id>
+        <name>Log files</name>
+        <description>Understanding your campaign's data</description>
+        <sections>
+            <section>
+                <sectionName>Clicks</sectionName>
+                <sectionText>This log file is for all instances in which an ad was clicked on by a user. For each click we know the time, what user clicked on it, and how much that click costed.</sectionText>
+            </section>
+            <section>
+                <sectionName>Impressions</sectionName>
+                <sectionText>Each impression is someone viewing your ad regardless of whether they interact with it. For each impression we know the time and that user's gender (Male/Female), age bracket, income (Low/Medium/High), the context in which they saw the ad (Blog, News, etc.), and how much that impression cost.</sectionText>
+            </section>
+            <section>
+                <sectionName>Server</sectionName>
+                <sectionText>This log file is used to track a user's interactions after clicking on an ad. For each instance we can see the time in which they entered and exited the website, how many pages they viewed and whether a user acts on the ad (e.g.by buying a product)</sectionText>
+            </section>
+        </sections>
+    </guide>
+    <guide>
+        <id>5</id>
+        <name>Types of graph</name>
+        <description>How to change type of graph for your loaded campaign</description>
+        <steps>
+            <step>Select "Load Campaign" from the main menu</step>
+            <step>Select the campaign you wish to load into the system</step>
+            <step>Select the dropdown button in the top right</step>
+            <step>Choose the between the available graphs (E.g. "Cumulative" or "Trend")</step>
+            <step>An updated graph will now be displayed</step>
+        </steps>
+        <sections>
+            <section>
+                <sectionName>Cumulative</sectionName>
+                <sectionText>A cumulative graph will show how your ad campaign fared using all the data from the beginning of the campaign to the time of each point display on the graph. This is useful to see the campaign in its entirety for each metric.</sectionText>
+            </section>
+            <section>
+                <sectionName>Trend</sectionName>
+                <sectionText>A trend graph shows the corresponding metric calculated over a given period of time, only accounting for the data from the last point in time to the current point. This is useful to see how you campaign fared on individual time periods. </sectionText>
+            </section>
+            <section>
+                <sectionName>Histogram</sectionName>
+                <sectionText>A histogram is used to show the distribution of certain metrics.</sectionText>
+            </section>
+        </sections>
+    </guide>
+</guides>
