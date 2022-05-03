@@ -234,7 +234,7 @@ public class LineChartModel extends ChartModel {
     public void screenshot() {
         WritableImage snapshot = graph.snapshot(null, null);
 
-        File file = new File("./screenshot-" + LocalDateTime.now() + ".png");
+        File file = new File("./screenshot-" + LocalDateTime.now().toString().replace(":","_").replace(".","_") + ".png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", file);
             logger.info("Screenshot taken");
