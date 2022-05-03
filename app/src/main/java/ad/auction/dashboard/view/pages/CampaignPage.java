@@ -206,8 +206,12 @@ public class CampaignPage extends BasePage {
         editButton.getStyleClass().add("buttonStyle");
         editButton.setOnMouseClicked((e) -> window.openEditPage(campaignName, window::startMenu));
 
+        var snapshot = new Button("Screenshot");
+        snapshot.getStyleClass().add("buttonStyle");
+        snapshot.setOnMouseClicked(e -> this.graph.screenshot());
+
         selectionWrapper.getChildren().add(campaignComponents());
-        var right = new HBox(selectionWrapper, editButton);
+        var right = new HBox(selectionWrapper, editButton, snapshot);
         right.setSpacing(25);
         right.setAlignment(Pos.CENTER);
 

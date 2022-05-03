@@ -81,7 +81,7 @@ public class FilterList extends VBox {
         var ttl = new Label(title);
         ttl.getStyleClass().add("filter-sub-heading");
         grp.getChildren().add(ttl);
-        for (int i=0; i < ls.size()/2 + (ls.size()%2); i+=2) {
+        for (int i=0; i <= ls.size()/2 + (2*(ls.size()%2)); i+=2) {
             HBox h = new HBox(ls.get(i));
             h.setSpacing(12);
             if (i < ls.size()-1) h.getChildren().add(ls.get(i+1));

@@ -2,9 +2,13 @@ package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 
 import ad.auction.dashboard.App;
+import ad.auction.dashboard.view.pages.CampaignPage;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.chart.AreaChart;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,16 +21,22 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.gillius.jfxutils.chart.ChartPanManager;
 import org.gillius.jfxutils.chart.ChartZoomManager;
 
+import javax.imageio.ImageIO;
 
 public class LineChartModel extends ChartModel {
+
+    private static final Logger logger = LogManager.getLogger(LineChartModel.class.getSimpleName());
 
     // Set of data points
     private final HashMap<String, List<Point2D>> datasets = new HashMap<>();
@@ -224,17 +234,14 @@ public class LineChartModel extends ChartModel {
     public void screenshot() {
         WritableImage snapshot = graph.snapshot(null, null);
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "image files (*.png)", "*.png"));
-
-        File file = fileChooser.showOpenDialog(App.getInstance().window().stage());
-        if (file != null) {
-            String name = file.getName();
-            if (!name.toUpperCase().endsWith(".PNG")) {
-                file = new File(file.getAbsolutePath() + ".png");
-            }
+        File file = new File("./screenshot-" + LocalDateTime.now() + ".png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", file);
+            logger.info("Screenshot taken");
+        } catch (IOException e) {
+            logger.error("Screenshot failed: {}", e.getMessage());
         }
+
     }
 
 }
