@@ -47,8 +47,6 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
         } catch (NumberFormatException | DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid server log record");
         }
-
-
     }
 
     /**

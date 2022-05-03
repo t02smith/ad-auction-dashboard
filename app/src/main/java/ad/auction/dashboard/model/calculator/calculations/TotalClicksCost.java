@@ -30,7 +30,7 @@ public class TotalClicksCost extends Metric implements Histogram {
 
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution, boolean isCumulative, int factor) {
+    public Function<Campaign, List<Point2D>> overTime(ChronoUnit resolution, boolean isCumulative, int factor) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
             if (c.clicks().findAny().isEmpty()) return points;

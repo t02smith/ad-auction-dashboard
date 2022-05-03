@@ -42,10 +42,6 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
         } catch (NumberFormatException | DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid impression field");
         }
-
-
-
-
     }
 
     // ENUM

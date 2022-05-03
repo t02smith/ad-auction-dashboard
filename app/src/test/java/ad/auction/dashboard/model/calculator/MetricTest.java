@@ -1,11 +1,16 @@
 package ad.auction.dashboard.model.calculator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import ad.auction.dashboard.model.calculator.calculations.Metric;
 import org.junit.jupiter.api.*;
 
 import ad.auction.dashboard.model.Model;
@@ -45,6 +50,59 @@ public class MetricTest {
         }
 
     }
+
+    //
+
+    @Test
+    @DisplayName("Increment date - hours")
+    public void incrementDateHoursTest() {
+        var date = LocalDateTime.of(LocalDate.of(2002,1,10), LocalTime.NOON);
+        var res = Metric.incrementDate(ChronoUnit.HOURS, date, 1);
+
+        assertEquals(
+                LocalDateTime.of(LocalDate.of(2002,1,10), LocalTime.of(13,0)),
+                res
+        );
+    }
+
+    @Test
+    @DisplayName("Increment date - day")
+    public void incrementDateDaysTest() {
+        var date = LocalDateTime.of(LocalDate.of(2002,1,10), LocalTime.NOON);
+        var res = Metric.incrementDate(ChronoUnit.DAYS, date, 6);
+
+        assertEquals(
+                LocalDateTime.of(LocalDate.of(2002,1,10), LocalTime.of(16,0)),
+                res
+        );
+    }
+
+    @Test
+    @DisplayName("Increment date - week")
+    public void incrementDateWeekTest() {
+        var date = LocalDateTime.of(LocalDate.of(2002,1,10), LocalTime.NOON);
+        var res = Metric.incrementDate(ChronoUnit.WEEKS, date, 2);
+
+        assertEquals(
+                LocalDateTime.of(LocalDate.of(2002,1,13), LocalTime.NOON),
+                res
+        );
+    }
+
+    @Test
+    @DisplayName("Increment date - invalid time res")
+    public void incrementDateInvalidRes() {
+        assertThrows(IllegalArgumentException.class, () ->
+                Metric.incrementDate(ChronoUnit.ERAS, LocalDateTime.MIN, 2));
+    }
+
+    @Test
+    @DisplayName("Increment date - invalid factor")
+    public void incrementDateInvalidFactor() {
+        assertThrows(IllegalArgumentException.class, () ->
+                Metric.incrementDate(ChronoUnit.DAYS, LocalDateTime.MIN, 0));
+    }
+
 
 
     // OVERALL

@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -27,6 +28,14 @@ public abstract class Metric {
     protected final String unit;
 
     protected final ExecutorService executor = Executors.newFixedThreadPool(2);
+
+    protected static class MetricValues {
+        protected List<Point2D> points;
+        protected LocalDateTime[] start;
+        protected LocalDateTime[] end;
+        protected double[] dCounter;
+        protected long[] lCounter;
+    }
 
     /**
      * Generate a new metric
@@ -56,9 +65,25 @@ public abstract class Metric {
     /**
      * Calculate a set of graph points
      * (time, metric)
+     *
      * @return function for graph points
      */
-    public abstract Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit timeResolution, boolean cumulative, int factor);
+    public abstract Function<Campaign, List<Point2D>> overTime(ChronoUnit timeResolution, boolean cumulative, int factor);
+
+    public MetricValues pointsSetup(ChronoUnit resolution, int factor, LocalDateTime start) {
+        if (factor < 1)
+            throw new IllegalArgumentException("Factor must be above 0");
+
+        var values = new MetricValues();
+        values.points = new ArrayList<>();
+        values.start = new LocalDateTime[] {start};
+        values.end = new LocalDateTime[] {Metric.incrementDate(resolution, values.start[0], factor)};
+        values.dCounter = new double[] {0, 1.0/factor};
+        values.lCounter = new long[] {0};
+
+        return values;
+    }
+
 
     /**
      * Gets the next date to calculate a point for
@@ -68,11 +93,12 @@ public abstract class Metric {
      * @return the next date
      */
     public static LocalDateTime incrementDate(ChronoUnit resolution, LocalDateTime time, int factor) {
+        if (factor < 1) throw new IllegalArgumentException("Factor must be >= 1");
         return switch (resolution) {
             case HOURS -> time.plusHours(factor);
-            case WEEKS -> time.plusDays(7L * factor);
+            case WEEKS -> time.plusDays(7L / factor);
             case DAYS -> time.plusHours(24/factor);
-            default -> throw new IllegalStateException("Unexpected value: " + resolution);
+            default -> throw new IllegalArgumentException("Unexpected value: " + resolution);
         };
     }
 

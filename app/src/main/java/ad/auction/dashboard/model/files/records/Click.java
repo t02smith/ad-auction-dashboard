@@ -33,4 +33,6 @@ public record Click(LocalDateTime dateTime, long ID, float clickCost) implements
 
     }
 
+
+
 }

@@ -3,6 +3,7 @@ package ad.auction.dashboard.model.calculator.calculations;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
@@ -26,7 +27,7 @@ public class BouncesCount extends Metric {
     }
 
     @Override
-    public Function<Campaign, ArrayList<Point2D>> overTime(ChronoUnit resolution, boolean isCumulative, int factor) {
+    public Function<Campaign, List<Point2D>> overTime(ChronoUnit resolution, boolean isCumulative, int factor) {
         return c -> {
             ArrayList<Point2D> points = new ArrayList<>();
             if (c.server().findAny().isEmpty()) return points;

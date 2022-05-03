@@ -46,6 +46,10 @@ public class Model {
      * Attempts to read from the config file
      */
     public Model() {
+        this(true);
+    }
+
+    public Model(boolean readFiles) {
         var config = fetchConfig();
         if (config == null) return;
 
@@ -59,6 +63,7 @@ public class Model {
             this.factor = config.factor();
 
         if (config.campaigns() != null) {
+            //if (!readFiles) return;
             this.campaignManager.setCampaigns(config.campaigns());
             config.campaigns().forEach(c -> {
                 fileTracker.trackFile(c.clkPath());
@@ -66,7 +71,6 @@ public class Model {
                 fileTracker.trackFile(c.svrPath());
             });
         }
-
     }
 
     /**
