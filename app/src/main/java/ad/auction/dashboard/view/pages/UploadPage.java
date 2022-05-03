@@ -103,6 +103,7 @@ public class UploadPage extends BasePage {
         campaignNameInput.setMaxWidth(300);
         campaignNameInput.textProperty().addListener(e -> this.campaignName = campaignNameInput.getText());
         campaignNameInput.setText(campaignName);
+        campaignNameInput.getStyleClass().add("upload-text");
         return campaignNameInput;
     }
 

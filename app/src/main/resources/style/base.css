@@ -176,7 +176,11 @@ All styles not exclusive to a colour scheme
 }
 
 .upload-list {
+    -fx-text-fill:black;
     -fx-background-color: -fx-bg-primary;
+}
+.upload-text{
+    -fx-text-fill:black;
 }
 
 /*TAB MENU*/
