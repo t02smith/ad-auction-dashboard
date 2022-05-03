@@ -31,7 +31,7 @@ All styles not exclusive to a colour scheme
 	-fx-font-family: 'Sen';
 	-fx-font-size: 40px;
 	-fx-stroke-width: 0.5px;
-	-fx-fill: -fx-text-primary;
+	-fx-fill: white;
 }
 
 .topBackground {
@@ -50,7 +50,7 @@ All styles not exclusive to a colour scheme
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.6) , 3,0,0,2 );
     -fx-padding: 9 18 9 18;
 	-fx-cursor: hand;
-	-fx-text-fill: -fx-text-primary;
+	-fx-text-fill: white;
 	-fx-background-color: -fx-bg-tertiary;
 }
 
@@ -70,6 +70,7 @@ All styles not exclusive to a colour scheme
 }
 
 .menu-btn {
+    -fx-text-fill:white;
     -fx-background-radius: 50%;
     -fx-font-size: 30px;
     -fx-font-weight: bold;
