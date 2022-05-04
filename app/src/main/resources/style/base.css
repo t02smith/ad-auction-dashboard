@@ -54,6 +54,7 @@ All styles not exclusive to a colour scheme
 	-fx-background-color: -fx-bg-tertiary;
 }
 
+
 .text-input {
     -fx-text-fill: -fx-bg-primary;
     -fx-padding: 6px;

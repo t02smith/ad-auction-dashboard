@@ -35,6 +35,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.text.Text;
@@ -248,7 +249,8 @@ public class CampaignPage extends BasePage {
      */
     private VBox campaignList() {
 
-        var genSnapshot = new Button("Snapshot");
+        var genSnapshot = new Button("Snapshot filters");
+        Tooltip.install(genSnapshot, new Tooltip("click to get current campaign's snapshot"));
         var hbox = new HBox(genSnapshot);
         hbox.setAlignment(Pos.CENTER);
         hbox.setPadding(new Insets(10));
@@ -260,11 +262,13 @@ public class CampaignPage extends BasePage {
         active.getStyleClass().add("bg-primary");
 
         genSnapshot.getStyleClass().add("buttonStyle");
+
         genSnapshot.setOnAction(e -> {
             try {
                 var id = controller.snapshot();
 
                 var btn = new Label(String.valueOf(id));
+                Tooltip.install(btn, new Tooltip("The form is (name of  current campaign:number of the snapshot)"));
                 btn.getStyleClass().add("snapshot-btn");
                 btn.setMinWidth(250);
 
