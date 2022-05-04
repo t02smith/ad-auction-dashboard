@@ -102,7 +102,7 @@ public class FileTrackerTest {
 
         fileTracker.trackFile(filename);
         var res = fileTracker.readFile(filename);
-        while (!res.isDone()) {}
+        while (!res.isDone());
 
         assertEquals(3, fileTracker.getFile(filename).getInvalidRecords());
     }

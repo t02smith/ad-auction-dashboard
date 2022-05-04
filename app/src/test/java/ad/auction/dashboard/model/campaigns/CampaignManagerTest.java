@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CampaignManagerTest {
 
-    private static final Model model = new Model();
+    private static Model model = new Model();
 
     @BeforeEach
     public void setUp() {
@@ -26,6 +26,7 @@ public class CampaignManagerTest {
             model.campaigns().removeCampaign("2 week - test");
         }
 
+        model = null;
     }
 
     @AfterAll

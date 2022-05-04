@@ -29,9 +29,12 @@ public record Impression(LocalDateTime dateTime, long ID, Gender gender, AgeGrou
             float ic = Float.parseFloat(line[6]);
             if (ic < 0) throw new IllegalArgumentException("Impression cost must be above 0");
 
+            long id = Long.parseLong(line[1]);
+            if (id < 0) throw new IllegalArgumentException("ID must be a positive value");
+
             return new Impression(
                     Util.parseDate(line[0]), // Date of impression
-                    Long.parseLong(line[1]), // ID
+                    id, // ID
                     Gender.valueOf(line[2]), // Gender
                     AgeGroup.getAgeGroup(line[3]), // Age Group
                     Income.valueOf(line[4]), // Income

@@ -32,6 +32,9 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
             var end = line[2].equals("n/a") ? LocalDateTime.MAX : Util.parseDate(line[2]);
             if (start.isAfter(end)) throw new IllegalArgumentException("Start date must be before end date");
 
+            long id = Long.parseLong(line[1]);
+            if (id < 0) throw new IllegalArgumentException("ID must be a positive value");
+
             boolean conversion;
             if (line[4].equals("Yes")) conversion = true;
             else if (line[4].equals("No")) conversion = false;
@@ -39,7 +42,7 @@ public record Server(LocalDateTime dateTime, long ID, LocalDateTime exitDate, in
 
             return new Server(
                     start, // Date
-                    Long.parseLong(line[1]), // ID
+                    id, // ID
                     end, // Exit date
                     pv, // Pages viewed
                     conversion // Conversion

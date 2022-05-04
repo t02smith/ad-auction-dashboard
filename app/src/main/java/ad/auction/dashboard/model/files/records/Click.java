@@ -25,7 +25,10 @@ public record Click(LocalDateTime dateTime, long ID, float clickCost) implements
             float cc = Float.parseFloat(line[2]);
             if (cc < 0) throw new IllegalArgumentException("Click cost must be at least 0");
 
-            return new Click(Util.parseDate(line[0]),Long.parseLong(line[1]),cc);
+            long id = Long.parseLong(line[1]);
+            if (id < 0) throw new IllegalArgumentException("ID must be a positive value");
+
+            return new Click(Util.parseDate(line[0]),id,cc);
 
         } catch (NumberFormatException | DateTimeParseException e) {
             throw new IllegalArgumentException("Incorrect field format");

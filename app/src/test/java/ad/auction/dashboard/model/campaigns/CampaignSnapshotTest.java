@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("model/campaigns")
 public class CampaignSnapshotTest {
 
-    private static final Model model = new Model();
+    private static Model model = new Model();
 
     @BeforeAll
     public static void setUp() {
@@ -22,6 +22,7 @@ public class CampaignSnapshotTest {
     @AfterAll
     public static void tearDownAll() {
         model.campaigns().closeAll();
+        model = null;
     }
 
     /*SNAPSHOT CREATION*/

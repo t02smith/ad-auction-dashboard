@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import ad.auction.dashboard.model.calculator.calculations.Metric;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.*;
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.campaigns.Campaign;
 import javafx.geometry.Point2D;
+import org.junit.jupiter.params.ParameterizedTest;
 
 
 @Tag("model/calculator")
@@ -33,22 +35,13 @@ public class MetricTest {
                 "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
         c = model.campaigns().getCurrentCampaign();
+        c.setCacheValues(false);
     }
 
     @AfterAll
     public static void tearDown() {
         model.campaigns().removeCampaign("2 week - test");
         model.close();
-    }
-
-    @Test
-    public void overTimeTest() {
-        ArrayList<Point2D> actual = Metrics.TOTAL_COST.getMetric().overTime(ChronoUnit.DAYS, true, 1).apply(c);
-
-        for (Point2D point2D : actual) {
-            System.out.println(point2D.toString());
-        }
-
     }
 
     //
@@ -107,21 +100,21 @@ public class MetricTest {
 
     // OVERALL
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Impression count")
     public void impressionCountTest() {
         long result = (long) Metrics.IMPRESSION_COUNT.getMetric().overall().apply(c);
         assertEquals(486104, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Click count")
     public void clickCountTest() {
         long result = (long) Metrics.CLICK_COUNT.getMetric().overall().apply(c);
         assertEquals(23923, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Uniques count")
     @Deprecated
     public void uniquesCountTest() {
@@ -129,28 +122,28 @@ public class MetricTest {
         assertEquals(23806, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Bounces count")
     public void bouncesCountTest() {
         long result = (long) Metrics.BOUNCES_COUNT.getMetric().overall().apply(c);
         assertEquals(8665, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Conversions count")
     public void conversionsCountTest() {
         long result = (long) Metrics.CONVERSIONS_COUNT.getMetric().overall().apply(c);
         assertEquals(2026, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Total cost - Impression")
     public void totalCostImpressionTest() {
         double result = (double) Metrics.TOTAL_COST_IMPRESSION.getMetric().overall().apply(c);
         assertEquals(487.055, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Total cost - Click")
     public void totalCostClickTest() {
         double result = (double) Metrics.TOTAL_COST_CLICK.getMetric().overall().apply(c);
@@ -158,7 +151,7 @@ public class MetricTest {
 
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Total cost")
     public void totalCostTest() {
         double result = (double) Metrics.TOTAL_COST.getMetric().overall().apply(c);
@@ -166,35 +159,35 @@ public class MetricTest {
 
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("CTR")
     public void ctrTest() {
         double result = (double) Metrics.CTR.getMetric().overall().apply(c);
         assertEquals(0.04921, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("CPA")
     public void cpaTest() {
         double result = (double) Metrics.CPA.getMetric().overall().apply(c);
         assertEquals(58.291, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("CPC")
     public void cpcTest() {
         double result = (double) Metrics.CPC.getMetric().overall().apply(c);
         assertEquals(4.937, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("CPM")
     public void cpmTest() {
         double result = (double) Metrics.CPM.getMetric().overall().apply(c);
         assertEquals(242.99984, result);
     }
 
-    @Test
+    @RepeatedTest(5)
     @DisplayName("Bounce Rate")
     public void bounceRateTest() {
         double result = (double) Metrics.BOUNCE_RATE.getMetric().overall().apply(c);

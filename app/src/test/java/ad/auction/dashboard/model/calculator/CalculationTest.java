@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
@@ -29,6 +26,7 @@ public class CalculationTest {
                 "./data/2-week/server_log.csv");
         model.campaigns().openCampaign("2 week - test");
         model.setFactor(1);
+        model.campaigns().getCurrentCampaign().setCacheValues(false);
     }
 
     @AfterAll

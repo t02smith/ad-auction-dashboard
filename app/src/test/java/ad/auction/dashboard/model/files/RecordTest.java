@@ -12,6 +12,8 @@ import ad.auction.dashboard.model.files.records.Impression;
 import ad.auction.dashboard.model.files.records.Impression.*;
 import ad.auction.dashboard.model.files.records.Server;
 import ad.auction.dashboard.model.files.records.Click;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @Tag("model/files")
 public class RecordTest {
@@ -63,12 +65,42 @@ public class RecordTest {
         );
     }
 
-    @Test
-    @DisplayName("Invalid impressions record")
-    public void invalidImpressionRecordTest() {
-        final String ir = "2015-01-01 12:00:02,4620864431353617408,Male,25-34,High,Blog,-12";
-
+    @ParameterizedTest(name="{index} -  invalid imp record test")
+    @ValueSource(strings = {
+            "2015-01-01 12:00:02,4620864431353617408,Male,25-34,High,Blog,-12",
+            "2015-01-01 12:00:02,4620864431353617408,Fake Gender,25-34,High,Blog,0.002265",
+            "2015-01-01 12:00:02,-4,Female,25-34,High,Blog,0.002265",
+            "2015-01-01 12:00:02,4620864431353617408,Male,25-34,massive,Blog,0.002265",
+            "2015-01-01 12:00:02,4620864431353617408,Male,25-34,High,elsewhere,0.002265",
+            "2015-01-01,4620864431353617408,Female,25-34,High,Blog,0.002265"
+    })
+    public void invalidImpressionRecordTest(String record) {
         assertThrows(IllegalArgumentException.class,
-                () -> FileType.IMPRESSION.produce(ir.split(",")));
+                () -> FileType.IMPRESSION.produce(record.split(",")));
     }
+
+    @ParameterizedTest(name="{index} - invalid clk record test")
+    @ValueSource(strings = {
+            "12:01:21,8895519749317550080,11.794442",
+            "2015-01-01 12:01:21,-20,11.794442",
+            "2015-01-01 12:01:21,8895519749317550080,-90"
+    })
+    public void invalidClickRecordTest(String record) {
+        assertThrows(IllegalArgumentException.class,
+                () -> FileType.CLICK.produce(record.split(",")));
+    }
+
+    @ParameterizedTest(name="{index} - invalid svr record test")
+    @ValueSource(strings = {
+            "2015-01 12:21,8895519749317550080,2015-01-01 12:05:13,7,No",
+            "2015-01-01 12:01:21,-12,2015-01-01 12:05:13,7,No",
+            "2015-01-01 12:01:21,8895519749317550080,never,7,No",
+            "2015-01-01 12:01:21,8895519749317550080,n/a,-3,No",
+            "2015-01-01 12:01:21,8895519749317550080,2015-01-01 12:05:13,7,fail"
+    })
+    public void invalidServerRecordTest(String record) {
+        assertThrows(IllegalArgumentException.class,
+                () -> FileType.SERVER.produce(record.split(",")));
+    }
+
 }

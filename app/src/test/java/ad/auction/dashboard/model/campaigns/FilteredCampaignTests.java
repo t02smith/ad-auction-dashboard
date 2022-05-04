@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Tag("model/campaigns")
 public class FilteredCampaignTests {
 
-    private static final Model model = new Model();
+    private static Model model = new Model();
 
     /*HELPER*/
 
@@ -30,6 +30,7 @@ public class FilteredCampaignTests {
     public static void tearDown() {
         model.campaigns().removeCampaign("2 week - test");
         model.campaigns().closeAll();
+        model = null;
     }
 
     @AfterEach
