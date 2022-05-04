@@ -10,3 +10,4 @@ bin
 
 /app/campaigns.xml
 /app/data/
+/app/*.png
