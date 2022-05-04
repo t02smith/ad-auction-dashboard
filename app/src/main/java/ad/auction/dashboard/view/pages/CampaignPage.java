@@ -159,7 +159,7 @@ public class CampaignPage extends BasePage {
 
         var filterTitle = new Text("Filters");
         filterTitle.getStyleClass().add("filter-title");
-        var filterMenu = new FilterList(() -> this.loadMetric.accept(this.currentMetric), (int)ChronoUnit.DAYS.between(cData.start().toLocalDate(), cData.end().toLocalDate()));
+        var filterMenu = new FilterList(() -> this.loadMetric.accept(this.currentMetric), cData.start(), cData.end());
         rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
         graphPane.setBottom(graphButtonPane);

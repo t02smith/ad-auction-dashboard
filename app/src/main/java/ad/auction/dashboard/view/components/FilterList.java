@@ -11,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,16 +26,15 @@ public class FilterList extends VBox {
     private final Controller controller = App.getInstance().controller();
     private final Runnable reloadMetric;
 
-    private final int daySpan;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private int daySpan;
 
-    /**
-     * Create a new filter list
-     * @param reloadMetric Function to call whenever a filter section changes
-     * @param daySpan the number of days the data goes over
-     */
-    public FilterList(Runnable reloadMetric, int daySpan) {
+    public FilterList(Runnable reloadMetric, LocalDateTime start, LocalDateTime end) {
         this.reloadMetric = reloadMetric;
-        this.daySpan = daySpan;
+        this.start = start;
+        this.end = end;
+        this.daySpan = (int) ChronoUnit.DAYS.between(start, end);
         this.getStyleClass().add("bg-secondary");
         build();
     }
@@ -46,7 +47,7 @@ public class FilterList extends VBox {
         this.setPadding(new Insets(10));
 
         this.getChildren().addAll(
-                timeSlider(),
+                timeSlider("Date Range"),
                 group(genders(), "Genders"),
                 group(income(), "Income"),
                 group(ageGroup(), "Age Group"),
@@ -54,18 +55,42 @@ public class FilterList extends VBox {
         );
     }
 
-    /**
-     * Create the slider to control which dates to include
-     * @return the time slider component
-     */
-    private RangeSlider timeSlider() {
+    private VBox timeSlider(String title) {
+
+        var grp = new VBox();
+        grp.setSpacing(5);
+        grp.getChildren().add(sectionTitle(title));
         var slider = new RangeSlider(0, daySpan, 0, daySpan);
         slider.setBlockIncrement(1);
-        slider.setShowTickMarks(true);
         slider.setShowTickLabels(true);
         slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(0);
+        slider.setSnapToTicks(true);
+        slider.setCursor(Cursor.CLOSED_HAND);
 
-        return slider;
+        slider.setOnMouseReleased(e -> {
+            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
+            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
+            this.reloadMetric.run();
+        });
+
+        /*
+        slider.highValueChangingProperty().addListener(e -> {
+            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
+            System.out.println("new end date " + end.minusDays((long)(daySpan - slider.getHighValue())));
+            this.reloadMetric.run();
+        });
+        slider.lowValueChangingProperty().addListener(e -> {
+            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
+            System.out.println("New start date " + start.plusDays((long) slider.getLowValue()));
+            this.reloadMetric.run();
+        });
+
+         */
+
+        grp.getChildren().add(slider);
+
+        return grp;
     }
 
     /**
@@ -88,6 +113,12 @@ public class FilterList extends VBox {
             grp.getChildren().add(h);
         }
         return grp;
+    }
+
+    private Label sectionTitle(String title) {
+        var ttl = new Label(title);
+        ttl.getStyleClass().add("filter-sub-heading");
+        return ttl;
     }
 
     /**
