@@ -35,6 +35,9 @@ import org.gillius.jfxutils.chart.ChartZoomManager;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Builds the Linechart and histogram
+ */
 public class LineChartModel extends ChartModel {
 
     private static final Logger logger = LogManager.getLogger(LineChartModel.class.getSimpleName());
@@ -58,6 +61,10 @@ public class LineChartModel extends ChartModel {
     }
 
 
+    /**
+     * Creates series of points for each dataset and adds to the given list
+     * @param seriesList
+     */
     private void setAllSeries(ArrayList<XYChart.Series<Number, Number>> seriesList) {
         datasets.forEach((name, data) -> {
             var dataSeries = new XYChart.Series<Number, Number>();
@@ -73,6 +80,10 @@ public class LineChartModel extends ChartModel {
 
     }
 
+    /**
+     * Builds the UI element of the Linechart
+     * @return Linechart
+     */
     public StackPane getLineChart() {
         var xAxis = new NumberAxis();
         xAxis.setLabel(getXName());
@@ -111,6 +122,12 @@ public class LineChartModel extends ChartModel {
 
     }
 
+    /**
+     * Builds the Histogram
+     * @param xAxisLabel
+     * @param data
+     * @return Histogram
+     */
     public StackPane histogram(String xAxisLabel, List<Point2D> data) {
         var xAxis = new NumberAxis();
         xAxis.setLabel(xAxisLabel);
@@ -144,6 +161,11 @@ public class LineChartModel extends ChartModel {
         return num.doubleValue() < 1 ? "%.3f" : "%.2f";
     }
 
+    /**
+     * Adds the extra functionality for the given chart
+     * @param chart
+     * @param label
+     */
     private void createCursorMonitor(XYChart<Number, Number> chart, Label label) {
 
         final var x = chart.getXAxis();
@@ -246,26 +268,4 @@ public class LineChartModel extends ChartModel {
 
     }
 
-}
-
-class ShowNodes extends StackPane {
-    ShowNodes(double x, double y) {
-        //setPrefSize(10, 10);
-
-        final Label hoverLabel = new Label(String.format("( %.3f , %.3f )", x, y));
-        hoverLabel.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
-        hoverLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
-        hoverLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
-
-        setOnMouseEntered((e) -> {
-            getChildren().setAll(hoverLabel);
-            setCursor(Cursor.NONE);
-            toFront();
-        });
-
-        setOnMouseExited((e) -> {
-            getChildren().clear();
-            setCursor(Cursor.CROSSHAIR);
-        });
-    }
 }

@@ -7,6 +7,9 @@ import ad.auction.dashboard.App;
 
 import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
 
+/**
+ * Manager for managing a given metric
+ */
 public class MetricManager {
 
     private final Metrics currentMetric;
@@ -18,6 +21,9 @@ public class MetricManager {
         this.buildCampaign();
     }
 
+    /**
+     * Calculates the current metric's values for all active campaigns
+     */
     public void buildCampaign() {
         var overAll = App.getInstance().controller().runCalculation(currentMetric, MetricFunction.OVERALL);
         overAll.forEach((key, value) -> {

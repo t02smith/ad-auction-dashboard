@@ -8,6 +8,9 @@ import javafx.scene.layout.*;
 
 import java.io.File;
 
+/**
+ * Creates the campaign editing page
+ */
 public class EditPage extends UploadPage {
 
     private final CampaignData oldCampaign;
@@ -23,6 +26,9 @@ public class EditPage extends UploadPage {
         this.returnTo = returnTo;
     }
 
+    /**
+     * Builds the UI element of the editing page
+     */
     @Override
     public void build() {
         this.clkPath = new File(oldCampaign.clkPath()).getName();

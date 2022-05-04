@@ -20,6 +20,9 @@ import javafx.scene.text.TextAlignment;
 import java.util.concurrent.Future;
 
 
+/**
+ * Main menu page
+ */
 public class MainMenuPage extends BasePage {
 
     private boolean campaignListOpen = false;
@@ -27,6 +30,9 @@ public class MainMenuPage extends BasePage {
 
     public MainMenuPage(Window window) {super(window);}
 
+    /**
+     * Builds the menu page
+     */
     @Override
     public void build() {
         var bp = new BorderPane();
@@ -71,6 +77,10 @@ public class MainMenuPage extends BasePage {
 
     }
 
+    /**
+     * Adds the options to the menu
+     * @return
+     */
     private HBox menuOptions() {
 
         var options = new HBox(
