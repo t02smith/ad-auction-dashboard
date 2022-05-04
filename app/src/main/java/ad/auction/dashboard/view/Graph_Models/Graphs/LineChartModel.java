@@ -16,6 +16,7 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -82,7 +83,7 @@ public class LineChartModel extends ChartModel {
         var allData = new ArrayList<XYChart.Series<Number, Number>>();
         var lChart = new LineChart<>(xAxis, yAxis);
 
-
+        lChart.setAnimated(false);
         setAllSeries(allData);
         lChart.getData().addAll(allData);
 
@@ -162,6 +163,7 @@ public class LineChartModel extends ChartModel {
             }
         }
 
+        
         backgroundNodes.setOnMouseClicked((ev) -> {
             if (ev.getButton() == MouseButton.SECONDARY) {
                 label.setVisible(true);
@@ -246,4 +248,24 @@ public class LineChartModel extends ChartModel {
 
 }
 
+class ShowNodes extends StackPane {
+    ShowNodes(double x, double y) {
+        //setPrefSize(10, 10);
 
+        final Label hoverLabel = new Label(String.format("( %.3f , %.3f )", x, y));
+        hoverLabel.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
+        hoverLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        hoverLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
+
+        setOnMouseEntered((e) -> {
+            getChildren().setAll(hoverLabel);
+            setCursor(Cursor.NONE);
+            toFront();
+        });
+
+        setOnMouseExited((e) -> {
+            getChildren().clear();
+            setCursor(Cursor.CROSSHAIR);
+        });
+    }
+}
