@@ -1,43 +1,38 @@
 package ad.auction.dashboard.view.pages;
 
-import java.time.temporal.ChronoUnit;
+import ad.auction.dashboard.model.calculator.Histogram;
+import ad.auction.dashboard.model.calculator.MetricManager;
+import ad.auction.dashboard.model.calculator.Metrics;
+import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
+import ad.auction.dashboard.model.campaigns.Campaign;
+import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
+import ad.auction.dashboard.view.components.BackBtn;
+import ad.auction.dashboard.view.components.ButtonList;
+import ad.auction.dashboard.view.components.FilterList;
+import ad.auction.dashboard.view.components.TabMenu;
+import ad.auction.dashboard.view.ui.Window;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.skin.TableHeaderRow;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
-import ad.auction.dashboard.model.calculator.Histogram;
-import ad.auction.dashboard.model.calculator.MetricManager;
-import ad.auction.dashboard.model.campaigns.Campaign;
-import ad.auction.dashboard.view.components.BackBtn;
-import ad.auction.dashboard.view.components.ButtonList;
-import ad.auction.dashboard.view.components.FilterList;
-import ad.auction.dashboard.view.components.TabMenu;
-import javafx.collections.FXCollections;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import ad.auction.dashboard.model.calculator.Metrics;
-import ad.auction.dashboard.model.calculator.calculations.Metric.MetricFunction;
-import ad.auction.dashboard.view.Graph_Models.Graphs.LineChartModel;
-import ad.auction.dashboard.view.ui.Window;
-import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.text.Text;
 
 /**
  * Advertisement page that holds the UI part of the graphs and controls
@@ -48,10 +43,13 @@ public class CampaignPage extends BasePage {
 
     private static final Logger logger = LogManager.getLogger(CampaignPage.class.getSimpleName());
 
+    //The campaign's name
     private final String campaignName;
 
+    //The graph to be displayed
     private LineChartModel graph;
 
+    //The dashboard of overall values
     private final StackPane dashBoard = new StackPane();
     private TableView<MetricManager> metricBox;
 
@@ -159,7 +157,11 @@ public class CampaignPage extends BasePage {
 
         var filterTitle = new Text("Filters");
         filterTitle.getStyleClass().add("filter-title");
-        var filterMenu = new FilterList(() -> this.loadMetric.accept(this.currentMetric), cData.start(), cData.end());
+        var filterMenu = new FilterList(
+                () -> this.loadMetric.accept(this.currentMetric)
+                ,() -> controller.toggleAllFilters(false)
+                , cData.start()
+                , cData.end());
         rightMenu.getChildren().addAll(filterTitle, filterMenu);
 
         graphPane.setBottom(graphButtonPane);
@@ -195,7 +197,10 @@ public class CampaignPage extends BasePage {
         title.setCenter(mainMenuText);
 
         //Add back button
-        var backButton = new BackBtn(e -> window.startMenu());
+        var backButton = new BackBtn(e -> {
+            controller.toggleAllFilters(false);
+            window.startMenu();
+        });
         BorderPane.setAlignment(backButton, Pos.CENTER);
         BorderPane.setMargin(backButton, new Insets(0, 0 ,0, 3));
         title.setLeft(backButton);
@@ -332,7 +337,7 @@ public class CampaignPage extends BasePage {
         var activeCampaigns = controller.getActiveCampaigns();
 
         activeCampaigns.forEach((camp) -> {
-            TableColumn<MetricManager, String> campColumn = new TableColumn<MetricManager, String>(camp.name());
+            TableColumn<MetricManager, String> campColumn = new TableColumn<>(camp.name());
             campColumn.setCellValueFactory(rowObject -> new SimpleStringProperty(rowObject.getValue().getOutput(camp.name())));
 
             metricBox.getColumns().add(campColumn);
@@ -370,10 +375,6 @@ public class CampaignPage extends BasePage {
         metricBox.setPrefHeight(height);
     }
 
-    /**
-     *
-     * @return
-     */
     private ComboBox<CampaignComponent> campaignComponents() {
         var options = new ComboBox<>(FXCollections.observableArrayList(
                 this.currentMetric.getMetric() instanceof Histogram

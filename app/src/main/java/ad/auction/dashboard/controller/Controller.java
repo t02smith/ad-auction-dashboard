@@ -160,6 +160,14 @@ public class Controller {
     }
 
     /**
+     * Toggles all filters to one state
+     * @param state the filters state
+     */
+    public void toggleAllFilters(boolean state) {
+        this.model.campaigns().getCurrentCampaign().toggleAllFilters(state);
+    }
+
+    /**
      * Set the start/end date of the data to be shown
      * @param start changing start(true) or end(false)
      * @param value The new date

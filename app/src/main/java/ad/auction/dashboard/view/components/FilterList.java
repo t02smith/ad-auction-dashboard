@@ -5,6 +5,7 @@ import ad.auction.dashboard.controller.Controller;
 import ad.auction.dashboard.model.files.records.Impression;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -24,16 +25,22 @@ import java.util.List;
 public class FilterList extends VBox {
 
     private final Controller controller = App.getInstance().controller();
+
+    //Recalculates the current metric
     private final Runnable reloadMetric;
+
+    //Resets the filters to default settings
+    private final Runnable resetFilters;
 
     private LocalDateTime start;
     private LocalDateTime end;
     private int daySpan;
 
-    public FilterList(Runnable reloadMetric, LocalDateTime start, LocalDateTime end) {
+    public FilterList(Runnable reloadMetric, Runnable resetFilters, LocalDateTime start, LocalDateTime end) {
         this.reloadMetric = reloadMetric;
         this.start = start;
         this.end = end;
+        this.resetFilters = resetFilters;
         this.daySpan = (int) ChronoUnit.DAYS.between(start, end);
         this.getStyleClass().add("bg-secondary");
         build();
@@ -42,24 +49,26 @@ public class FilterList extends VBox {
     /**
      * Build the filter list
      */
-    private void build() {
+    public void build() {
         this.setSpacing(15);
         this.setPadding(new Insets(10));
 
+        this.getChildren().clear();
         this.getChildren().addAll(
-                timeSlider("Date Range"),
+                timeSlider(),
                 group(genders(), "Genders"),
                 group(income(), "Income"),
                 group(ageGroup(), "Age Group"),
-                group(context(), "Context")
+                group(context(), "Context"),
+                resetFilters()
         );
     }
 
-    private VBox timeSlider(String title) {
+    private VBox timeSlider() {
 
         var grp = new VBox();
         grp.setSpacing(5);
-        grp.getChildren().add(sectionTitle(title));
+        grp.getChildren().add(sectionTitle("Date Range"));
         var slider = new RangeSlider(0, daySpan, 0, daySpan);
         slider.setBlockIncrement(1);
         slider.setShowTickLabels(true);
@@ -199,5 +208,17 @@ public class FilterList extends VBox {
 
             return box;
         }).toList();
+    }
+
+    public Button resetFilters() {
+        var btn = new Button("Reset");
+        btn.setOnAction(e -> {
+            this.resetFilters.run();
+            this.build();
+            this.reloadMetric.run();
+        });
+        btn.getStyleClass().add("buttonStyle");
+
+        return btn;
     }
 }

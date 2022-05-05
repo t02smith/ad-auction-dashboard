@@ -63,6 +63,9 @@ public class FilteredCampaign extends Campaign {
      */
     public void toggleAllFilters(boolean state) {
         this.filterActive.keySet().forEach(k -> filterActive.put(k, state));
+        this.cache = new HashMap<>();
+        logger.info("Cache cleared");
+        logger.info("Toggled all filters to {}", state);
     }
 
     /**

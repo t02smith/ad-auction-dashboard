@@ -11,27 +11,23 @@ public class CampaignManagerTest {
 
     private static Model model = new Model();
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         model.campaigns().newCampaign("2 week - test",
                 "./data/2-week/click_log.csv",
                 "./data/2-week/impression_log.csv",
                 "./data/2-week/server_log.csv");
     }
 
-    @AfterEach
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         if (model.campaigns().campaigns.containsKey("2 week - test")) {
             if (model.campaigns().currentCampaign != null) model.campaigns().closeCurrentCampaign();
             model.campaigns().removeCampaign("2 week - test");
         }
 
-        model = null;
-    }
-
-    @AfterAll
-    public static void tearDownAll() {
         model.campaigns().closeAll();
+        model = null;
     }
 
     /*OPEN CAMPAIGN*/
@@ -42,7 +38,7 @@ public class CampaignManagerTest {
         var c = model.campaigns().getCampaignData("2 week - test");
         model.campaigns().openCampaign("2 week - test");
         assertEquals(c, model.campaigns().getCurrentCampaign().getData());
-
+        model.campaigns().closeCurrentCampaign();
     }
 
     @Test
@@ -50,6 +46,7 @@ public class CampaignManagerTest {
     public void openCampaignTwiceTest() {
         model.campaigns().openCampaign("2 week - test");
         assertThrows(IllegalArgumentException.class, () -> model.campaigns().openCampaign("2 week - test"));
+        model.campaigns().closeCurrentCampaign();
     }
 
     @Test
@@ -127,6 +124,10 @@ public class CampaignManagerTest {
     public void removeCampaignTest() {
         model.campaigns().removeCampaign("2 week - test");
         assertFalse(model.campaigns().campaigns.containsKey("2 week - test"));
+        model.campaigns().newCampaign("2 week - test",
+                "./data/2-week/click_log.csv",
+                "./data/2-week/impression_log.csv",
+                "./data/2-week/server_log.csv");
     }
 
     @Test
