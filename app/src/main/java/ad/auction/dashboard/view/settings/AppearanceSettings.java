@@ -8,6 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
+/**
+ * Makes changes to appearence of the app
+ */
 public class AppearanceSettings extends SettingPage {
     private final Controller controller = App.getInstance().controller();
 

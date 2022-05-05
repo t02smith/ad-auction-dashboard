@@ -16,6 +16,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
+/**
+ * Creates the settings page
+ */
 public class SettingsPage extends BasePage{
 
     private static final Logger logger = LogManager.getLogger(SettingsPage.class.getSimpleName());
@@ -27,6 +30,9 @@ public class SettingsPage extends BasePage{
         super(window);
     }
 
+    /**
+     * Builds the UI element of the settings page
+     */
     @Override
     public void build() {
         logger.info("Building Main Menu");

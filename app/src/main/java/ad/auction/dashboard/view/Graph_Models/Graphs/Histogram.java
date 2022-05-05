@@ -9,6 +9,9 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
+/**
+ * Builds the Histogram
+ */
 public class Histogram extends ChartModel{
 
     private List<Point2D> data;
