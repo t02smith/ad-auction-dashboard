@@ -7,17 +7,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 import ad.auction.dashboard.model.calculator.calculations.Metric;
 import org.junit.jupiter.api.*;
 
 import ad.auction.dashboard.model.Model;
 import ad.auction.dashboard.model.campaigns.Campaign;
-import javafx.geometry.Point2D;
-import org.junit.jupiter.params.ParameterizedTest;
 
 
 @Tag("model/calculator")

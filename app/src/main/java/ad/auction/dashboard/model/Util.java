@@ -34,8 +34,4 @@ public final class Util {
         return (double)Math.round(number*factor)/factor;
     }
 
-    public static void saveScreenshot(String name, WritableImage img) {
-
-    }
-    
 }

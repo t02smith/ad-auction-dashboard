@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 
 import ad.auction.dashboard.model.campaigns.Campaign;
 import org.junit.jupiter.api.*;

@@ -80,24 +80,8 @@ public class FilterList extends VBox {
         slider.setOnMouseReleased(e -> {
             controller.setDateSpan(false, (int)slider.getHighValue());
             controller.setDateSpan(true, (int)slider.getLowValue());
-//            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
-//            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
             this.reloadMetric.run();
         });
-
-        /*
-        slider.highValueChangingProperty().addListener(e -> {
-            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
-            System.out.println("new end date " + end.minusDays((long)(daySpan - slider.getHighValue())));
-            this.reloadMetric.run();
-        });
-        slider.lowValueChangingProperty().addListener(e -> {
-            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
-            System.out.println("New start date " + start.plusDays((long) slider.getLowValue()));
-            this.reloadMetric.run();
-        });
-
-         */
 
         grp.getChildren().add(slider);
 

@@ -1,6 +1,5 @@
 package ad.auction.dashboard.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +22,10 @@ import ad.auction.dashboard.view.settings.Themes;
  */
 public class Controller {
 
+    //Model instance
     private final Model model = new Model();
 
+    //Whether the controller is still active
     private boolean available = true;
 
     /**
@@ -168,14 +169,10 @@ public class Controller {
     }
 
     /**
-     * Set the start/end date of the data to be shown
-     * @param start changing start(true) or end(false)
-     * @param value The new date
+     * Sets the relative date span
+     * @param start change start(true) or end (false)
+     * @param span days since start of campaign
      */
-    public void setDate(boolean start, LocalDateTime value) {
-        this.model.campaigns().setDate(start, value);
-    }
-
     public void setDateSpan(boolean start, int span) {
         if (span < 0) return;
         model.campaigns().setDateSpan(start,span);

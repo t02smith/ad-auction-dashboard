@@ -1,8 +1,6 @@
 package ad.auction.dashboard.view.Graph_Models.Graphs;
 
 
-import ad.auction.dashboard.App;
-import ad.auction.dashboard.view.pages.CampaignPage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.chart.AreaChart;
 
@@ -16,18 +14,15 @@ import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gillius.jfxutils.chart.ChartPanManager;
