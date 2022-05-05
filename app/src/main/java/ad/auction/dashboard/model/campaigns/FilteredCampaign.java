@@ -1,5 +1,7 @@
 package ad.auction.dashboard.model.campaigns;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -28,6 +30,9 @@ public class FilteredCampaign extends Campaign {
     //active filters
     protected HashMap<Integer, Boolean> filterActive = new HashMap<>();
     protected HashMap<Integer, Predicate<User>> userFilters = new HashMap<>();
+
+    protected Integer relativeStart = 0;
+    protected Integer relativeEnd;
 
     //User data
     protected HashMap<Long, User> userData;
@@ -64,6 +69,12 @@ public class FilteredCampaign extends Campaign {
     public void toggleAllFilters(boolean state) {
         this.filterActive.keySet().forEach(k -> filterActive.put(k, state));
         this.cache = new HashMap<>();
+
+        if (!state) {
+            this.relativeStart = 0;
+            this.relativeEnd = (int)ChronoUnit.DAYS.between(start, end);
+        }
+
         logger.info("Cache cleared");
         logger.info("Toggled all filters to {}", state);
     }
@@ -114,6 +125,21 @@ public class FilteredCampaign extends Campaign {
         this.userData = this.collectUserData(imps);
     }
 
+    /**
+     * Sets the relative date start and end point of the campaign
+     * @param start change start(true) or end(false) date
+     * @param relDate the number of days since starting the campaign
+     */
+    public void setRelativeDate(boolean start, int relDate) {
+        this.clearCache();
+        if (start) {
+            if (this.end == null) this.relativeStart = relDate;
+            if (relDate <= this.relativeEnd) this.relativeStart = relDate;
+        } else {
+            if (relativeStart <= relDate) this.relativeEnd = relDate;
+        }
+    }
+
     // Getters
 
     /**
@@ -130,8 +156,8 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Click> clicks() {
         return this.clicks.stream()
-                .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
+                .dropWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) < relativeStart)
+                .takeWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) <= relativeEnd)
                 .filter(c -> userFilters.keySet().stream().filter(filterActive::get)
                                 .allMatch(f -> userFilters.get(f).test(userData.get(c.ID()))));
     }
@@ -142,8 +168,8 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Impression> impressions() {
         return this.impressions.stream()
-                .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
+                .dropWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) < relativeStart)
+                .takeWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) <= relativeEnd)
                 .filter(i -> userFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> userFilters.get(f).test(userData.get(i.ID()))));
     }
@@ -161,8 +187,8 @@ public class FilteredCampaign extends Campaign {
     @Override
     public Stream<Server> server() {
         return this.server.stream()
-                .dropWhile(r -> r.dateTime().isBefore(start))
-                .takeWhile(r -> r.dateTime().isBefore(end) || r.dateTime().equals(end))
+                .dropWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) < relativeStart)
+                .takeWhile(r -> ChronoUnit.DAYS.between(start, r.dateTime()) <= relativeEnd)
                 .filter(s -> userFilters.keySet().stream().filter(filterActive::get)
                         .allMatch(f -> userFilters.get(f).test(userData.get(s.ID()))));
     }

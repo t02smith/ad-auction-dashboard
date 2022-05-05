@@ -1,6 +1,7 @@
 package ad.auction.dashboard.model.campaigns;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -128,6 +129,7 @@ public class CampaignManager {
 
             c.setDate(true, ls.get(0).dateTime());
             c.setDate(false, ls.get(ls.size()-1).dateTime());
+            c.setRelativeDate(false, (int)ChronoUnit.DAYS.between(c.start,c.end));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -303,6 +305,11 @@ public class CampaignManager {
      */
     public List<CampaignData> getCampaigns() {
         return this.campaigns.values().stream().map(Campaign::getData).toList();
+    }
+
+    public void setDateSpan(boolean start, int span) {
+        this.currentCampaign.setRelativeDate(start,span);
+        this.currentCampaign.clearCache();
     }
 
 }

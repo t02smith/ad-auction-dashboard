@@ -78,8 +78,10 @@ public class FilterList extends VBox {
         slider.setCursor(Cursor.CLOSED_HAND);
 
         slider.setOnMouseReleased(e -> {
-            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
-            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
+            controller.setDateSpan(false, (int)slider.getHighValue());
+            controller.setDateSpan(true, (int)slider.getLowValue());
+//            controller.setDate(false, end.minusDays((long)(daySpan - slider.getHighValue())));
+//            controller.setDate(true, start.plusDays((long) slider.getLowValue()));
             this.reloadMetric.run();
         });
 
@@ -220,5 +222,12 @@ public class FilterList extends VBox {
         btn.getStyleClass().add("buttonStyle");
 
         return btn;
+    }
+
+    public void setDaySpan(int span) {
+        if (span > this.daySpan) {
+            this.daySpan = span;
+            build();
+        }
     }
 }

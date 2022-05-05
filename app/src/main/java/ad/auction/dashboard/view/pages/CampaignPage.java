@@ -27,6 +27,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,7 @@ public class CampaignPage extends BasePage {
     private final BorderPane screen = new BorderPane();
     private final VBox selectionWrapper = new VBox();
 
+    private FilterList filterList;
 
     //current selection
     private Metrics currentMetric = controller.getDefaultMetric();
@@ -157,12 +159,12 @@ public class CampaignPage extends BasePage {
 
         var filterTitle = new Text("Filters");
         filterTitle.getStyleClass().add("filter-title");
-        var filterMenu = new FilterList(
+        this.filterList = new FilterList(
                 () -> this.loadMetric.accept(this.currentMetric)
                 ,() -> controller.toggleAllFilters(false)
                 , cData.start()
                 , cData.end());
-        rightMenu.getChildren().addAll(filterTitle, filterMenu);
+        rightMenu.getChildren().addAll(filterTitle, this.filterList);
 
         graphPane.setBottom(graphButtonPane);
         graphPane.setCenter(graph.getLineChart());
@@ -170,7 +172,7 @@ public class CampaignPage extends BasePage {
         // Tab menu for metrics + filters
         var menu = new TabMenu("metrics");
         menu.addPane("metrics", new ButtonList<>(Arrays.asList(Metrics.values()),this.currentMetric,false,loadMetric));
-        menu.addPane("filters", filterMenu);
+        menu.addPane("filters", this.filterList);
         menu.addPane("compare", campaignList());
         menu.build();
 
@@ -302,6 +304,9 @@ public class CampaignPage extends BasePage {
         var bl = new ButtonList<>(cList, null, true, c -> {
             var res = controller.toggleCampaign(c);
             while (!res.isDone()) {}
+            Campaign.CampaignData campaign = controller.getCampaignData(c);
+            this.filterList.setDaySpan((int)ChronoUnit.DAYS.between(campaign.start(), campaign.end()));
+
             loadMetric.accept(currentMetric);
         });
 

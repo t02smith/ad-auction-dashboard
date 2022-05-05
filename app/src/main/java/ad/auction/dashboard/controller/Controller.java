@@ -176,6 +176,12 @@ public class Controller {
         this.model.campaigns().setDate(start, value);
     }
 
+    public void setDateSpan(boolean start, int span) {
+        if (span < 0) return;
+        model.campaigns().setDateSpan(start,span);
+
+    }
+
     /**
      * Sets whether a graph is a cumulative or trend graph
      * @param state cumulative(true) or trend(false)

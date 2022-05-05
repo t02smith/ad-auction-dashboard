@@ -45,6 +45,16 @@ public class ManyCampaignManager extends CampaignManager {
         super.openCampaign(name);
     }
 
+    @Override
+    public void setDateSpan(boolean start, int span) {
+        super.setDateSpan(start, span);
+        this.includedCampaigns.forEach(c -> {
+            var camp = campaigns.get(c);
+            camp.setRelativeDate(start,span);
+            camp.clearCache();
+        });
+    }
+
     /**
      * Remove a campaign
      * If it is included then the data is flushed first
