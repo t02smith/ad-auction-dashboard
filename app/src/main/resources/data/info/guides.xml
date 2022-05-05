@@ -191,4 +191,17 @@
             <step>Choose the default metric and the points per unit of time</step>
         </steps>
     </guide>
+    <guide>
+        <id>11</id>
+        <name>Using snapshot</name>
+        <description>How to get a snapshot of a campaign</description>
+        <steps>
+            <step>Choose the campaign in the campaign list</step>
+            <step>Click the campaign to enter the campaign page</step>
+            <step>Choose compare function on the side menu</step>
+            <step>Click the snapshot button</step>
+            <step>The campaign's snapshot is shown below that button</step>
+            <step>Note: The name of the snapshot is (campaign name:number of snapshot for this campaign)</step>
+        </steps>
+    </guide>
 </guides>
